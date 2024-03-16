@@ -1,8 +1,8 @@
 ﻿using Api.Vendas.Attributes;
 using Api.Vendas.Utilities;
 using Domain.Enumeradores;
-using Domain.Interfaces.Repository;
-using Domain.Models;
+using Domain.Interfaces.Repository.LogApp;
+using Domain.Models.LogApp;
 using FamilyFinanceApi.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using ProEventos.API.Controllers.Base;

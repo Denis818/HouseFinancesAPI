@@ -1,7 +1,7 @@
 ﻿using Domain.Models.Dtos;
 using FluentValidation;
 
-namespace Application.Validators
+namespace Application.Validators.Finance
 {
     public class DespesaValidator : AbstractValidator<DespesaDto>
     {

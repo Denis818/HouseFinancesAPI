@@ -5,11 +5,15 @@ namespace Domain.Enumeradores
     public enum EnumPermissoes
     {
         /// <summary>
-        /// Vizualizar acessos do usuario
+        /// Permite ao usuário criar, atualizar e deletar Despesas e Membros
         /// </summary>
-        [Description("Vizualizar acessos do usuario")]
+        [Description("Permite ao usuário criar, atualizar e deletar Despesas e Membros")]
         USU_000001 = 1,
+
+        /// <summary>
+        /// Vizualizar logs de requests
+        /// </summary>
         [Description("Vizualizar logs de requests")]
-        USU_000002
+        USU_000002 = 2
     }
 }

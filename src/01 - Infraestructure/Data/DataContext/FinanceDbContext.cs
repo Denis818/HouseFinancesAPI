@@ -1,4 +1,4 @@
-﻿using Domain.Models;
+﻿using Domain.Models.Finance;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

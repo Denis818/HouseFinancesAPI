@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Models;
 using Domain.Models.Dtos;
+using Domain.Models.Finance;
 
 namespace DadosInCached.Configurations.PerfisAutoMapper
 {

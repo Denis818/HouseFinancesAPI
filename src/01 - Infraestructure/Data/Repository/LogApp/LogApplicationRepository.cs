@@ -1,9 +1,9 @@
 ﻿using Data.DataContext;
-using Domain.Interfaces.Repository;
-using Domain.Models;
+using Domain.Interfaces.Repository.LogApp;
+using Domain.Models.LogApp;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.Repository
+namespace Data.Repository.LogApp
 {
     public class LogApplicationRepository(LogDbContext LogDbContext) : ILogApplicationRepository
     {

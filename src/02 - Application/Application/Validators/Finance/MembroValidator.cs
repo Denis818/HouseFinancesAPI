@@ -1,7 +1,7 @@
 ﻿using Domain.Models;
 using FluentValidation;
 
-namespace Application.Validators
+namespace Application.Validators.Finance
 {
     public class MembroValidator : AbstractValidator<MembroDto>
     {

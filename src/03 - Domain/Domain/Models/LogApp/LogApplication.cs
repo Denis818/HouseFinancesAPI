@@ -1,7 +1,7 @@
 ﻿using Domain.Converters;
 using System.Text.Json.Serialization;
 
-namespace Domain.Models
+namespace Domain.Models.LogApp
 {
     public class LogApplication
     {
