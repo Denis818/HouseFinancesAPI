@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using Domain.Models;
-using Domain.Models.Dtos;
+using Domain.Dtos.Finance;
 using Domain.Models.Finance;
 
 namespace DadosInCached.Configurations.PerfisAutoMapper
@@ -9,7 +8,7 @@ namespace DadosInCached.Configurations.PerfisAutoMapper
     {
         public EntityMappingProfile()
         {
-            CreateMap<Membro, MembroDto>().ReverseMap();
+            CreateMap<Member, MemberDto>().ReverseMap();
             CreateMap<Despesa, DespesaDto>().ReverseMap();
         }
     }

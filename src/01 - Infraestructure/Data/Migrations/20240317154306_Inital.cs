@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Data.Migrations.FinanceDb
+#nullable disable
+
+namespace Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Intial : Migration
+    public partial class Inital : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -12,6 +15,45 @@ namespace Data.Migrations.FinanceDb
             migrationBuilder.AlterDatabase()
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "Despesas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Categoria = table.Column<string>(type: "varchar(20)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Item = table.Column<string>(type: "varchar(20)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Preco = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    Quantidade = table.Column<int>(type: "int", nullable: false),
+                    Fornecedor = table.Column<string>(type: "varchar(20)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Total = table.Column<decimal>(type: "decimal(6,2)", nullable: false),
+                    DataCompra = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Despesas", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Membros",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Nome = table.Column<string>(type: "varchar(20)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Membros", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            #region Tables Identity
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -52,7 +94,7 @@ namespace Data.Migrations.FinanceDb
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ConcurrencyStamp = table.Column<string>(type: "varchar(100)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PhoneNumber = table.Column<string>(type: "varchar(100)", nullable: true)
+                    PhoneNumber = table.Column<string>(type: "varchar(14)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PhoneNumberConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -67,49 +109,12 @@ namespace Data.Migrations.FinanceDb
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Despesas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Categoria = table.Column<string>(type: "varchar(20)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Item = table.Column<string>(type: "varchar(20)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Preco = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
-                    Quantidade = table.Column<int>(type: "int", nullable: false),
-                    Fornecedor = table.Column<string>(type: "varchar(20)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DataCompra = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Despesas", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Membros",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Nome = table.Column<string>(type: "varchar(20)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Membros", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    RoleId = table.Column<string>(type: "varchar(20)", nullable: false)
+                    RoleId = table.Column<string>(type: "varchar(50)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ClaimType = table.Column<string>(type: "varchar(20)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -157,11 +162,11 @@ namespace Data.Migrations.FinanceDb
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "varchar(50)", nullable: false)
+                    LoginProvider = table.Column<string>(type: "varchar(20)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ProviderKey = table.Column<string>(type: "varchar(100)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProviderDisplayName = table.Column<string>(type: "varchar(50)", nullable: true)
+                    ProviderDisplayName = table.Column<string>(type: "varchar(20)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UserId = table.Column<string>(type: "varchar(100)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
@@ -184,7 +189,7 @@ namespace Data.Migrations.FinanceDb
                 {
                     UserId = table.Column<string>(type: "varchar(100)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    RoleId = table.Column<string>(type: "varchar(100)", nullable: false)
+                    RoleId = table.Column<string>(type: "varchar(50)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -211,11 +216,11 @@ namespace Data.Migrations.FinanceDb
                 {
                     UserId = table.Column<string>(type: "varchar(100)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    LoginProvider = table.Column<string>(type: "varchar(50)", nullable: false)
+                    LoginProvider = table.Column<string>(type: "varchar(20)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Name = table.Column<string>(type: "varchar(50)", nullable: false)
+                    Name = table.Column<string>(type: "varchar(20)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Value = table.Column<string>(type: "varchar(50)", nullable: true)
+                    Value = table.Column<string>(type: "varchar(100)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -229,7 +234,44 @@ namespace Data.Migrations.FinanceDb
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
+            #endregion
 
+            migrationBuilder.CreateIndex(
+              name: "IX_Despesas_Id",
+              table: "Despesas",
+              column: "Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Despesas_Categoria",
+                table: "Despesas",
+                column: "Categoria");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Despesas_Item",
+                table: "Despesas",
+                column: "Item");
+
+            migrationBuilder.CreateIndex(
+               name: "IX_Despesas_Fornecedor",
+               table: "Despesas",
+               column: "Fornecedor");
+
+            migrationBuilder.CreateIndex(
+               name: "IX_Despesas_DataCompra",
+               table: "Despesas",
+               column: "DataCompra");
+
+            migrationBuilder.CreateIndex(
+              name: "IX_Despesas_Id",
+              table: "Membros",
+              column: "Id");
+
+            migrationBuilder.CreateIndex(
+              name: "IX_Despesas_Nome",
+              table: "Membros",
+              column: "Nome");
+
+            #region Indices Identity
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -266,6 +308,7 @@ namespace Data.Migrations.FinanceDb
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+            #endregion
         }
 
         /// <inheritdoc />

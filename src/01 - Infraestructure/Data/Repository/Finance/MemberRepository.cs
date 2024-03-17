@@ -5,8 +5,8 @@ using Domain.Models.Finance;
 
 namespace Data.Repository.Finance
 {
-    public class FinanceRepository(IServiceProvider service) : 
-        RepositoryBase<Despesa, FinanceDbContext>(service), IFinanceRepository
+    public class MemberRepository(IServiceProvider service) : 
+        RepositoryBase<Member, FinanceDbContext>(service), IMemberRepository
     {
     }
 }

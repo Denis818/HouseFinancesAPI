@@ -1,13 +1,11 @@
-﻿using Api.Vendas.Extensios.Swagger;
-using Api.Vendas.FiltersControllers;
-using Application.Configurations.Extensions.DependencyManagers;
+﻿using Application.Configurations.Extensions.DependencyManagers;
 using Application.Configurations.UserMain;
 using Data.Configurations.Extensions;
-using Microsoft.AspNetCore.Localization;
+using FamilyFinanceApi.Extensios.Swagger;
+using FamilyFinanceApi.FiltersControllers;
 using ProEventos.API.Configuration.Middleware;
-using System.Globalization;
 
-namespace Api.Vendas
+namespace FamilyFinanceApi
 {
     public class Startup(IConfiguration configuration)
     {

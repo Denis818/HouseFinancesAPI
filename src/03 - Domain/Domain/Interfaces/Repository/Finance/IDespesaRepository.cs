@@ -3,7 +3,7 @@ using Domain.Models.Finance;
 
 namespace Domain.Interfaces.Repository.Finance
 {
-    public interface IFinanceRepository : IRepositoryBase<Despesa>
+    public interface IDespesaRepository : IRepositoryBase<Despesa>
     {
     }
 }

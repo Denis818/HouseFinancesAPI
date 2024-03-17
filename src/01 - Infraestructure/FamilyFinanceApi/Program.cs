@@ -1,7 +1,7 @@
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 
-namespace Api.Vendas
+namespace FamilyFinanceApi
 {
     public class Program
     {

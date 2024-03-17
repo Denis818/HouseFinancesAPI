@@ -19,13 +19,15 @@ namespace Application.Configurations.Extensions.DependencyManagers
             services.AddHttpContextAccessor();
             services.AddScoped<INotificador, Notificador>();
             services.AddScoped<ILogApplicationRepository, LogApplicationRepository>();
-            services.AddScoped<IFinanceRepository, FinanceRepository>();
+            services.AddScoped<IDespesaRepository, DespesaRepository>();
+            services.AddScoped<IMemberRepository, MemberRepository>();
         }
         public static void AddDependecyServices(this IServiceCollection services)
         {
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<ILogApplicationServices, LogApplicationServices>();
-            services.AddScoped<IFinanceServices, FinanceServices>();
+            services.AddScoped<IDespesaServices, DespesaServices>();
+            services.AddScoped<IMemberServices, MemberServices>();
         }
     }
 }

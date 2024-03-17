@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Data.Migrations
+namespace Data.Migrations.LogDb
 {
     /// <inheritdoc />
-    public partial class Intial : Migration
+    public partial class Inital : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,11 +21,11 @@ namespace Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    TypeLog = table.Column<string>(type: "varchar(15)", nullable: true)
+                    TypeLog = table.Column<string>(type: "varchar(20)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UserName = table.Column<string>(type: "varchar(20)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Content = table.Column<string>(type: "longtext", nullable: true)
+                    Content = table.Column<string>(type: "varchar(120)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Method = table.Column<string>(type: "varchar(50)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -34,9 +34,9 @@ namespace Data.Migrations
                     QueryString = table.Column<string>(type: "varchar(50)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     InclusionDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    ExceptionMessage = table.Column<string>(type: "longtext", nullable: true)
+                    ExceptionMessage = table.Column<string>(type: "varchar(200)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    StackTrace = table.Column<string>(type: "longtext", nullable: true)
+                    StackTrace = table.Column<string>(type: "varchar(200)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>

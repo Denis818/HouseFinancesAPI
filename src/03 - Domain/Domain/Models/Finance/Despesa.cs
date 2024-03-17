@@ -11,7 +11,7 @@ namespace Domain.Models.Finance
         public decimal Preco { get; set; }
         public int Quantidade { get; set; }
         public string Fornecedor { get; set; }
-        public decimal Total => Preco * Quantidade;
+        public decimal Total { get; set; }
 
         [JsonConverter(typeof(DateFormatConverter))]
         public DateTime DataCompra { get; set; }

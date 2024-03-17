@@ -3,7 +3,7 @@ using Domain.Dtos.User;
 using ProEventos.API.Controllers.Base;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Api.Vendas.Extensios.Swagger.ExamplesSwagger.User
+namespace FamilyFinanceApi.Extensios.Swagger.ExamplesSwagger.User
 {
     public class UserTokenExample : IExamplesProvider<ResponseResultDTO<UserTokenDto>>
     {

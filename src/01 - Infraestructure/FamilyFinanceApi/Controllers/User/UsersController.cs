@@ -1,8 +1,8 @@
-﻿using Api.Vendas.Attributes;
-using Api.Vendas.Extensios.Swagger.ExamplesSwagger.User;
-using Application.Interfaces.Services;
+﻿using Application.Interfaces.Services;
 using Domain.Dtos.User;
 using Domain.Enumeradores;
+using FamilyFinanceApi.Attributes;
+using FamilyFinanceApi.Extensios.Swagger.ExamplesSwagger.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;

@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 
-namespace Api.Vendas.Extensios.Swagger
+namespace FamilyFinanceApi.Extensios.Swagger
 {
     public static class SwaggerExtensions
     {
@@ -14,6 +16,7 @@ namespace Api.Vendas.Extensios.Swagger
             services.AddSwaggerGen(swagger =>
             {
                 swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "FamilyFinanceApi", Version = "v1" });
+                swagger.SchemaFilter<DateSchemaFilter>();
 
                 swagger.ExampleFilters();
 
@@ -46,6 +49,17 @@ namespace Api.Vendas.Extensios.Swagger
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             });
+        }
+    }
+
+    public class DateSchemaFilter : ISchemaFilter
+    {
+        public void Apply(OpenApiSchema schema, SchemaFilterContext context)
+        {
+            if (context.Type == typeof(DateTime) || context.Type == typeof(DateTime?))
+            {
+                schema.Example = new OpenApiString(DateTime.Now.ToString("dd-MM-yyyy"));
+            }
         }
     }
 }

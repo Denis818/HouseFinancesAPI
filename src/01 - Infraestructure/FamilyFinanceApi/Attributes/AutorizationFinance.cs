@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Utilities;
 using ProEventos.API.Controllers.Base;
 
-namespace Api.Vendas.Attributes
+namespace FamilyFinanceApi.Attributes
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class AutorizationFinance : Attribute, IAuthorizationFilter

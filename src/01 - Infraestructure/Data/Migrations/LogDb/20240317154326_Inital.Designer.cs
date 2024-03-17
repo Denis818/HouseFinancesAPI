@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Data.Migrations
+namespace Data.Migrations.LogDb
 {
     [DbContext(typeof(LogDbContext))]
-    [Migration("20240316144103_Intial")]
-    partial class Intial
+    [Migration("20240317154326_Inital")]
+    partial class Inital
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Data.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Models.LogApplication", b =>
+            modelBuilder.Entity("Domain.Models.LogApp.LogApplication", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

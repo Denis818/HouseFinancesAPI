@@ -13,7 +13,7 @@ namespace Domain.Converters
 
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(value.ToString("g", new CultureInfo("pt-BR")));
+            writer.WriteStringValue(value.ToString("D", new CultureInfo("pt-BR")));
         }
     }
 }

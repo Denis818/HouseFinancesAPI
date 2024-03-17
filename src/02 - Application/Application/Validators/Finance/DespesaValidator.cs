@@ -1,4 +1,4 @@
-﻿using Domain.Models.Dtos;
+﻿using Domain.Dtos.Finance;
 using FluentValidation;
 
 namespace Application.Validators.Finance

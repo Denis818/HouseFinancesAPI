@@ -1,7 +1,7 @@
 ﻿using Domain.Converters;
 using System.Text.Json.Serialization;
 
-namespace Domain.Models.Dtos
+namespace Domain.Dtos.Finance
 {
     public class DespesaDto
     {

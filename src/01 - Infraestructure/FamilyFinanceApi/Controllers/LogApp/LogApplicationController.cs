@@ -1,13 +1,12 @@
-﻿using Api.Vendas.Attributes;
-using Api.Vendas.Utilities;
-using Domain.Enumeradores;
+﻿using Domain.Enumeradores;
 using Domain.Interfaces.Repository.LogApp;
 using Domain.Models.LogApp;
 using FamilyFinanceApi.Attributes;
+using FamilyFinanceApi.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using ProEventos.API.Controllers.Base;
 
-namespace Api.Vendas.Controllers.LogApp
+namespace FamilyFinanceApi.Controllers.LogApp
 {
     [ApiController]
     [AutorizationFinance]
