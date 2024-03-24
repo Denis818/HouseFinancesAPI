@@ -1,9 +1,5 @@
 ﻿using Application.Interfaces.Services;
-using Application.Utilities;
-using Domain.Converters;
 using Domain.Enumeradores;
-using Domain.Interfaces.Repository;
-using Domain.Models;
 using ProEventos.API.Controllers.Base;
 using System.Text.Json;
 

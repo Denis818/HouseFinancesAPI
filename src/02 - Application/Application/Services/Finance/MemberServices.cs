@@ -6,14 +6,15 @@ using Domain.Enumeradores;
 using Domain.Interfaces;
 using Domain.Models;
 using FamilyFinanceApi.Utilities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Interfaces.Services
 {
     public class MemberServices(IServiceProvider service) :
         ServiceAppBase<Member, MemberDto, IMemberRepository>(service), IMemberServices
     {
-        public async Task<PagedResult<Member>> GetAllMembersAsync(int paginaAtual, int itensPorPagina)
-           => await Pagination.PaginateResultAsync(_repository.Get(), paginaAtual, itensPorPagina);
+        public IQueryable<Member> GetAllMembersAsync() => _repository.Get();
+
         public async Task<Member> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
 
         public async Task<Member> InsertAsync(MemberDto memberDto)

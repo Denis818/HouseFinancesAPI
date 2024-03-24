@@ -1,6 +1,5 @@
 ﻿using Application.Utilities;
 using Domain.Dtos.Responses;
-using Domain.Models.Finance;
 using FamilyFinanceApi.Utilities;
 using ProEventos.API.Controllers.Base;
 using Swashbuckle.AspNetCore.Filters;

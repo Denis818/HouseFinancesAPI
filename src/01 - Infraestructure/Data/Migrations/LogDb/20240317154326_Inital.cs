@@ -29,7 +29,7 @@ namespace Data.Migrations.LogDb
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Method = table.Column<string>(type: "varchar(50)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Path = table.Column<string>(type: "varchar(50)", nullable: true)
+                    Path = table.Column<string>(type: "varchar(100)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     QueryString = table.Column<string>(type: "varchar(50)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),

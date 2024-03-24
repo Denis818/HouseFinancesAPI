@@ -38,7 +38,7 @@ namespace Application.Services.LogApp
 
             if (typeLog is EnumTypeLog.Exception)
             {
-                logEntry.StackTrace = ex.StackTrace;
+                logEntry.StackTrace = ex.StackTrace[..Math.Min(100, content.Length)];
                 logEntry.ExceptionMessage = $"InnerException: {ex.InnerException} | Message: {ex.Message}";
             }
 

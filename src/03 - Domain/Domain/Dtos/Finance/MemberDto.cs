@@ -1,7 +1,4 @@
 ﻿namespace Domain.Dtos.Finance
 {
-    public class MemberDto
-    {
-        public string Nome { get; set; }
-    }
+    public record MemberDto(string Nome);
 }

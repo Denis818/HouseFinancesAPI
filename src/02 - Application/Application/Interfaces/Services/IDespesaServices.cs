@@ -9,9 +9,10 @@ namespace Application.Interfaces.Services
     {
         Task DeleteAsync(int id);
         Task<PagedResult<Despesa>> GetAllDespesaAsync(int paginaAtual, int itensPorPagina);
-        Task<PagedResult<DespesasPorMesDto>> GetTotalDespesasByMonthAsync(int paginaAtual, int itensPorPagina);
+        Task<PagedResult<DespesasPorMesDto>> GetTotaisComprasPorMesAsync(int paginaAtual, int itensPorPagina);
         Task<Despesa> GetByIdAsync(int id);
         Task<Despesa> InsertAsync(DespesaDto despesaDto);
         Task<Despesa> UpdateAsync(int id, DespesaDto despesaDto);
+        Task<DespesasMensaisPorMembroDto> GetTotalParaCadaMembro();
     }
 }

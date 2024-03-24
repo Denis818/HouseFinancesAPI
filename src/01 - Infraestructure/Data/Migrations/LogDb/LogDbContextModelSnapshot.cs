@@ -43,7 +43,7 @@ namespace Data.Migrations.LogDb
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Path")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("QueryString")
                         .HasColumnType("varchar(50)");

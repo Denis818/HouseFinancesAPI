@@ -5,6 +5,7 @@ using FamilyFinanceApi.Attributes;
 using FamilyFinanceApi.Extensios.Swagger.ExamplesSwagger;
 using FamilyFinanceApi.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProEventos.API.Controllers.Base;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -20,8 +21,8 @@ namespace FamilyFinanceApi.Controllers.Finance
     {
         [HttpGet]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(PageMemberExample))]
-        public async Task<PagedResult<Member>> GetAllDespesaAsync(int paginaAtual = 1, int itensPorPagina = 10) =>
-            await MemberServices.GetAllMembersAsync(paginaAtual, itensPorPagina);
+        public async Task<IEnumerable<Member>> GetAllDespesaAsync() =>
+            await MemberServices.GetAllMembersAsync().ToListAsync();
 
         [HttpGet("{id}")]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(MemberExample))]

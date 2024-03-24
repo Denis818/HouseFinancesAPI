@@ -19,15 +19,11 @@ namespace FamilyFinanceApi.Controllers.Finance
         IDespesaServices DespesaServices) : 
         BaseApiController(service)
     {
+        #region CRUD
         [HttpGet]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(PageDespesaExample))]
         public async Task<PagedResult<Despesa>> GetAllDespesaAsync(int paginaAtual = 1, int itensPorPagina = 10) =>
             await DespesaServices.GetAllDespesaAsync(paginaAtual, itensPorPagina);
-
-        [HttpGet("by-month")]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(PageDespesabyMonthExample))]
-        public async Task<PagedResult<DespesasPorMesDto>> GetTotalDespesasByMonthAsync(int paginaAtual = 1, int itensPorPagina = 10) =>
-           await DespesaServices.GetTotalDespesasByMonthAsync(paginaAtual, itensPorPagina);
 
         [HttpGet("{id}")]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(DespesaExample))]
@@ -46,5 +42,15 @@ namespace FamilyFinanceApi.Controllers.Finance
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task Delete(int id) => await DespesaServices.DeleteAsync(id);
+        #endregion
+
+        [HttpGet("total-por-membro")]
+        public async Task<DespesasMensaisPorMembroDto> GetTotalParaCadaMembro() =>
+            await DespesaServices.GetTotalParaCadaMembro();
+
+        [HttpGet("totais-por-mes")]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(PageDespesabyMonthExample))]
+        public async Task<PagedResult<DespesasPorMesDto>> GetTotalDespesasByMonthAsync(int paginaAtual = 1, int itensPorPagina = 10) =>
+           await DespesaServices.GetTotaisComprasPorMesAsync(paginaAtual, itensPorPagina);
     }
 }

@@ -6,7 +6,8 @@ namespace Domain.Models
     public class Despesa
     {
         public int Id { get; set; }
-        public string Categoria { get; set; }
+        public Categoria Categoria { get; set; }
+        public int CategoriaId { get; set; } // Chave estrangeira
         public string Item { get; set; }
         public decimal Preco { get; set; }
         public int Quantidade { get; set; }
