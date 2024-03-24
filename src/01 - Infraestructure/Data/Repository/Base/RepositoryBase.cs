@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq.Expressions;
-using Domain.Interfaces.Repository.Base;
+using Domain.Interfaces;
 
 namespace Data.Repository.Base
 {

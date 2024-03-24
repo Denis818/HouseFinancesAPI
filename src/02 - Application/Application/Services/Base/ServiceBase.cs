@@ -2,7 +2,7 @@
 using Application.Utilities;
 using AutoMapper;
 using Domain.Enumeradores;
-using Domain.Interfaces.Repository.Base;
+using Domain.Interfaces;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;

@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces.Services;
 using Domain.Dtos.Finance;
-using Domain.Models.Finance;
+using Domain.Models;
 using FamilyFinanceApi.Attributes;
 using FamilyFinanceApi.Extensios.Swagger.ExamplesSwagger;
 using FamilyFinanceApi.Utilities;

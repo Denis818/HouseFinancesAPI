@@ -3,10 +3,14 @@ using Application.Interfaces.Services;
 using Application.Services.Base;
 using Domain.Converters;
 using Domain.Dtos.Finance;
+using Domain.Dtos.Responses;
 using Domain.Enumeradores;
-using Domain.Interfaces.Repository.Finance;
-using Domain.Models.Finance;
+using Domain.Interfaces;
+using Domain.Models;
 using FamilyFinanceApi.Utilities;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Application.Services.Finance
 {
@@ -14,9 +18,24 @@ namespace Application.Services.Finance
         ServiceAppBase<Despesa, DespesaDto, IDespesaRepository>(service), IDespesaServices
     {
         public async Task<PagedResult<Despesa>> GetAllDespesaAsync(int paginaAtual, int itensPorPagina)
-            => await Pagination.PaginateResult(_repository.Get(), paginaAtual, itensPorPagina);
+            => await Pagination.PaginateResultAsync(_repository.Get(), paginaAtual, itensPorPagina);
 
         public async Task<Despesa> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
+
+        public async Task<PagedResult<DespesasPorMesDto>> GetTotalDespesasByMonthAsync(int paginaAtual, int itensPorPagina)
+        {
+            var despesasPorMes = _repository
+                .Get()
+                .GroupBy(d => new { d.DataCompra.Month, d.DataCompra.Year })
+                .Select(group => new DespesasPorMesDto
+                {
+                    //CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(group.Key.Month) + " de " + group.Key.Year
+                    Mes = new DateTime(group.Key.Year, group.Key.Month, 1).ToString("Y"),
+                    TotalDespesas = group.Sum(d => d.Total)
+                });
+
+            return await Pagination.PaginateResultAsync(despesasPorMes, paginaAtual, itensPorPagina);        }
+
 
         public async Task<Despesa> InsertAsync(DespesaDto despesaDto)
         {

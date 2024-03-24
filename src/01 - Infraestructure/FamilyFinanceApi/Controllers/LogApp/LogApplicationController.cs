@@ -1,6 +1,6 @@
 ﻿using Domain.Enumeradores;
-using Domain.Interfaces.Repository.LogApp;
-using Domain.Models.LogApp;
+using Domain.Interfaces;
+using Domain.Models;
 using FamilyFinanceApi.Attributes;
 using FamilyFinanceApi.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +16,6 @@ namespace FamilyFinanceApi.Controllers.LogApp
     {
         [HttpGet]
         public async Task<PagedResult<LogApplication>> GetAllLogs(int paginaAtual = 1, int itensPorPagina = 10)
-           => await Pagination.PaginateResult(LogRepository.GetLogs(), paginaAtual, itensPorPagina);
+           => await Pagination.PaginateResultAsync(LogRepository.GetLogs(), paginaAtual, itensPorPagina);
     }
 }

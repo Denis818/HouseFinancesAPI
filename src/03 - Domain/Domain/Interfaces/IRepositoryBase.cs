@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Domain.Interfaces.Repository.Base
+namespace Domain.Interfaces
 {
     public interface IRepositoryBase<TEntity> where TEntity : class, new()
     {

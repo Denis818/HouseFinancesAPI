@@ -1,6 +1,8 @@
 ﻿using Application.Interfaces.Services;
 using Domain.Dtos.Finance;
-using Domain.Models.Finance;
+using Domain.Dtos.Responses;
+using Domain.Enumeradores;
+using Domain.Models;
 using FamilyFinanceApi.Attributes;
 using FamilyFinanceApi.Extensios.Swagger.ExamplesSwagger;
 using FamilyFinanceApi.Utilities;
@@ -11,7 +13,6 @@ using Swashbuckle.AspNetCore.Filters;
 namespace FamilyFinanceApi.Controllers.Finance
 {
     [ApiController]
-    [PermissoesFinance]
     [AutorizationFinance]
     [Route("api/[controller]")]
     public class DespesaController(IServiceProvider service, 
@@ -23,24 +24,27 @@ namespace FamilyFinanceApi.Controllers.Finance
         public async Task<PagedResult<Despesa>> GetAllDespesaAsync(int paginaAtual = 1, int itensPorPagina = 10) =>
             await DespesaServices.GetAllDespesaAsync(paginaAtual, itensPorPagina);
 
+        [HttpGet("by-month")]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(PageDespesabyMonthExample))]
+        public async Task<PagedResult<DespesasPorMesDto>> GetTotalDespesasByMonthAsync(int paginaAtual = 1, int itensPorPagina = 10) =>
+           await DespesaServices.GetTotalDespesasByMonthAsync(paginaAtual, itensPorPagina);
 
         [HttpGet("{id}")]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(DespesaExample))]
-        public async Task<Despesa> GetById(int id)
-           => await DespesaServices.GetByIdAsync(id);
+        public async Task<Despesa> GetById(int id) => await DespesaServices.GetByIdAsync(id);
 
         [HttpPost]
+        [PermissoesFinance(EnumPermissoes.USU_000001)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(DespesaExample))]
-        public async Task<Despesa> Post(DespesaDto vendaDto)
-            => await DespesaServices.InsertAsync(vendaDto);
+        public async Task<Despesa> Post(DespesaDto vendaDto) => await DespesaServices.InsertAsync(vendaDto);
 
         [HttpPut]
+        [PermissoesFinance(EnumPermissoes.USU_000001)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(DespesaExample))]
-        public async Task<Despesa> Put(int id, DespesaDto vendaDto)
-            => await DespesaServices.UpdateAsync(id, vendaDto);
+        public async Task<Despesa> Put(int id, DespesaDto vendaDto) => await DespesaServices.UpdateAsync(id, vendaDto);
 
         [HttpDelete]
-        public async Task Delete(int id)
-            => await DespesaServices.DeleteAsync(id);
+        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        public async Task Delete(int id) => await DespesaServices.DeleteAsync(id);
     }
 }

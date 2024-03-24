@@ -1,8 +1,8 @@
 ﻿using Application.Interfaces.Services;
 using Domain.Converters;
 using Domain.Enumeradores;
-using Domain.Interfaces.Repository.LogApp;
-using Domain.Models.LogApp;
+using Domain.Interfaces;
+using Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;

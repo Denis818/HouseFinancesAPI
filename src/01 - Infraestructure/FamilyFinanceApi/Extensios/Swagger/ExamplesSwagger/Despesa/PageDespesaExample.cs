@@ -1,5 +1,5 @@
 ﻿using Application.Utilities;
-using Domain.Models.Finance;
+using Domain.Models;
 using FamilyFinanceApi.Utilities;
 using ProEventos.API.Controllers.Base;
 using Swashbuckle.AspNetCore.Filters;

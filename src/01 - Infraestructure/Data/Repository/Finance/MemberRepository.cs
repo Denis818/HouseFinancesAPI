@@ -1,7 +1,7 @@
 ﻿using Data.DataContext.Context;
 using Data.Repository.Base;
-using Domain.Interfaces.Repository.Finance;
-using Domain.Models.Finance;
+using Domain.Interfaces;
+using Domain.Models;
 
 namespace Data.Repository.Finance
 {

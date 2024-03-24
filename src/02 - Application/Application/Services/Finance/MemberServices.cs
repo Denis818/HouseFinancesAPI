@@ -3,8 +3,8 @@ using Application.Services.Base;
 using Application.Services.Finance;
 using Domain.Dtos.Finance;
 using Domain.Enumeradores;
-using Domain.Interfaces.Repository.Finance;
-using Domain.Models.Finance;
+using Domain.Interfaces;
+using Domain.Models;
 using FamilyFinanceApi.Utilities;
 
 namespace Application.Interfaces.Services
@@ -13,7 +13,7 @@ namespace Application.Interfaces.Services
         ServiceAppBase<Member, MemberDto, IMemberRepository>(service), IMemberServices
     {
         public async Task<PagedResult<Member>> GetAllMembersAsync(int paginaAtual, int itensPorPagina)
-           => await Pagination.PaginateResult(_repository.Get(), paginaAtual, itensPorPagina);
+           => await Pagination.PaginateResultAsync(_repository.Get(), paginaAtual, itensPorPagina);
         public async Task<Member> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
 
         public async Task<Member> InsertAsync(MemberDto memberDto)

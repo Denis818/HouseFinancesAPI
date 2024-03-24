@@ -1,4 +1,4 @@
-﻿using Domain.Models.LogApp;
+﻿using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.DataContext

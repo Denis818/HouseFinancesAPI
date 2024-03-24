@@ -5,10 +5,9 @@ using Application.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Services.LogApp;
 using Data.Repository.LogApp;
-using Domain.Interfaces.Repository.LogApp;
-using Domain.Interfaces.Repository.Finance;
 using Application.Services.Finance;
 using Data.Repository.Finance;
+using Domain.Interfaces;
 
 namespace Application.Configurations.Extensions.DependencyManagers
 {

@@ -1,6 +1,6 @@
-﻿using Domain.Models.LogApp;
+﻿using Domain.Models;
 
-namespace Domain.Interfaces.Repository.LogApp
+namespace Domain.Interfaces
 {
     public interface ILogApplicationRepository
     {

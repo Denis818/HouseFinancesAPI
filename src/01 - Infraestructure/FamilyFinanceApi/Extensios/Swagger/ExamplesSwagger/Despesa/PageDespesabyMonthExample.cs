@@ -1,16 +1,17 @@
 ﻿using Application.Utilities;
-using Domain.Models;
+using Domain.Dtos.Responses;
+using Domain.Models.Finance;
 using FamilyFinanceApi.Utilities;
 using ProEventos.API.Controllers.Base;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace FamilyFinanceApi.Extensios.Swagger.ExamplesSwagger
 {
-    public class PageMemberExample : IExamplesProvider<ResponseResultDTO<PagedResult<Member>>>
+    public class PageDespesabyMonthExample : IExamplesProvider<ResponseResultDTO<PagedResult<DespesasPorMesDto>>>
     {
-        public ResponseResultDTO<PagedResult<Member>> GetExamples()
+        public ResponseResultDTO<PagedResult<DespesasPorMesDto>> GetExamples()
         {
-            return new ResponseResultDTO<PagedResult<Member>>
+            return new ResponseResultDTO<PagedResult<DespesasPorMesDto>>
             {
                 Dados = new()
                 {
@@ -20,19 +21,19 @@ namespace FamilyFinanceApi.Extensios.Swagger.ExamplesSwagger
                     [
                         new()
                         {
-                            Id = 1,
-                            Nome = "João",
+                            Mes = "Janeiro De 2024",
+                            TotalDespesas = 837.50m
                         },
                         new()
                         {
-                            Id = 2,
-                            Nome = "Larissa",
+                            Mes = "fevereiro De 2024",
+                            TotalDespesas = 337.50m
                         },
-                        new()
+                         new()
                         {
-                            Id = 3,
-                            Nome = "Jorge",
-                        }
+                            Mes = "Março De 2024",
+                            TotalDespesas = 537.50m
+                        },
                     ],
                 },
 

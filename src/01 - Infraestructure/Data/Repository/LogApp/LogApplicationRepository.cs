@@ -1,6 +1,6 @@
 ﻿using Data.DataContext;
-using Domain.Interfaces.Repository.LogApp;
-using Domain.Models.LogApp;
+using Domain.Interfaces;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository.LogApp

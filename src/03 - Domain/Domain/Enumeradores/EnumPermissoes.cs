@@ -5,9 +5,9 @@ namespace Domain.Enumeradores
     public enum EnumPermissoes
     {
         /// <summary>
-        /// Permite ao usuário criar, atualizar e deletar Despesas e Membros
+        /// Permite ao usuário criar, atualizar e deletar.
         /// </summary>
-        [Description("Permite ao usuário criar, atualizar e deletar Despesas e Membros")]
+        [Description("Permite ao usuário criar, atualizar e deletar.")]
         USU_000001 = 1,
 
         /// <summary>

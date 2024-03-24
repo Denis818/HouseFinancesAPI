@@ -1,5 +1,5 @@
 ﻿using Domain.Dtos.Finance;
-using Domain.Models.Finance;
+using Domain.Models;
 using FamilyFinanceApi.Utilities;
 
 namespace Application.Interfaces.Services

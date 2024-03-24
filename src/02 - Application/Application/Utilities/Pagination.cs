@@ -11,7 +11,7 @@ namespace FamilyFinanceApi.Utilities
 
     public class Pagination
     {
-        public static async Task<PagedResult<T>> PaginateResult<T>(IQueryable<T> consulta, int numeroPagina, int tamanhoPagina)
+        public static async Task<PagedResult<T>> PaginateResultAsync<T>(IQueryable<T> consulta, int numeroPagina, int tamanhoPagina)
             where T : class
         {
             var totalItens = await consulta.CountAsync();

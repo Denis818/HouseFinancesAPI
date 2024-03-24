@@ -1,4 +1,4 @@
-﻿namespace Domain.Models.Finance
+﻿namespace Domain.Models
 {
     public class Member
     {

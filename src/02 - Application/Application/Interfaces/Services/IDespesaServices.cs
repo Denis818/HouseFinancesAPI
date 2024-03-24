@@ -1,5 +1,6 @@
 ﻿using Domain.Dtos.Finance;
-using Domain.Models.Finance;
+using Domain.Dtos.Responses;
+using Domain.Models;
 using FamilyFinanceApi.Utilities;
 
 namespace Application.Interfaces.Services
@@ -8,6 +9,7 @@ namespace Application.Interfaces.Services
     {
         Task DeleteAsync(int id);
         Task<PagedResult<Despesa>> GetAllDespesaAsync(int paginaAtual, int itensPorPagina);
+        Task<PagedResult<DespesasPorMesDto>> GetTotalDespesasByMonthAsync(int paginaAtual, int itensPorPagina);
         Task<Despesa> GetByIdAsync(int id);
         Task<Despesa> InsertAsync(DespesaDto despesaDto);
         Task<Despesa> UpdateAsync(int id, DespesaDto despesaDto);
