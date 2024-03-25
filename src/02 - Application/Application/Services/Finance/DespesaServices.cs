@@ -14,7 +14,9 @@ using System.Globalization;
 
 namespace Application.Services.Finance
 {
-    public class DespesaServices(IServiceProvider Service, IMemberServices _memberServices) :
+    public class DespesaServices(IServiceProvider Service, 
+        IMemberServices _memberServices,
+        ICategoriaRepository _categoriaRepository) :
         ServiceAppBase<Despesa, DespesaDto, IDespesaRepository>(Service), IDespesaServices
     {
         #region CRUD
@@ -34,6 +36,13 @@ namespace Application.Services.Finance
         public async Task<Despesa> InsertAsync(DespesaDto despesaDto)
         {
             if (Validator(despesaDto)) return null;
+
+            var categoriaExiste = _categoriaRepository.Get(c => c.Id == despesaDto.CategoriaId);
+            if (categoriaExiste is null)
+            {
+                Notificar(EnumTipoNotificacao.ClientError, "Categoria não existe.");
+                return null;
+            }
 
             var despesa = MapToModel(despesaDto);
 

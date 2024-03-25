@@ -20,6 +20,7 @@ namespace Application.Configurations.Extensions.DependencyManagers
             services.AddScoped<ILogApplicationRepository, LogApplicationRepository>();
             services.AddScoped<IDespesaRepository, DespesaRepository>();
             services.AddScoped<IMemberRepository, MemberRepository>();
+            services.AddScoped<ICategoriaRepository, CategoriaRepository>();
         }
         public static void AddDependecyServices(this IServiceCollection services)
         {
