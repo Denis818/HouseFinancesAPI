@@ -21,7 +21,7 @@ namespace FamilyFinanceApi.Extensios.Swagger.ExamplesSwagger
                         new()
                         {
                             Id = 1,
-                            Categoria = new Categoria { Nome = "Almoço" } ,
+                            Categoria = new Categoria { Descricao = "Almoço" } ,
                             Item = "Arroz",
                             Preco = 15.2m,
                             Quantidade = 3,
@@ -32,7 +32,7 @@ namespace FamilyFinanceApi.Extensios.Swagger.ExamplesSwagger
                         new()
                         {
                             Id = 2,
-                            Categoria = new Categoria { Nome = "Almoço" },
+                            Categoria = new Categoria { Descricao = "Almoço" },
                             Item = "Pães",
                             Preco = 2.30m,
                             Quantidade = 7,

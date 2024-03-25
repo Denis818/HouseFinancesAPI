@@ -14,7 +14,7 @@ namespace FamilyFinanceApi.Extensios.Swagger.ExamplesSwagger
                 Dados = new()
                 {
                     Id = 1,
-                    Categoria = new Categoria { Nome = "Almoço" },
+                    Categoria = new Categoria { Descricao = "Almoço" },
                     Item = "Arroz",
                     Preco = 15.2m,
                     Quantidade = 3,
