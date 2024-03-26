@@ -49,6 +49,12 @@ namespace Application.Services.Finance
                 return null;
             }
 
+            if (categoria.Id == 1 && !categoriaDto.Descricao.StartsWith("Almoço"))
+            {
+                Notificar(EnumTipoNotificacao.Informacao, "Essa categoria deve começar com 'Almoço'.");
+                return null;
+            }
+
             MapDtoToModel(categoriaDto, categoria);
 
             _repository.Update(categoria);
@@ -69,6 +75,12 @@ namespace Application.Services.Finance
             if (categoria == null)
             {
                 Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
+                return;
+            }
+
+            if (categoria.Descricao.StartsWith("Almoço"))
+            {
+                Notificar(EnumTipoNotificacao.Informacao, "Essa categoria faz parta da regra de negócio. Não pode ser deletada");
                 return;
             }
 

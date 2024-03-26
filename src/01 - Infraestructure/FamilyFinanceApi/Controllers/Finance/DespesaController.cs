@@ -1,6 +1,8 @@
 ﻿using Application.Interfaces.Services;
 using Domain.Dtos.Finance;
+using Domain.Enumeradores;
 using Domain.Models;
+using FamilyFinanceApi.Attributes;
 using FamilyFinanceApi.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using ProEventos.API.Controllers.Base;
@@ -8,7 +10,7 @@ using ProEventos.API.Controllers.Base;
 namespace FamilyFinanceApi.Controllers.Finance
 {
     [ApiController]
-    // [AutorizationFinance]
+    [AutorizationFinance]
     [Route("api/[controller]")]
     public class DespesaController(IServiceProvider service,
         IDespesaServices DespesaServices) :
@@ -24,17 +26,17 @@ namespace FamilyFinanceApi.Controllers.Finance
             => await DespesaServices.GetByIdAsync(id);
 
         [HttpPost]
-        //  [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<Despesa> Post(DespesaDto vendaDto)
             => await DespesaServices.InsertAsync(vendaDto);
 
         [HttpPut]
-        //  [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<Despesa> Put(int id, DespesaDto vendaDto)
             => await DespesaServices.UpdateAsync(id, vendaDto);
 
         [HttpDelete]
-        // [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task Delete(int id)
             => await DespesaServices.DeleteAsync(id);
         #endregion

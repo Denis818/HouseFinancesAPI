@@ -10,16 +10,16 @@ namespace FamilyFinanceApi.Attributes
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            if (!context.HttpContext.User.Identity.IsAuthenticated)
-            {
-                var response = new ResponseResultDTO<string>()
-                {
-                    Mensagens = [new Notificacao("Acesso não autorizado.")]
-                };
+            //if (!context.HttpContext.User.Identity.IsAuthenticated)
+            //{
+            //    var response = new ResponseResultDTO<string>()
+            //    {
+            //        Mensagens = [new Notificacao("Acesso não autorizado.")]
+            //    };
 
-                context.Result = new ObjectResult(response) { StatusCode = 401 };
-                return;
-            }
+            //    context.Result = new ObjectResult(response) { StatusCode = 401 };
+            //    return;
+            //}
         }
     }
 }
