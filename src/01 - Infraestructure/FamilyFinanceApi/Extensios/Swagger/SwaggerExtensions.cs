@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Reflection;
 
 namespace FamilyFinanceApi.Extensios.Swagger
 {
@@ -11,14 +9,10 @@ namespace FamilyFinanceApi.Extensios.Swagger
     {
         public static void AddSwaggerAuthorizationJWT(this IServiceCollection services)
         {
-            services.AddSwaggerExamplesFromAssemblies(Assembly.GetExecutingAssembly());
-
             services.AddSwaggerGen(swagger =>
             {
                 swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "FamilyFinanceApi", Version = "v1" });
                 swagger.SchemaFilter<DateSchemaFilter>();
-
-                swagger.ExampleFilters();
 
                 var securitySchema = new OpenApiSecurityScheme
                 {

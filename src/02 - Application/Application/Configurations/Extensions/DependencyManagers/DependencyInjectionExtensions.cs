@@ -25,9 +25,11 @@ namespace Application.Configurations.Extensions.DependencyManagers
         public static void AddDependecyServices(this IServiceCollection services)
         {
             services.AddScoped<IUserServices, UserServices>();
+
             services.AddScoped<ILogApplicationServices, LogApplicationServices>();
             services.AddScoped<IDespesaServices, DespesaServices>();
             services.AddScoped<IMemberServices, MemberServices>();
+            services.AddScoped<ICategoriaServices, CategoriaServices>();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Application.Services.Finance
 {
     public class DespesaServices(IServiceProvider Service, 
         IMemberServices _memberServices,
-        ICategoriaRepository _categoriaRepository) :
+        ICategoriaServices _categoriaServices) :
         ServiceAppBase<Despesa, DespesaDto, IDespesaRepository>(Service), IDespesaServices
     {
         #region CRUD
@@ -27,7 +27,7 @@ namespace Application.Services.Finance
                                     .FirstOrDefaultAsync();
         }
 
-        public async Task<PagedResult<Despesa>> GetAllDespesaAsync(int paginaAtual, int itensPorPagina)
+        public async Task<PagedResult<Despesa>> GetAllAsync(int paginaAtual, int itensPorPagina)
         {
             var query = _repository.Get().Include(c => c.Categoria);
             return await Pagination.PaginateResultAsync(query, paginaAtual, itensPorPagina);
@@ -37,8 +37,7 @@ namespace Application.Services.Finance
         {
             if (Validator(despesaDto)) return null;
 
-            var categoriaExiste = _categoriaRepository.Get(c => c.Id == despesaDto.CategoriaId);
-            if (categoriaExiste is null)
+            if (!await _categoriaServices.Existe(despesaDto.CategoriaId))
             {
                 Notificar(EnumTipoNotificacao.ClientError, "Categoria não existe.");
                 return null;
@@ -108,7 +107,7 @@ namespace Application.Services.Finance
 
         public async Task<DespesasMensaisPorMembroDto> GetTotalParaCadaMembro()
         {
-            int members = await _memberServices.GetAllMembersAsync()
+            int members = await _memberServices.GetAllAsync()
                                                .CountAsync();
 
             var dataMaisRecente = await _repository.Get()

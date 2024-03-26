@@ -34,7 +34,7 @@ namespace Data.Migrations.LogDb
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("ExceptionMessage")
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("varchar(250)");
 
                     b.Property<DateTime>("InclusionDate")
                         .HasColumnType("datetime(6)");
@@ -49,7 +49,7 @@ namespace Data.Migrations.LogDb
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("StackTrace")
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("TypeLog")
                         .HasColumnType("varchar(20)");

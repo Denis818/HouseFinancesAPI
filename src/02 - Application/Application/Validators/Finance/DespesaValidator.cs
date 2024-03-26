@@ -7,8 +7,7 @@ namespace Application.Validators.Finance
     {
         public DespesaValidator()
         {
-            //RuleFor(x => x.Categoria.Nome).NotEmpty().WithMessage("É obrigatório.")
-            //                         .Length(3, 25).WithMessage("Deve ter entre 3 a 25 caracteres.");
+            
 
             RuleFor(x => x.Item).NotEmpty().WithMessage("É obrigatório.")
                                 .Length(3, 25).WithMessage("Deve ter entre 3 a 25 caracteres.");

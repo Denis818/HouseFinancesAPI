@@ -34,9 +34,9 @@ namespace Data.Migrations.LogDb
                     QueryString = table.Column<string>(type: "varchar(100)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     InclusionDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    ExceptionMessage = table.Column<string>(type: "varchar(100)", nullable: true)
+                    ExceptionMessage = table.Column<string>(type: "varchar(250)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    StackTrace = table.Column<string>(type: "varchar(100)", nullable: true)
+                    StackTrace = table.Column<string>(type: "varchar(250)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>

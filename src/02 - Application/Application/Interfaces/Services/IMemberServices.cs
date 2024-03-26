@@ -7,7 +7,7 @@ namespace Application.Interfaces.Services
     public interface IMemberServices
     {
         Task DeleteAsync(int id);
-        IQueryable<Member> GetAllMembersAsync();
+        IQueryable<Member> GetAllAsync();
         Task<Member> GetByIdAsync(int id);
         Task<Member> InsertAsync(MemberDto memberDto);
         Task<Member> UpdateAsync(int id, MemberDto memberDto);

@@ -5,6 +5,7 @@ using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Text.Json;
 
 namespace Application.Services.LogApp
@@ -26,7 +27,7 @@ namespace Application.Services.LogApp
             {
                 UserName = context.User.Identity.Name,
                 TypeLog = typeLog.ToString(),
-                Content = content[..Math.Min(100, content.Length)],
+                Content = ReduzirString(content, 100),
                 InclusionDate = DateTimeZoneProvider.GetBrasiliaTimeZone(DateTime.UtcNow),
                 Method = method,
                 Path = fullUrl,
@@ -38,11 +39,20 @@ namespace Application.Services.LogApp
 
             if (typeLog is EnumTypeLog.Exception)
             {
-                logEntry.StackTrace = ex.StackTrace[..Math.Min(100, content.Length)];
-                logEntry.ExceptionMessage = $"InnerException: {ex.InnerException} | Message: {ex.Message}";
+                var message = $"InnerException: {ex?.InnerException} | Message: {ex?.Message}";
+
+                logEntry.StackTrace = ReduzirString(ex?.StackTrace, 250);
+                logEntry.ExceptionMessage = ReduzirString(message, 250);
             }
 
             await LogRepository.InsertAsync(logEntry);
+        }
+
+        private string ReduzirString(string message, int max)
+        {
+            if (message.IsNullOrEmpty()) message = "";
+
+            return message.Substring(0, Math.Min(max, message.Length));
         }
     }
 }

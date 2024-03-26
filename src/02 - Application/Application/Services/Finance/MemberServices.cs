@@ -13,7 +13,7 @@ namespace Application.Interfaces.Services
     public class MemberServices(IServiceProvider service) :
         ServiceAppBase<Member, MemberDto, IMemberRepository>(service), IMemberServices
     {
-        public IQueryable<Member> GetAllMembersAsync() => _repository.Get();
+        public IQueryable<Member> GetAllAsync() => _repository.Get();
 
         public async Task<Member> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
 
