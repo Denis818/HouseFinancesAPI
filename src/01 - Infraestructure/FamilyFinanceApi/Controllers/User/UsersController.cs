@@ -2,12 +2,10 @@
 using Domain.Dtos.User;
 using Domain.Enumeradores;
 using FamilyFinanceApi.Attributes;
-using FamilyFinanceApi.Extensios.Swagger.ExamplesSwagger.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ProEventos.API.Controllers.Base;
-using Swashbuckle.AspNetCore.Filters;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -28,7 +26,6 @@ namespace Controllers.User
         private readonly IUserServices _userService = userService;
 
         [HttpPost("login")]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(UserTokenExample))]
         public async Task<UserTokenDto> Login(UserDto userDto)
         {
             var userLogin = await _signInManager.PasswordSignInAsync(userDto.Email, userDto.Password,
