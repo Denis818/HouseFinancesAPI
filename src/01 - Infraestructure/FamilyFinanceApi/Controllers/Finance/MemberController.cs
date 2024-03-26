@@ -9,7 +9,7 @@ using ProEventos.API.Controllers.Base;
 namespace FamilyFinanceApi.Controllers.Finance
 {
     [ApiController]
-    [AutorizationFinance]
+    //[AutorizationFinance]
     [Route("api/[controller]")]
     public class MemberController(IServiceProvider service, 
         IMemberServices MemberServices) : 

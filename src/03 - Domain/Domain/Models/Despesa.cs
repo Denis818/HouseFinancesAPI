@@ -12,6 +12,8 @@ namespace Domain.Models
         public string Fornecedor { get; set; }
         public decimal Total { get; set; }
         public Categoria Categoria { get; set; }
+
+        [JsonIgnore]
         public int CategoriaId { get; set; }
 
         [JsonConverter(typeof(DateFormatConverter))]
