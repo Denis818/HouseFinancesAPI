@@ -4,6 +4,7 @@ using Domain.Models;
 using Domain.Models.Dtos.Finance;
 using FamilyFinanceApi.Attributes;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProEventos.API.Controllers.Base;
 
 namespace FamilyFinanceApi.Controllers.Finance

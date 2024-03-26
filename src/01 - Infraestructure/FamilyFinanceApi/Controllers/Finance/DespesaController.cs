@@ -43,13 +43,13 @@ namespace FamilyFinanceApi.Controllers.Finance
 
         [HttpGet("total-por-membro")]
         public async Task<DespesasPorMembroDto> GetTotalParaCadaMembro() 
-            => await DespesaServices.GetTotalParaCadaMembro();
+            => await DespesaServices.GetTotalParaCadaMembroAsync();
 
         [HttpGet("total-por-categoria")]
         public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoria()
-            => await DespesaServices.GetTotalPorCategoria();
+            => await DespesaServices.GetTotalPorCategoriaAsync();
 
-        [HttpGet("totais-por-mes")]
+        [HttpGet("total-por-mes")]
         public async Task<PagedResult<DespesasPorMesDto>> GetTotalDespesasByMonthAsync(int paginaAtual = 1, int itensPorPagina = 10)
             => await DespesaServices.GetTotaisComprasPorMesAsync(paginaAtual, itensPorPagina);
     }

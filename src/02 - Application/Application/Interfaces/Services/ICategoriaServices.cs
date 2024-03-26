@@ -11,6 +11,6 @@ namespace Application.Interfaces.Services
         Task<Categoria> InsertAsync(CategoriaDto categoriaDto);
         Task<Categoria> UpdateAsync(int id, CategoriaDto categoriaDto);
         Task<Categoria> GetByIdAsync(int id);
-
+        Task<(int, int)> GetIdsAluguelAlmocoAsync();
     }
 }

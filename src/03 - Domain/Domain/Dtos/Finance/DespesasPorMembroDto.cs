@@ -1,6 +1,15 @@
-﻿using System.Globalization;
-
-namespace Domain.Dtos.Finance
+﻿namespace Domain.Dtos.Finance
 {
-    public record DespesasPorMembroDto(decimal TotalPorMembro, decimal TotalDoMes, string Mes);
+    public class DespesasPorMembroDto()
+    {
+        public decimal TotalDoMes { get; set; }
+        public string Mes { get; set; }
+        public List<DespesaPorMembro> DespesasPorMembros { get; set; }
+    }
+
+    public class DespesaPorMembro
+    {
+        public string Nome { get; set; }
+        public decimal Valor { get; set; }
+    }
 }

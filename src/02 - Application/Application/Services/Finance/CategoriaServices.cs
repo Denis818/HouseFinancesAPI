@@ -1,4 +1,5 @@
-﻿using Application.Constants;
+﻿using Application.Configurations.Extensions.Help;
+using Application.Constants;
 using Application.Interfaces.Services;
 using Application.Services.Base;
 using Domain.Enumeradores;
@@ -7,12 +8,15 @@ using Domain.Models;
 using Domain.Models.Dtos.Finance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Application.Services.Finance
 {
     public class CategoriaServices(IServiceProvider Service) :
         ServiceAppBase<Categoria, CategoriaDto, ICategoriaRepository>(Service), ICategoriaServices
     {
+        #region CRUD
         public async Task<IEnumerable<Categoria>> GetAllAsync()
             => await _repository.Get().ToListAsync();
 
@@ -49,9 +53,12 @@ namespace Application.Services.Finance
                 return null;
             }
 
-            if (categoria.Id == 1 && !categoriaDto.Descricao.StartsWith("Almoço"))
+            (int idAlmoco, int idAluguel) = await GetIdsAluguelAlmocoAsync();
+
+            if (categoria.Id == idAlmoco || categoria.Id == idAluguel)
             {
-                Notificar(EnumTipoNotificacao.Informacao, "Essa categoria deve começar com 'Almoço'.");
+                Notificar(EnumTipoNotificacao.Informacao,
+                    "Essa categoria faz parta da regra de negócio. Não pode ser alterada.");
                 return null;
             }
 
@@ -78,9 +85,11 @@ namespace Application.Services.Finance
                 return;
             }
 
-            if (categoria.Descricao.StartsWith("Almoço"))
+            (int idAlmoco, int idAluguel) = await GetIdsAluguelAlmocoAsync();
+            if (categoria.Id == idAlmoco || categoria.Id == idAluguel)
             {
-                Notificar(EnumTipoNotificacao.Informacao, "Essa categoria faz parta da regra de negócio. Não pode ser deletada");
+                Notificar(EnumTipoNotificacao.Informacao, 
+                    "Essa categoria faz parta da regra de negócio. Não pode ser deletada");
                 return;
             }
 
@@ -94,6 +103,15 @@ namespace Application.Services.Finance
 
             Notificar(EnumTipoNotificacao.Informacao, "Registro Deletado");
         }
+        #endregion
 
+        public async Task<(int, int)> GetIdsAluguelAlmocoAsync()
+        {
+            var categorias = await GetAllAsync();
+            var idAlmoco = categorias.FirstOrDefault(c => c.Descricao.StartsWith("Almoço"));
+            var idAluguel = categorias.FirstOrDefault(c => c.Descricao.StartsWith("Aluguel"));
+
+            return (idAlmoco.Id, idAluguel.Id);
+        }
     }
 }
