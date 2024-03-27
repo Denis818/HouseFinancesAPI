@@ -7,7 +7,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["src/01 - Infraestructure/FamilyFinanceApi/FamilyFinanceApi.csproj", "FamilyFinanceApi/"]
 
-RUN dotnet restore "src/01 - Infraestructure/FamilyFinanceApi/FamilyFinanceApi.csproj"
+RUN dotnet restore "./src/01 - Infraestructure/FamilyFinanceApi/FamilyFinanceApi.csproj"
 
 COPY . .
 WORKDIR "/src/01 - Infraestructure/FamilyFinanceApi"
