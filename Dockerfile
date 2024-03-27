@@ -20,7 +20,7 @@ RUN dotnet build "./src/01 - Infraestructure/FamilyFinanceApi/FamilyFinanceApi.c
 
 FROM build AS publish
 
-RUN dotnet publish "./src/01 - Infraestructure/FamilyFinanceApi//FamilyFinanceApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./src/01 - Infraestructure/FamilyFinanceApi/FamilyFinanceApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
