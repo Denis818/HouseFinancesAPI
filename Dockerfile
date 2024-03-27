@@ -15,7 +15,7 @@ COPY ["src/03 - Domain/Domain/Domain.csproj", "src/03 - Domain/Domain/"]
 RUN dotnet restore "./src/01 - Infraestructure/FamilyFinanceApi/FamilyFinanceApi.csproj"
 
 COPY . .
-WORKDIR "/src/src/01 - Infraestructure/FamilyFinanceApi"
+WORKDIR "/src/01 - Infraestructure/FamilyFinanceApi"
 RUN dotnet build "./FamilyFinanceApi.csproj" -c Release -o /app/build
 
 FROM build AS publish
