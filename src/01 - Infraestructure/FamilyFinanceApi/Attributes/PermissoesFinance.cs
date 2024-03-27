@@ -13,19 +13,19 @@ namespace FamilyFinanceApi.Attributes
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            //var possuiTodasPermissoes = EnumPermissoes.All(permissao =>
-            //context.HttpContext.User.Claims.Any(claim => claim.Value == permissao));
+            var possuiTodasPermissoes = EnumPermissoes.All(permissao =>
+            context.HttpContext.User.Claims.Any(claim => claim.Value == permissao));
 
-            //if (!possuiTodasPermissoes)
-            //{
-            //    var response = new ResponseResultDTO<string>()
-            //    {
-            //        Mensagens = [new Notificacao("Você não tem permissão para acessar esse recurso.")]
-            //    };
+            if (!possuiTodasPermissoes)
+            {
+                var response = new ResponseResultDTO<string>()
+                {
+                    Mensagens = [new Notificacao("Você não tem permissão para acessar esse recurso.")]
+                };
 
-            //    context.Result = new ObjectResult(response) { StatusCode = 401 };
-            //    return;
-            //}
+                context.Result = new ObjectResult(response) { StatusCode = 401 };
+                return;
+            }
         }
     }
 }
