@@ -13,9 +13,12 @@ COPY ["src/01 - Infraestructure/FamilyFinanceApi/FamilyFinanceApi.csproj", "src/
 COPY ["src/02 - Application/Application/Application.csproj", "src/02 - Application/Application/"]
 COPY ["src/01 - Infraestructure/Data/Data.csproj", "src/01 - Infraestructure/Data/"]
 COPY ["src/03 - Domain/Domain/Domain.csproj", "src/03 - Domain/Domain/"]
+
 RUN dotnet restore "./src/01 - Infraestructure/FamilyFinanceApi/FamilyFinanceApi.csproj"
+
 COPY . .
 WORKDIR "/src/src/01 - Infraestructure/FamilyFinanceApi"
+
 RUN dotnet build "./FamilyFinanceApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
