@@ -24,10 +24,19 @@ namespace ProEventos.API.Controllers.Base
         {
             if (_notificador.ListNotificacoes.Count > 0)
             {
+                var listInformacoes = _notificador.ListNotificacoes.Where(item => item.StatusCode == EnumTipoNotificacao.Informacao);
+                if (listInformacoes.Any())
+                {
+                    return Ok(new ResponseResultDTO<TResponse>(contentResponse)
+                    {
+                        Mensagens = listInformacoes.ToArray()
+                    });
+                }
+
                 var ListErros = _notificador.ListNotificacoes.Where(item => item.StatusCode == EnumTipoNotificacao.ClientError);
                 if (ListErros.Any())
                 {
-                    return BadRequest(new ResponseResultDTO<TResponse>(default)
+                    return BadRequest(new ResponseResultDTO<TResponse>(contentResponse)
                     {
                         Mensagens = ListErros.ToArray()
                     });
@@ -41,15 +50,6 @@ namespace ProEventos.API.Controllers.Base
                         Mensagens = listErrosInternos.ToArray()
 
                     }) { StatusCode = 500 };
-                }
-
-                var listInformacoes = _notificador.ListNotificacoes.Where(item => item.StatusCode == EnumTipoNotificacao.Informacao);
-                if (listInformacoes.Any())
-                {
-                    return Ok(new ResponseResultDTO<TResponse>(contentResponse)
-                    {
-                        Mensagens = listInformacoes.ToArray()
-                    });
                 }
             }
 

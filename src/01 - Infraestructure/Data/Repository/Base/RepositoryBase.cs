@@ -29,9 +29,9 @@ namespace Data.Repository.Base
         public async Task<TEntity> GetByIdAsync(int id) => await DbSet.FindAsync(id);
 
         public async Task InsertAsync(TEntity entity) => await DbSet.AddAsync(entity);
+        public async Task InsertRangeAsync(List<TEntity> entity) => await DbSet.AddRangeAsync(entity);
 
         public void Update(TEntity entity) => DbSet.Update(entity);
-        public void UpdateRange(List<TEntity> entity) => DbSet.UpdateRange(entity);
 
         public void Delete(TEntity entity) => DbSet.Remove(entity);
         public void DeleteRange(TEntity[] entityArray) => DbSet.RemoveRange(entityArray);

@@ -52,7 +52,7 @@ namespace Application.Services.Base
 
                 foreach (var failure in groupedFailures)
                 {
-                    Notificar(EnumTipoNotificacao.ClientError, $"{failure.PropertyName}: {failure.Errors}");
+                    Notificar(EnumTipoNotificacao.Informacao, $"{failure.PropertyName}: {failure.Errors}");
                 }
 
                 return true;

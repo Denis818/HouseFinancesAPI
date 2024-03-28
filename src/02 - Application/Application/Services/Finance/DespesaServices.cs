@@ -104,6 +104,49 @@ namespace Application.Services.Finance
         }
         #endregion
 
+        public async Task<IEnumerable<Despesa>> InsertRangeAsync(IAsyncEnumerable<DespesaDto> listDespesasDto)
+        {
+            var totalRecebido = 0;
+            var despesasParaInserir = new List<Despesa>();
+
+            await foreach (var despesaDto in listDespesasDto)
+            {
+                totalRecebido++;
+
+                if (Validator(despesaDto)) continue; //As notificações já são tratadas dentro do Validator
+
+                if (!await _categoriaServices.Existe(despesaDto.CategoriaId))
+                {
+                    Notificar(EnumTipoNotificacao.Informacao, $"Categoria com id:{despesaDto.CategoriaId} não existe.");
+                    continue;
+                }
+
+                var despesa = MapToModel(despesaDto);
+                despesa.Total = despesa.Preco * despesa.Quantidade;
+                despesasParaInserir.Add(despesa);
+            }
+
+            if (despesasParaInserir.Count == 0) return [];
+
+            await _repository.InsertRangeAsync(despesasParaInserir);
+            if (!await _repository.SaveChangesAsync())
+            {
+                Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.InsertError);
+                return null;
+            }
+
+            Notificar(EnumTipoNotificacao.Informacao,
+                $"{despesasParaInserir.Count} de {totalRecebido} despesas foram inseridas com sucesso. Algumas não eram validas.");
+
+            var despesasInseridas = await _repository.Get(d => despesasParaInserir.Select(p => p.Id)
+                                                     .Contains(d.Id))
+                                                     .Include(c => c.Categoria)
+                                                     .ToListAsync();
+
+            return despesasInseridas;
+        }
+
+
         public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync()
         {
             var (inicioDoMes, fimDoMes) = await GetPeriodoParaCalculoAsync();

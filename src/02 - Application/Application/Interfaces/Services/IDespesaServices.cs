@@ -11,6 +11,8 @@ namespace Application.Interfaces.Services
         Task<Despesa> GetByIdAsync(int id);
         Task<Despesa> InsertAsync(DespesaDto despesaDto);
         Task<Despesa> UpdateAsync(int id, DespesaDto despesaDto);
+
+        Task<IEnumerable<Despesa>> InsertRangeAsync(IAsyncEnumerable<DespesaDto> listDespesasDto);
         Task<DespesasPorMembroDto> GetTotalParaCadaMembroAsync();
         Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync();
         Task<PagedResult<DespesasPorMesDto>> GetTotaisComprasPorMesAsync(int paginaAtual, int itensPorPagina);

@@ -41,6 +41,12 @@ namespace FamilyFinanceApi.Controllers.Finance
             => await DespesaServices.DeleteAsync(id);
         #endregion
 
+
+        [HttpPost("inserir-lote")]
+        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        public async Task<IEnumerable<Despesa>> PostRange(IAsyncEnumerable<DespesaDto> vendaDto)
+           => await DespesaServices.InsertRangeAsync(vendaDto);
+
         [HttpGet("total-por-membro")]
         public async Task<DespesasPorMembroDto> GetTotalParaCadaMembro() 
             => await DespesaServices.GetTotalParaCadaMembroAsync();
