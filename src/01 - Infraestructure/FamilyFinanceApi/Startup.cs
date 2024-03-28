@@ -16,7 +16,10 @@ namespace FamilyFinanceApi
             services.AddControllers(options =>
             {
                 options.Filters.Add(typeof(LogInformationFilter));
-            });
+            }).AddJsonOptions(opt =>
+            {
+                opt.JsonSerializerOptions.PropertyNamingPolicy = null;
+            }); ;
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
