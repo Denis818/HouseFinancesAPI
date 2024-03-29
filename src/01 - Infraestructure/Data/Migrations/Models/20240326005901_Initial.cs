@@ -48,7 +48,7 @@ namespace Data.Migrations.Models
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Item = table.Column<string>(type: "varchar(20)", nullable: true)
+                    Item = table.Column<string>(type: "varchar(40)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Preco = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
                     Quantidade = table.Column<int>(type: "int", nullable: false),

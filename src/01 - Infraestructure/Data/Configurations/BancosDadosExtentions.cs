@@ -1,6 +1,9 @@
 ﻿using Data.DataContext;
 using Data.DataContext.Context;
 using Domain.Enumeradores;
+using Domain.Interfaces;
+using Domain.Models;
+using Domain.Models.Dtos.Finance;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,33 +15,27 @@ namespace Application.Configurations.UserMain
     {
         public static void ConfigurarBancoDados(this IServiceProvider services)
         {
-            using var serviceScope = services.CreateScope();
-            var serviceProvider = serviceScope.ServiceProvider;
-
-            var vendasDbContext = serviceProvider.GetRequiredService<FinanceDbContext>();
-
-          //  bool deletado = vendasDbContext.Database.EnsureDeleted();
-
+            var vendasDbContext = services.GetRequiredService<FinanceDbContext>();
             if (!vendasDbContext.Database.CanConnect())
             {
                 vendasDbContext.Database.Migrate();
+                PrepareCategoryAndMember(services);
             }
 
-            var logDbContext = serviceProvider.GetRequiredService<LogDbContext>();
-          //  bool dseletado = logDbContext.Database.EnsureDeleted();
-
+            var logDbContext = services.GetRequiredService<LogDbContext>();
             if (!logDbContext.Database.CanConnect())
             {
                 logDbContext.Database.Migrate();
             }
 
-            PrepareUserAdmin(serviceScope);
-            PrepareUserMember(serviceScope);
+            PrepareUserAdmin(services);
+            PrepareUserMember(services);
         }
 
-        public static void PrepareUserAdmin(IServiceScope serviceScope)
+        public static void PrepareUserAdmin(IServiceProvider service)
         {
-            var _userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var _userManager = service.GetRequiredService<UserManager<IdentityUser>>();
+
             var usuarioInicial = _userManager.FindByEmailAsync("master@gmail.com").GetAwaiter().GetResult();
 
             if (usuarioInicial is null)
@@ -71,9 +68,9 @@ namespace Application.Configurations.UserMain
                 }
             }
         }
-        public static void PrepareUserMember(IServiceScope serviceScope)
+        public static void PrepareUserMember(IServiceProvider service)
         {
-            var _userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var _userManager = service.GetRequiredService<UserManager<IdentityUser>>();
             var usuarioInicial = _userManager.FindByEmailAsync("visitante@gmail.com").GetAwaiter().GetResult();
 
             if (usuarioInicial is null)
@@ -89,8 +86,38 @@ namespace Application.Configurations.UserMain
                     SecurityStamp = Guid.NewGuid().ToString()
                 };
 
-                _userManager.CreateAsync(user, "Abc@123456").Wait();    
+                _userManager.CreateAsync(user, "Abc@123456").Wait();
             }
+        }
+
+        public static void PrepareCategoryAndMember(IServiceProvider service)
+        {
+            var categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
+            var memberRepository = service.GetRequiredService<IMemberRepository>();
+
+            var listCategoria = new List<Categoria>
+            {
+                new() { Descricao = "Almoço/Janta" },
+                new() { Descricao = "Aluguel" },
+                new() { Descricao = "Limpeza" },
+                new() { Descricao = "Lanches" },
+                new() { Descricao = "Higiêne" },
+                new() { Descricao = "Internet" },
+                new() { Descricao = "Conta de Água" },
+                new() { Descricao = "Conta de Luz" }
+
+            };
+
+            var listMember = new List<Member>
+            {
+                new() { Nome = "Bruno" },
+                new() { Nome = "Denis" },
+                new() { Nome = "Valdirene" },
+                new() { Nome = "Peu" }
+            };
+
+            categoriaRepository.InsertRangeAsync(listCategoria).Wait();
+            memberRepository.InsertRangeAsync(listMember).Wait();
         }
     }
 }

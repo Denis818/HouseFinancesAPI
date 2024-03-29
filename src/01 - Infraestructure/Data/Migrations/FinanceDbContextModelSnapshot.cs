@@ -56,7 +56,7 @@ namespace Data.Migrations
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("Item")
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("varchar(40)");
 
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(5,2)");
