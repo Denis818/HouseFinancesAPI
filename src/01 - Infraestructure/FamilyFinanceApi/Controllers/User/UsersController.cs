@@ -28,6 +28,8 @@ namespace Controllers.User
         [HttpPost("login")]
         public async Task<UserTokenDto> Login(UserDto userDto)
         {
+            if (userDto.Email.ToLower() == "master") userDto.Email = "master@gmail.com";
+
             var userLogin = await _signInManager.PasswordSignInAsync(userDto.Email, userDto.Password,
                                                                      isPersistent: false, lockoutOnFailure: false);
 
