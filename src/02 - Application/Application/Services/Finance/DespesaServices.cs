@@ -113,7 +113,7 @@ namespace Application.Services.Finance
             {
                 totalRecebido++;
 
-                if (Validator(despesaDto)) continue; //As notificações já são tratadas dentro do Validator
+                if (Validator(despesaDto)) continue;
 
                 if (!await _categoriaServices.Existe(despesaDto.CategoriaId))
                 {
@@ -138,7 +138,8 @@ namespace Application.Services.Finance
             Notificar(EnumTipoNotificacao.Informacao,
                 $"{despesasParaInserir.Count} de {totalRecebido} despesas foram inseridas com sucesso. Algumas não eram validas.");
 
-            var despesasInseridas = await _repository.Get(d => despesasParaInserir.Select(p => p.Id)
+            var ids = despesasParaInserir.Select(d => d.Id).ToList();
+            var despesasInseridas = await _repository.Get(d => ids
                                                      .Contains(d.Id))
                                                      .Include(c => c.Categoria)
                                                      .ToListAsync();
