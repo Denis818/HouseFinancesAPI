@@ -22,7 +22,7 @@ namespace Controllers.User
         {
             if(userDto.Email.IsNullOrEmpty() || userDto.Password.IsNullOrEmpty())
             {
-                Notificar(EnumTipoNotificacao.Informacao, "Email ou Senha incorretos.");
+                Notificar(EnumTipoNotificacao.ClientError, "Email ou Senha incorretos.");
                 return null;
             }
 
@@ -34,7 +34,7 @@ namespace Controllers.User
 
             if (!userLogin.Succeeded)
             {
-                Notificar(EnumTipoNotificacao.Informacao, "Email ou Senha incorretos.");
+                Notificar(EnumTipoNotificacao.ClientError, "Email ou Senha incorretos.");
                 return null;
             }
 
