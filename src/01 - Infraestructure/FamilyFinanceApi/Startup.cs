@@ -4,6 +4,7 @@ using Data.Configurations.Extensions;
 using FamilyFinanceApi.Extensios.Swagger;
 using FamilyFinanceApi.FiltersControllers;
 using ProEventos.API.Configuration.Middleware;
+using System.Text.Json;
 
 namespace FamilyFinanceApi
 {
@@ -18,8 +19,8 @@ namespace FamilyFinanceApi
                 options.Filters.Add(typeof(LogInformationFilter));
             }).AddJsonOptions(opt =>
             {
-                opt.JsonSerializerOptions.PropertyNamingPolicy = null;
-            }); ;
+                opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            });
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
