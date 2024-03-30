@@ -1,4 +1,6 @@
-﻿using Domain.Enumeradores;
+﻿using Domain.Dtos.User;
+using Domain.Enumeradores;
+using System.Security.Claims;
 
 namespace Application.Interfaces.Services
 {
@@ -6,5 +8,6 @@ namespace Application.Interfaces.Services
     {
         public string Name { get; }
         bool PossuiPermissao(params EnumPermissoes[] permissoesParaValidar);
+        UserTokenDto GerarToken(UserDto userDto, Claim[] permissoes);
     }
 }

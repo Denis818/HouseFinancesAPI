@@ -6,86 +6,53 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ProEventos.API.Controllers.Base;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Controllers.User
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController(UserManager<IdentityUser> userManager,
-        SignInManager<IdentityUser> signInManager,
-        IConfiguration configuration,
-        IServiceProvider service,
-        IUserServices userService) : BaseApiController(service)
+    public class UsersController(
+        UserManager<IdentityUser> UserManager,
+        SignInManager<IdentityUser> SignInManager,
+        IUserServices UserService, 
+        IServiceProvider service) : BaseApiController(service)
     {
-        private readonly UserManager<IdentityUser> _userManager = userManager;
-        private readonly SignInManager<IdentityUser> _signInManager = signInManager;
-        private readonly IConfiguration _configuration = configuration;
-        private readonly IUserServices _userService = userService;
-
         [HttpPost("login")]
         public async Task<UserTokenDto> Login(UserDto userDto)
         {
-            if (userDto.Email.ToLower() == "master") userDto.Email = "master@gmail.com";
+            if(userDto.Email.IsNullOrEmpty() || userDto.Password.IsNullOrEmpty())
+            {
+                Notificar(EnumTipoNotificacao.Informacao, "Email ou Senha incorretos.");
+                return null;
+            }
 
-            var userLogin = await _signInManager.PasswordSignInAsync(userDto.Email, userDto.Password,
+            if (userDto.Email.ToLower() == "master") 
+                userDto.Email = _configuration["UserMaster:Email"];
+
+            var userLogin = await SignInManager.PasswordSignInAsync(userDto.Email, userDto.Password,
                                                                      isPersistent: false, lockoutOnFailure: false);
 
             if (!userLogin.Succeeded)
             {
-                Notificar("Email ou Senha incorretos.", EnumTipoNotificacao.ClientError);
+                Notificar(EnumTipoNotificacao.Informacao, "Email ou Senha incorretos.");
                 return null;
             }
 
-            var user = await _userManager.FindByEmailAsync(userDto.Email);
-            var claims = await _userManager.GetClaimsAsync(user);
+            var user = await UserManager.FindByEmailAsync(userDto.Email);
+            var claims = await UserManager.GetClaimsAsync(user);
 
-            return GerarToken(userDto, claims.ToArray());
+            return UserService.GerarToken(userDto, claims.ToArray());
         }
 
         [HttpGet("info")]
         [AutorizationFinance]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public UserInfoDto UserInfo() => new(_userService.Name, _userService.PossuiPermissao(EnumPermissoes.USU_000001));
+        public UserInfoDto UserInfo() => new(UserService.Name, UserService.PossuiPermissao(EnumPermissoes.USU_000001));
 
         [HttpGet("logout")]
         [AutorizationFinance]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task Logout() => await _signInManager.SignOutAsync();
+        public async Task Logout() => await SignInManager.SignOutAsync();
 
-        private UserTokenDto GerarToken(UserDto userDto, Claim[] permissoes)
-        {
-            var claims = new List<Claim>
-            {
-                new(JwtRegisteredClaimNames.UniqueName, userDto.Email),
-                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-
-            claims.AddRange(permissoes);
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]));
-
-            var credenciais = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var expirationFormat = DateTime.UtcNow.AddHours(int.Parse(_configuration["TokenConfiguration:ExpireHours"]));
-
-            JwtSecurityToken token = new(
-              issuer: _configuration["TokenConfiguration:Issuer"],
-              audience: _configuration["TokenConfiguration:Audience"],
-              claims: claims,
-              expires: expirationFormat,
-              signingCredentials: credenciais);
-
-            Notificar("Data de expiração no formato UTC.", EnumTipoNotificacao.Informacao);
-
-            return new UserTokenDto()
-            {
-                Authenticated = true,
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Expiration = expirationFormat,
-            };
-        }
     }
 }

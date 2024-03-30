@@ -9,6 +9,7 @@ namespace ProEventos.API.Controllers.Base
     public abstract class BaseApiController(IServiceProvider service) : Controller
     {
         private readonly INotificador _notificador = service.GetRequiredService<INotificador>();
+        protected readonly IConfiguration _configuration = service.GetRequiredService<IConfiguration>();
 
         public override void OnActionExecuted(ActionExecutedContext context)
         {
@@ -59,7 +60,7 @@ namespace ProEventos.API.Controllers.Base
             });
         }
 
-        protected void Notificar(string mesage, EnumTipoNotificacao tipo)
+        protected void Notificar(EnumTipoNotificacao tipo, string mesage)
             => _notificador.Add(new Notificacao(mesage, tipo));
     }
 
