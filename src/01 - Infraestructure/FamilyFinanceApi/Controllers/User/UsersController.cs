@@ -26,7 +26,7 @@ namespace Controllers.User
                 return null;
             }
 
-            if (userDto.Email.ToLower() == "master") 
+            if (userDto.Email.Replace(" ", "").ToLower() == "master") 
                 userDto.Email = _configuration["UserMaster:Email"];
 
             var userLogin = await SignInManager.PasswordSignInAsync(userDto.Email, userDto.Password,
