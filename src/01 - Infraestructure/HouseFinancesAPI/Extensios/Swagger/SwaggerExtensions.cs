@@ -50,7 +50,7 @@ namespace HouseFinancesAPI.Extensios.Swagger
             });
         }
 
-        public static void ConfigureSwaggerUI(this IApplicationBuilder app, IWebHostEnvironment env)
+        public static void ConfigureSwaggerUI(this WebApplication app)
         {
             app.UseStaticFiles();
             app.UseSwagger();
@@ -60,7 +60,7 @@ namespace HouseFinancesAPI.Extensios.Swagger
                 
                 c.RoutePrefix = "Doc";
                 c.DocumentTitle = "House Finances API";
-                c.HeadContent = env.ReadFileFromRootPath("html/swagger-head.html");
+                c.HeadContent = app.ReadFileFromRootPath("html/swagger-head.html");
             });
         }
 

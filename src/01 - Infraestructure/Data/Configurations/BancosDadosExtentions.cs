@@ -13,8 +13,11 @@ namespace Application.Configurations.UserMain
 {
     public static class SeedUser
     {
-        public static void ConfigurarBancoDados(this IServiceProvider services)
+        public static void ConfigurarBancoDados(this IServiceProvider serviceProvider)
         {
+            using var serviceScope = serviceProvider.CreateScope();
+            var services = serviceScope.ServiceProvider;
+
             var vendasDbContext = services.GetRequiredService<FinanceDbContext>();
             if (!vendasDbContext.Database.CanConnect())
             {

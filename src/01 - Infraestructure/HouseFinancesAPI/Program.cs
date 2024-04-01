@@ -1,32 +1,39 @@
-using Serilog;
-using Serilog.Sinks.SystemConsole.Themes;
+using Application.Configurations.Extensions.DependencyManagers;
+using Application.Configurations.UserMain;
+using HouseFinancesAPI.Extensios.Swagger;
+using ProEventos.API.Configuration.Middleware;
+using HouseFinancesAPI.Extensios.Application;
 
-namespace HouseFinancesAPI
+var builder = WebApplication.CreateBuilder(args);
+builder.SetupApplication();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddApiDependencyServices(builder.Configuration); 
+builder.Services.AddSwaggerAuthorizationJWT();
+
+var app = builder.Build();
+
+app.ConfigureSwaggerUI();
+
+app.UseCorsPolicy();
+
+app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.Services.ConfigurarBancoDados();
+
+app.UseMiddleware<MiddlewareException>();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
+
+app.MapControllers();
+app.MapGet("/{*path}", async context =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+    context.Response.Redirect("/Doc");
+    await Task.CompletedTask;
+});
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .UseSerilog((hosting, loggerConfiguration) =>
-                {
-                    loggerConfiguration
-                    .ReadFrom.Configuration(hosting.Configuration).Enrich.FromLogContext()
-                    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm} {Level:u3}] {Message:lj}{NewLine}{Exception}\n",
-                     theme: AnsiConsoleTheme.Sixteen);
-                })
-                .ConfigureAppConfiguration((hosting, config) =>
-                {
-                    config.AddJsonFile($"appsettings.{hosting.HostingEnvironment.EnvironmentName}.json", optional: false, reloadOnChange: true);
-                })
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    var port = Environment.GetEnvironmentVariable("PORT") ?? "3000";
-                    webBuilder.UseStartup<Startup>().UseUrls($"http://0.0.0.0:{port}");
-                });
-    }
-}
+app.Run();

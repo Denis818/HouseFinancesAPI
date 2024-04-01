@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Builder;
 
 namespace Application.Configurations.Extensions.Help
 {
@@ -7,10 +7,7 @@ namespace Application.Configurations.Extensions.Help
         public static decimal RoundTo(this decimal soucer, int decimalPlaces)
             => Math.Round(soucer, decimalPlaces);
 
-        public static string RootPathCombine(this string soucer, IWebHostEnvironment env)
-            => Path.Combine(env.WebRootPath, soucer);
-
-        public static string ReadFileFromRootPath(this IWebHostEnvironment env, string soucer) 
-            => File.ReadAllText(Path.Combine(env.WebRootPath, soucer));
+        public static string ReadFileFromRootPath(this WebApplication app, string soucer) 
+            => File.ReadAllText(Path.Combine(app.Environment.WebRootPath, soucer));
     }
 }
