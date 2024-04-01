@@ -1,7 +1,7 @@
 ﻿using Domain.Models;
 using Domain.Models.Dtos.Finance;
 
-namespace Application.Interfaces.Services
+namespace Application.Interfaces.Services.Finance
 {
     public interface ICategoriaServices
     {

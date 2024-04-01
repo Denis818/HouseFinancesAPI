@@ -1,6 +1,6 @@
 ﻿namespace Domain.Dtos.Finance
 {
-    public class DespesasPorMembroDto()
+    public class RelatorioDespesasMensais()
     {
         public decimal TotalDoMes { get; set; }
         public string Mes { get; set; }

@@ -1,37 +1,37 @@
-﻿using Application.Interfaces.Services;
-using Domain.Dtos.Finance;
+﻿using Domain.Dtos.Finance;
 using Domain.Enumeradores;
 using Domain.Models;
 using FamilyFinanceApi.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ProEventos.API.Controllers.Base;
+using FamilyFinanceApi.Controllers.Base;
+using Application.Interfaces.Services.Finance;
 
 namespace FamilyFinanceApi.Controllers.Finance
 {
     [ApiController]
     [AutorizationFinance]
     [Route("api/[controller]")]
-    public class MemberController(IServiceProvider service,
-        IMemberServices MemberServices) :
+    public class MembroController(IServiceProvider service,
+        IMembroServices MemberServices) :
         BaseApiController(service)
     {
         [HttpGet]
-        public async Task<IEnumerable<Member>> GetAllDespesaAsync() =>
+        public async Task<IEnumerable<Membro>> GetAllDespesaAsync() =>
             await MemberServices.GetAllAsync().ToListAsync();
 
         [HttpGet("{id}")]
-        public async Task<Member> GetById(int id)
+        public async Task<Membro> GetById(int id)
            => await MemberServices.GetByIdAsync(id);
 
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task<Member> Post(MemberDto vendaDto)
+        public async Task<Membro> Post(MembroDto vendaDto)
             => await MemberServices.InsertAsync(vendaDto);
 
         [HttpPatch]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task<Member> Put(int id, MemberDto vendaDto)
+        public async Task<Membro> Put(int id, MembroDto vendaDto)
             => await MemberServices.UpdateAsync(id, vendaDto);
 
         [HttpDelete]

@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Application.Validators.Finance
 {
-    public class MembroValidator : AbstractValidator<MemberDto>
+    public class MembroValidator : AbstractValidator<MembroDto>
     {
         public MembroValidator()
         {

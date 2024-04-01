@@ -93,7 +93,7 @@ namespace Application.Configurations.UserMain
         public static void PrepareCategoryAndMember(IServiceProvider service)
         {
             var categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
-            var memberRepository = service.GetRequiredService<IMemberRepository>();
+            var memberRepository = service.GetRequiredService<IMembroRepository>();
 
             var listCategoria = new List<Categoria>
             {
@@ -108,7 +108,7 @@ namespace Application.Configurations.UserMain
 
             };
 
-            var listMember = new List<Member>
+            var listMember = new List<Membro>
             {
                 new() { Nome = "Bruno" },
                 new() { Nome = "Denis" },

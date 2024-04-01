@@ -1,11 +1,11 @@
-﻿using Application.Interfaces.Services;
-using Domain.Enumeradores;
+﻿using Domain.Enumeradores;
 using Domain.Models;
 using Domain.Models.Dtos.Finance;
 using FamilyFinanceApi.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ProEventos.API.Controllers.Base;
+using FamilyFinanceApi.Controllers.Base;
+using Application.Interfaces.Services.Finance;
 
 namespace FamilyFinanceApi.Controllers.Finance
 {

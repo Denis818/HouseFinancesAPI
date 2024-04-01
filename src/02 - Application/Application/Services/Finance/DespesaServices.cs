@@ -1,6 +1,6 @@
 ﻿using Application.Configurations.Extensions.Help;
 using Application.Constants;
-using Application.Interfaces.Services;
+using Application.Interfaces.Services.Finance;
 using Application.Services.Base;
 using Domain.Dtos.Finance;
 using Domain.Enumeradores;
@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Services.Finance
 {
     public class DespesaServices(IServiceProvider Service,
-        IMemberServices _memberServices,
+        IMembroServices _memberServices,
         ICategoriaServices _categoriaServices) :
         ServiceAppBase<Despesa, DespesaDto, IDespesaRepository>(Service), IDespesaServices
     {
@@ -174,7 +174,7 @@ namespace Application.Services.Finance
             return await Pagination.PaginateResultAsync(despesasPorMes, paginaAtual, itensPorPagina);
         }
 
-        public async Task<DespesasPorMembroDto> GetTotalParaCadaMembroAsync()
+        public async Task<RelatorioDespesasMensais> GetTotalParaCadaMembroAsync()
         {
             var listMembers = await _memberServices.GetAllAsync().ToListAsync();
 
@@ -196,7 +196,7 @@ namespace Application.Services.Finance
             decimal despesaPorMembroForaAluguel = totalDespesaForaAluguel / listMembers.Count - 100; //desconto do estacionamento que alugamos
 
 
-            DespesasPorMembroDto valoresPorMembro = new()
+            RelatorioDespesasMensais valoresPorMembro = new()
             {
                 Mes = mesDespesaAtual,
                 TotalDoMes = totalDoMes,
@@ -255,7 +255,7 @@ namespace Application.Services.Finance
         }
 
         private List<DespesaPorMembro> CalculaValoresPorMembro(
-            List<Member> members,
+            List<Membro> members,
             decimal despesaPorMembroForaAluguel,
             decimal totalAluguelPara3Membros)
         {

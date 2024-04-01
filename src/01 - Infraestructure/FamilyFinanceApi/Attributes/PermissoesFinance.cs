@@ -2,7 +2,7 @@
 using Domain.Enumeradores;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
-using ProEventos.API.Controllers.Base;
+using FamilyFinanceApi.Controllers.Base;
 
 namespace FamilyFinanceApi.Attributes
 {

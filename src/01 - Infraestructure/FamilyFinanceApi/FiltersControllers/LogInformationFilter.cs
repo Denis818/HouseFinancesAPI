@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
-using Application.Interfaces.Services;
 using Domain.Models;
 using Domain.Enumeradores;
+using Application.Interfaces.Services.LogApp;
 
 namespace FamilyFinanceApi.FiltersControllers
 {

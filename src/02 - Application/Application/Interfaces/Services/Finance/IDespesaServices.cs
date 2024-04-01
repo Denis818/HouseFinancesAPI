@@ -2,7 +2,7 @@
 using Domain.Models;
 using FamilyFinanceApi.Utilities;
 
-namespace Application.Interfaces.Services
+namespace Application.Interfaces.Services.Finance
 {
     public interface IDespesaServices
     {
@@ -13,7 +13,7 @@ namespace Application.Interfaces.Services
         Task<Despesa> UpdateAsync(int id, DespesaDto despesaDto);
 
         Task<IEnumerable<Despesa>> InsertRangeAsync(IAsyncEnumerable<DespesaDto> listDespesasDto);
-        Task<DespesasPorMembroDto> GetTotalParaCadaMembroAsync();
+        Task<RelatorioDespesasMensais> GetTotalParaCadaMembroAsync();
         Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync();
         Task<PagedResult<DespesasPorMesDto>> GetTotaisComprasPorMesAsync(int paginaAtual, int itensPorPagina);
     }

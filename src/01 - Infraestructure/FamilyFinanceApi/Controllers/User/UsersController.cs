@@ -1,11 +1,11 @@
-﻿using Application.Interfaces.Services;
-using Domain.Dtos.User;
+﻿using Domain.Dtos.User;
 using Domain.Enumeradores;
 using FamilyFinanceApi.Attributes;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using ProEventos.API.Controllers.Base;
+using FamilyFinanceApi.Controllers.Base;
+using Application.Interfaces.Services.User;
 
 namespace Controllers.User
 {

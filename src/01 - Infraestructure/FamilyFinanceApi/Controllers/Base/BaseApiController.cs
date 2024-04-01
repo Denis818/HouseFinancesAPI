@@ -4,7 +4,7 @@ using Domain.Enumeradores;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace ProEventos.API.Controllers.Base
+namespace FamilyFinanceApi.Controllers.Base
 {
     public abstract class BaseApiController(IServiceProvider service) : Controller
     {

@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.Services;
+﻿using Application.Interfaces.Services.User;
 using Domain.Dtos.User;
 using Domain.Enumeradores;
 using Microsoft.AspNetCore.Http;

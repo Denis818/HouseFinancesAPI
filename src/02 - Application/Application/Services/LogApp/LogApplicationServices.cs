@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.Services;
+﻿using Application.Interfaces.Services.LogApp;
 using Domain.Converters;
 using Domain.Enumeradores;
 using Domain.Interfaces;

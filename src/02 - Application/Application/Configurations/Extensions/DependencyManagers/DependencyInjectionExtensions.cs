@@ -8,6 +8,9 @@ using Data.Repository.LogApp;
 using Application.Services.Finance;
 using Data.Repository.Finance;
 using Domain.Interfaces;
+using Application.Interfaces.Services.Finance;
+using Application.Interfaces.Services.LogApp;
+using Application.Interfaces.Services.User;
 
 namespace Application.Configurations.Extensions.DependencyManagers
 {
@@ -19,7 +22,7 @@ namespace Application.Configurations.Extensions.DependencyManagers
             services.AddScoped<INotificador, Notificador>();
             services.AddScoped<ILogApplicationRepository, LogApplicationRepository>();
             services.AddScoped<IDespesaRepository, DespesaRepository>();
-            services.AddScoped<IMemberRepository, MemberRepository>();
+            services.AddScoped<IMembroRepository, MembroRepository>();
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
         }
         public static void AddDependecyServices(this IServiceCollection services)
@@ -28,7 +31,7 @@ namespace Application.Configurations.Extensions.DependencyManagers
 
             services.AddScoped<ILogApplicationServices, LogApplicationServices>();
             services.AddScoped<IDespesaServices, DespesaServices>();
-            services.AddScoped<IMemberServices, MemberServices>();
+            services.AddScoped<IMembroServices, MembroServices>();
             services.AddScoped<ICategoriaServices, CategoriaServices>();
         }
     }

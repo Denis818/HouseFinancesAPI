@@ -1,11 +1,11 @@
-﻿using Application.Interfaces.Services;
-using Domain.Dtos.Finance;
+﻿using Domain.Dtos.Finance;
 using Domain.Enumeradores;
 using Domain.Models;
 using FamilyFinanceApi.Attributes;
 using FamilyFinanceApi.Utilities;
 using Microsoft.AspNetCore.Mvc;
-using ProEventos.API.Controllers.Base;
+using FamilyFinanceApi.Controllers.Base;
+using Application.Interfaces.Services.Finance;
 
 namespace FamilyFinanceApi.Controllers.Finance
 {
@@ -48,7 +48,7 @@ namespace FamilyFinanceApi.Controllers.Finance
            => await DespesaServices.InsertRangeAsync(vendaDto);
 
         [HttpGet("total-por-membro")]
-        public async Task<DespesasPorMembroDto> GetTotalParaCadaMembro() 
+        public async Task<RelatorioDespesasMensais> GetTotalParaCadaMembro() 
             => await DespesaServices.GetTotalParaCadaMembroAsync();
 
         [HttpGet("total-por-categoria")]

@@ -1,4 +1,5 @@
 ﻿using Application.Constants;
+using Application.Interfaces.Services.Finance;
 using Application.Services.Base;
 using Application.Services.Finance;
 using Domain.Dtos.Finance;
@@ -10,14 +11,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Interfaces.Services
 {
-    public class MemberServices(IServiceProvider service) :
-        ServiceAppBase<Member, MemberDto, IMemberRepository>(service), IMemberServices
+    public class MembroServices(IServiceProvider service) :
+        ServiceAppBase<Membro, MembroDto, IMembroRepository>(service), IMembroServices
     {
-        public IQueryable<Member> GetAllAsync() => _repository.Get();
+        public IQueryable<Membro> GetAllAsync() => _repository.Get();
 
-        public async Task<Member> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
+        public async Task<Membro> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
 
-        public async Task<Member> InsertAsync(MemberDto memberDto)
+        public async Task<Membro> InsertAsync(MembroDto memberDto)
         {
             if (Validator(memberDto)) return null;
 
@@ -37,7 +38,7 @@ namespace Application.Interfaces.Services
             return member;
         }
 
-        public async Task<Member> UpdateAsync(int id, MemberDto memberDto)
+        public async Task<Membro> UpdateAsync(int id, MembroDto memberDto)
         {
             if (Validator(memberDto)) return null;
 

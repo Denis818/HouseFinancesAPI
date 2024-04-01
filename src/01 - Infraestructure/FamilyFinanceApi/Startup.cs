@@ -23,8 +23,6 @@ namespace FamilyFinanceApi
             });
 
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
-
             services.AddConectionsString(Configuration);
             services.AddApiDependencyServices(Configuration);
             services.AddSwaggerAuthorizationJWT();
@@ -32,8 +30,7 @@ namespace FamilyFinanceApi
 
         public void Configure(IApplicationBuilder app, IServiceProvider services)
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UserSwaggerUICustom();
 
             app.UseCorsPolicy();
 

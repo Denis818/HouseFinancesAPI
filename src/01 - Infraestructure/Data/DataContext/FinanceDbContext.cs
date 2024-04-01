@@ -7,7 +7,7 @@ namespace Data.DataContext.Context
     public partial class FinanceDbContext(DbContextOptions<FinanceDbContext> options) : IdentityDbContext(options)
     {
         public DbSet<Despesa> Despesas { get; set; }
-        public DbSet<Member> Membros { get; set; }
+        public DbSet<Membro> Membros { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
     }
 }

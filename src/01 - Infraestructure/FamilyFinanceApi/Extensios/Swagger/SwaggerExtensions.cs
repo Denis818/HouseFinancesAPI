@@ -11,7 +11,12 @@ namespace FamilyFinanceApi.Extensios.Swagger
         {
             services.AddSwaggerGen(swagger =>
             {
-                swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "FamilyFinanceApi", Version = "v1" });
+                swagger.SwaggerDoc("v1", new OpenApiInfo
+                { 
+                    Title = "House Finances API", 
+                    Version = "v1" 
+                });
+
                 swagger.SchemaFilter<DateSchemaFilter>();
 
                 var securitySchema = new OpenApiSecurityScheme
@@ -42,6 +47,18 @@ namespace FamilyFinanceApi.Extensios.Swagger
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            });
+        }
+
+        public static void UserSwaggerUICustom(this IApplicationBuilder app)
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "House Finances API");
+
+                c.DocumentTitle = "House Finances API";
+               //c.HeadContent = @"<link rel=""stylesheet"" type=""text/css"" href=""/css/custom-theme.css"" />";
             });
         }
     }

@@ -4,7 +4,7 @@ using Domain.Models;
 using FamilyFinanceApi.Attributes;
 using FamilyFinanceApi.Utilities;
 using Microsoft.AspNetCore.Mvc;
-using ProEventos.API.Controllers.Base;
+using FamilyFinanceApi.Controllers.Base;
 
 namespace FamilyFinanceApi.Controllers.LogApp
 {

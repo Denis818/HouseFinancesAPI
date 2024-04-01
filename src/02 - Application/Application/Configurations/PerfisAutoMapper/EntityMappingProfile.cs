@@ -9,7 +9,7 @@ namespace DadosInCached.Configurations.PerfisAutoMapper
     {
         public EntityMappingProfile()
         {
-            CreateMap<Member, MemberDto>().ReverseMap();
+            CreateMap<Membro, MembroDto>().ReverseMap();
             CreateMap<Despesa, DespesaDto>().ReverseMap();
             CreateMap<Categoria, CategoriaDto>().ReverseMap();
         }
