@@ -1,11 +1,14 @@
 ﻿using Application.Configurations.Extensions.Help;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.OpenApi.Models;
 
 namespace HouseFinancesAPI.Extensios.Swagger
 {
     public static class SwaggerExtensions
     {
+        const string TypeToken = "Bearer";
+
         public static void AddSwaggerAuthorizationJWT(this IServiceCollection services)
         {
 
@@ -13,31 +16,31 @@ namespace HouseFinancesAPI.Extensios.Swagger
             {
                 swagger.SchemaFilter<DateSchemaFilter>();
 
-                swagger.SwaggerDoc("v1", new OpenApiInfo
-                { 
-                    Title = "House Finances API", 
-                    Version = "v1" 
-                });
+                //swagger.SwaggerDoc("v1", new OpenApiInfo
+                //{ 
+                //    Title = "House Finances API", 
+                //    Version = "v1" 
+                //});
 
                 var securitySchema = new OpenApiSecurityScheme
                 {
-                    Description = "JWT Auth Bearer Scheme",
+                    Description = $"JWT Auth {TypeToken} Scheme",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
+                    Scheme = TypeToken,
                     Reference = new OpenApiReference
                     {
                         Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
+                        Id = TypeToken
                     }
                 };
 
-                swagger.AddSecurityDefinition("Bearer", securitySchema);
+                swagger.AddSecurityDefinition(TypeToken, securitySchema);
 
                 var securityRequirement = new OpenApiSecurityRequirement
                 {
-                    { securitySchema, new [] {"Bearer"}}
+                    { securitySchema, new [] {TypeToken}}
                 };
 
                 swagger.AddSecurityRequirement(securityRequirement);
@@ -60,7 +63,8 @@ namespace HouseFinancesAPI.Extensios.Swagger
                 
                 c.RoutePrefix = "Doc";
                 c.DocumentTitle = "House Finances API";
-                c.HeadContent = app.ReadFileFromRootPath("html/swagger-head.html");
+                c.HeadContent = File.ReadAllText(
+                    Path.Combine(app.Environment.WebRootPath,"html/swagger-head.html"));
             });
         }
 

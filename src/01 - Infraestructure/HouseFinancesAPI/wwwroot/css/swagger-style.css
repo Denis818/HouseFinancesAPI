@@ -2,6 +2,11 @@
     display: none;
 }
 
+.swagger-ui .info .title {
+    display: none;
+}
+
+
 .swagger-ui .topbar .topbar-wrapper img {
     display: none;
 }
@@ -30,10 +35,10 @@
 
     .swagger-ui .topbar .topbar-wrapper .link:after {
         content: 'House Finances API';
-        font-size: 1.5em;
+        font-size: 31px;
         color: #ffffff;
         vertical-align: middle;
         margin-left: 50px;
-        margin-bottom: -11px;
+        margin-bottom: -16px;
         text-decoration: none;
     }
