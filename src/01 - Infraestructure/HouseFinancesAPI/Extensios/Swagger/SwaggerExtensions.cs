@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Application.Configurations.Extensions.Help;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -9,6 +10,7 @@ namespace HouseFinancesAPI.Extensios.Swagger
     {
         public static void AddSwaggerAuthorizationJWT(this IServiceCollection services)
         {
+
             services.AddSwaggerGen(swagger =>
             {
                 swagger.SwaggerDoc("v1", new OpenApiInfo
@@ -50,17 +52,20 @@ namespace HouseFinancesAPI.Extensios.Swagger
             });
         }
 
-        public static void UserSwaggerUICustom(this IApplicationBuilder app)
+        public static void ConfigureSwaggerUI(this IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseStaticFiles();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "House Finances API");
-
+                
+                c.RoutePrefix = "house-finances";
                 c.DocumentTitle = "House Finances API";
-               //c.HeadContent = @"<link rel=""stylesheet"" type=""text/css"" href=""/css/custom-theme.css"" />";
+                c.HeadContent = env.ReadFileFromRootPath("html/swagger-head.html");
             });
         }
+
     }
 
     public class DateSchemaFilter : ISchemaFilter

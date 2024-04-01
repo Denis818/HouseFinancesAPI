@@ -28,9 +28,9 @@ namespace HouseFinancesAPI
             services.AddSwaggerAuthorizationJWT();
         }
 
-        public void Configure(IApplicationBuilder app, IServiceProvider services)
+        public void Configure(IApplicationBuilder app, IServiceProvider services, IWebHostEnvironment env)
         {
-            app.UserSwaggerUICustom();
+            app.ConfigureSwaggerUI(env);
 
             app.UseCorsPolicy();
 
@@ -51,7 +51,7 @@ namespace HouseFinancesAPI
                 options.MapControllers();
                 options.MapGet("/{*path}", async context =>
                 {
-                    context.Response.Redirect("/swagger");
+                    context.Response.Redirect("/house-finances");
                     await Task.CompletedTask;
                 });
             });

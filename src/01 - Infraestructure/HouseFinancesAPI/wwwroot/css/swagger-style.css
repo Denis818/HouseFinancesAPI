@@ -1,0 +1,19 @@
+﻿.swagger-ui .info hgroup.main a {
+    display: none;
+}
+
+.swagger-ui .topbar .topbar-wrapper img {
+    display: none;
+}
+
+.swagger-ui .topbar .topbar-wrapper a {
+    background-image: url(/img/favicon-api.ico);
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 40px;
+    height: 40px;
+}
+
+.swagger-ui .topbar a {
+    flex: none;
+}
