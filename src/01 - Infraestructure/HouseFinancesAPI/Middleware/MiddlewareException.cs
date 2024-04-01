@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces.Services.LogApp;
 using Domain.Enumeradores;
-using FamilyFinanceApi.Controllers.Base;
+using HouseFinancesAPI.Controllers.Base;
 using System.Text.Json;
 
 namespace ProEventos.API.Configuration.Middleware

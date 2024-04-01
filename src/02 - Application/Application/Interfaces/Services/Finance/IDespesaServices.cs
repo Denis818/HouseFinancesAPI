@@ -1,6 +1,6 @@
 ﻿using Domain.Dtos.Finance;
 using Domain.Models;
-using FamilyFinanceApi.Utilities;
+using HouseFinancesAPI.Utilities;
 
 namespace Application.Interfaces.Services.Finance
 {

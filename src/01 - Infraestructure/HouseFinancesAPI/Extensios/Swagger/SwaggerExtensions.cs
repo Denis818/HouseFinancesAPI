@@ -3,7 +3,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace FamilyFinanceApi.Extensios.Swagger
+namespace HouseFinancesAPI.Extensios.Swagger
 {
     public static class SwaggerExtensions
     {

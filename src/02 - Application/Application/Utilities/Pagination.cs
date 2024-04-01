@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace FamilyFinanceApi.Utilities
+namespace HouseFinancesAPI.Utilities
 {
     public class PagedResult<T>
     {

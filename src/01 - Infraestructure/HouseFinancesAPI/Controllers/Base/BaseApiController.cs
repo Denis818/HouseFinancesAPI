@@ -4,7 +4,7 @@ using Domain.Enumeradores;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace FamilyFinanceApi.Controllers.Base
+namespace HouseFinancesAPI.Controllers.Base
 {
     public abstract class BaseApiController(IServiceProvider service) : Controller
     {

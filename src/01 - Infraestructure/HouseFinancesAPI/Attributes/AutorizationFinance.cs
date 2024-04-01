@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Application.Utilities;
-using FamilyFinanceApi.Controllers.Base;
+using HouseFinancesAPI.Controllers.Base;
 
-namespace FamilyFinanceApi.Attributes
+namespace HouseFinancesAPI.Attributes
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class AutorizationFinance : Attribute, IAuthorizationFilter

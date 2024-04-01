@@ -9,23 +9,23 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/01 - Infraestructure/FamilyFinanceApi/FamilyFinanceApi.csproj", "src/01 - Infraestructure/FamilyFinanceApi/"]
+COPY ["src/01 - Infraestructure/HouseFinancesAPI/HouseFinancesAPI.csproj", "src/01 - Infraestructure/HouseFinancesAPI/"]
 COPY ["src/02 - Application/Application/Application.csproj", "src/02 - Application/Application/"]
 COPY ["src/01 - Infraestructure/Data/Data.csproj", "src/01 - Infraestructure/Data/"]
 COPY ["src/03 - Domain/Domain/Domain.csproj", "src/03 - Domain/Domain/"]
 
-RUN dotnet restore "./src/01 - Infraestructure/FamilyFinanceApi/FamilyFinanceApi.csproj"
+RUN dotnet restore "./src/01 - Infraestructure/HouseFinancesAPI/HouseFinancesAPI.csproj"
 
 COPY . .
-WORKDIR "/src/src/01 - Infraestructure/FamilyFinanceApi"
+WORKDIR "/src/src/01 - Infraestructure/HouseFinancesAPI"
 
-RUN dotnet build "./FamilyFinanceApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./HouseFinancesAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./FamilyFinanceApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./HouseFinancesAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "FamilyFinanceApi.dll"]
+ENTRYPOINT ["dotnet", "HouseFinancesAPI.dll"]

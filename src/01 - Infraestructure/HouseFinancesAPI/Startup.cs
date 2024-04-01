@@ -1,12 +1,12 @@
 ﻿using Application.Configurations.Extensions.DependencyManagers;
 using Application.Configurations.UserMain;
 using Data.Configurations.Extensions;
-using FamilyFinanceApi.Extensios.Swagger;
-using FamilyFinanceApi.FiltersControllers;
+using HouseFinancesAPI.Extensios.Swagger;
+using HouseFinancesAPI.FiltersControllers;
 using ProEventos.API.Configuration.Middleware;
 using System.Text.Json;
 
-namespace FamilyFinanceApi
+namespace HouseFinancesAPI
 {
     public class Startup(IConfiguration configuration)
     {

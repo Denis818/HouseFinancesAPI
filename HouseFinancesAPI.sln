@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyFinanceApi", "src\01 - Infraestructure\FamilyFinanceApi\FamilyFinanceApi.csproj", "{7FB5B56D-B3D2-4617-A109-FF0E5C86383D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HouseFinancesAPI", "src\01 - Infraestructure\HouseFinancesAPI\HouseFinancesAPI.csproj", "{7FB5B56D-B3D2-4617-A109-FF0E5C86383D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03 - Domain", "03 - Domain", "{F27D49C2-4E57-471B-8CC3-260259FE6525}"
 EndProject

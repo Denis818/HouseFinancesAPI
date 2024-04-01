@@ -6,7 +6,7 @@ using Domain.Dtos.Finance;
 using Domain.Enumeradores;
 using Domain.Interfaces;
 using Domain.Models;
-using FamilyFinanceApi.Utilities;
+using HouseFinancesAPI.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Finance

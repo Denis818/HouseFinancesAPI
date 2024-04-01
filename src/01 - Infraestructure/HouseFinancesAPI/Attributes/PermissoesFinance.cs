@@ -2,9 +2,9 @@
 using Domain.Enumeradores;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
-using FamilyFinanceApi.Controllers.Base;
+using HouseFinancesAPI.Controllers.Base;
 
-namespace FamilyFinanceApi.Attributes
+namespace HouseFinancesAPI.Attributes
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class PermissoesFinance(params EnumPermissoes[] enumPermissoes) : Attribute, IAuthorizationFilter

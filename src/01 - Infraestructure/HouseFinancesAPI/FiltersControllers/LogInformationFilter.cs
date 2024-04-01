@@ -4,7 +4,7 @@ using Domain.Models;
 using Domain.Enumeradores;
 using Application.Interfaces.Services.LogApp;
 
-namespace FamilyFinanceApi.FiltersControllers
+namespace HouseFinancesAPI.FiltersControllers
 {
     public class LogInformationFilter(ILogApplicationServices LogService) : IAsyncResultFilter
     {

@@ -1,10 +1,10 @@
 ﻿using Domain.Dtos.User;
 using Domain.Enumeradores;
-using FamilyFinanceApi.Attributes;
+using HouseFinancesAPI.Attributes;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using FamilyFinanceApi.Controllers.Base;
+using HouseFinancesAPI.Controllers.Base;
 using Application.Interfaces.Services.User;
 
 namespace Controllers.User
