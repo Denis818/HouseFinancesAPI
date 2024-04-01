@@ -1,8 +1,6 @@
 ﻿using Application.Configurations.Extensions.Help;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace HouseFinancesAPI.Extensios.Swagger
 {
@@ -13,13 +11,13 @@ namespace HouseFinancesAPI.Extensios.Swagger
 
             services.AddSwaggerGen(swagger =>
             {
+                swagger.SchemaFilter<DateSchemaFilter>();
+
                 swagger.SwaggerDoc("v1", new OpenApiInfo
                 { 
                     Title = "House Finances API", 
                     Version = "v1" 
                 });
-
-                swagger.SchemaFilter<DateSchemaFilter>();
 
                 var securitySchema = new OpenApiSecurityScheme
                 {
@@ -66,16 +64,5 @@ namespace HouseFinancesAPI.Extensios.Swagger
             });
         }
 
-    }
-
-    public class DateSchemaFilter : ISchemaFilter
-    {
-        public void Apply(OpenApiSchema schema, SchemaFilterContext context)
-        {
-            if (context.Type == typeof(DateTime) || context.Type == typeof(DateTime?))
-            {
-                schema.Example = new OpenApiString(DateTime.Now.ToString("dd-MM-yyyy"));
-            }
-        }
     }
 }
