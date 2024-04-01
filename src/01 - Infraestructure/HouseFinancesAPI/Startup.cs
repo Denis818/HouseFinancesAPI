@@ -51,7 +51,7 @@ namespace HouseFinancesAPI
                 options.MapControllers();
                 options.MapGet("/{*path}", async context =>
                 {
-                    context.Response.Redirect("/house-finances");
+                    context.Response.Redirect("/Doc");
                     await Task.CompletedTask;
                 });
             });
