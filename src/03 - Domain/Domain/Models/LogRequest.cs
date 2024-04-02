@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Domain.Models
 {
-    public class LogApplication
+    public class LogRequest
     {
         public int Id { get; set; }
         public string TypeLog { get; set; }

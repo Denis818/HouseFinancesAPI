@@ -16,7 +16,7 @@ namespace Data.Migrations.LogDb
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "LogsApplication",
+                name: "LogsRequests",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -41,23 +41,23 @@ namespace Data.Migrations.LogDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LogsApplication", x => x.Id);
+                    table.PrimaryKey("PK_LogsRequests", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LogsApplication_TypeLog",
-                table: "LogsApplication",
+                name: "IX_LogsRequests_TypeLog",
+                table: "LogsRequests",
                 column: "TypeLog");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LogsApplication_Method",
-                table: "LogsApplication",
+                name: "IX_LogsRequests_Method",
+                table: "LogsRequests",
                 column: "Method");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LogsApplication_InclusionDate",
-                table: "LogsApplication",
+                name: "IX_LogsRequests_InclusionDate",
+                table: "LogsRequests",
                 column: "InclusionDate");
         }
 
@@ -65,7 +65,7 @@ namespace Data.Migrations.LogDb
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "LogsApplication");
+                name: "LogsRequests");
         }
     }
 }

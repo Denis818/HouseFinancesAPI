@@ -4,7 +4,7 @@ namespace Domain.Interfaces
 {
     public interface ILogApplicationRepository
     {
-        Task InsertAsync(LogApplication log);
-        IQueryable<LogApplication> GetLogs();
+        Task InsertAsync(LogRequest log);
+        IQueryable<LogRequest> GetLogs();
     }
 }

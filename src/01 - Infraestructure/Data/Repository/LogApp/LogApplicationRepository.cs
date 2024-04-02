@@ -7,13 +7,13 @@ namespace Data.Repository.LogApp
 {
     public class LogApplicationRepository(LogDbContext LogDbContext) : ILogApplicationRepository
     {
-        private DbSet<LogApplication> DbSet { get; } = LogDbContext.LogsApplication;
-        public async Task InsertAsync(LogApplication log)
+        private DbSet<LogRequest> DbSet { get; } = LogDbContext.LogsRequests;
+        public async Task InsertAsync(LogRequest log)
         {
             await DbSet.AddAsync(log);
             await LogDbContext.SaveChangesAsync();
         }
 
-        public IQueryable<LogApplication> GetLogs() => DbSet;
+        public IQueryable<LogRequest> GetLogs() => DbSet;
     }
 }

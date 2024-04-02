@@ -23,7 +23,7 @@ namespace Application.Services.LogApp
 
             string content = JsonSerializer.Serialize(objectResult?.Value);
 
-            var logEntry = new LogApplication
+            var logEntry = new LogRequest
             {
                 UserName = context.User.Identity.Name,
                 TypeLog = typeLog.ToString(),
