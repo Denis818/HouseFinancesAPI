@@ -8,6 +8,7 @@ using Domain.Interfaces;
 using Domain.Models;
 using HouseFinancesAPI.Utilities;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace Application.Services.Finance
 {
@@ -166,7 +167,7 @@ namespace Application.Services.Finance
             var despesasPorMes = _repository.Get()
                                             .GroupBy(d => new { d.DataCompra.Month, d.DataCompra.Year })
                                             .Select(group => new DespesasPorMesDto(
-                                                new DateTime(group.Key.Year, group.Key.Month, 1).ToString("Y"),
+                                                new DateTime(group.Key.Year, group.Key.Month, 1).ToString("Y", new CultureInfo("pt-BR")),
                                                 group.Sum(d => d.Total).RoundTo(2)
                                             ));
 
