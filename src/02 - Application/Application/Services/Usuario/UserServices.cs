@@ -12,6 +12,7 @@ namespace Application.Services.Usuario
 {
     public class UserServices(IHttpContextAccessor Acessor, IConfiguration Configuration) : IUserServices
     {
+        private readonly int TokenExpire = int.Parse(Configuration["TokenConfiguration:ExpireHours"]);
         public string Name => Acessor.HttpContext.User.Identity.Name;
 
         public bool PossuiPermissao(params EnumPermissoes[] permissoesParaValidar)
@@ -40,7 +41,7 @@ namespace Application.Services.Usuario
 
             var credenciais = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var expirationFormat = DateTime.UtcNow.AddHours(int.Parse(Configuration["TokenConfiguration:ExpireHours"]));
+            var expirationFormat = DateTime.UtcNow.AddDays(TokenExpire);
 
             JwtSecurityToken token = new(
               issuer: Configuration["TokenConfiguration:Issuer"],
