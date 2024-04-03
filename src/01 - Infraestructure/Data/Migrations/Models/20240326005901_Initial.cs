@@ -50,7 +50,7 @@ namespace Data.Migrations.Models
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Item = table.Column<string>(type: "varchar(40)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Preco = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    Preco = table.Column<decimal>(type: "decimal(6,2)", nullable: false),
                     Quantidade = table.Column<int>(type: "int", nullable: false),
                     Fornecedor = table.Column<string>(type: "varchar(20)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),

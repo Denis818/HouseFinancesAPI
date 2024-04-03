@@ -12,8 +12,8 @@ namespace Application.Validators.Finance
             RuleFor(x => x.Item).NotEmpty().WithMessage("É obrigatório.")
                                 .Length(3, 25).WithMessage("Deve ter entre 3 a 25 caracteres.");
 
-            RuleFor(x => (double)x.Preco).InclusiveBetween(0.01, 999)
-                                         .WithMessage("Não pode ser menor que 0.1, e maior que 999.");
+            RuleFor(x => (double)x.Preco).InclusiveBetween(0.01, 9999)
+                                         .WithMessage("Não pode ser menor que 0.1, e maior que 9999.");
 
             RuleFor(x => x.Quantidade).InclusiveBetween(1, 999)
                                       .WithMessage("Não pode ser menor que 1, e maior que 999.");
