@@ -144,7 +144,7 @@ namespace Application.Services.Finance
             {
                 Notificar(EnumTipoNotificacao.Informacao,
                     $"{despesasParaInserir.Count} de {totalRecebido} despesas foram inseridas. " +
-                    $"verifique as {totalRecebido - despesasParaInserir.Count} restantes.");
+                    $"total de {totalRecebido - despesasParaInserir.Count} invalidas.");
             }
 
             var ids = despesasParaInserir.Select(d => d.Id).ToList();
