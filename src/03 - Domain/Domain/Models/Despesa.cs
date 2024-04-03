@@ -1,4 +1,4 @@
-﻿using Domain.Converters.DateTimes;
+﻿using Domain.Converters.DatesTimes;
 using System.Text.Json.Serialization;
 
 namespace Domain.Models

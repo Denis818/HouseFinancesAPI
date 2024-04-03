@@ -1,10 +1,9 @@
-﻿using System.Globalization;
+﻿using System.Text.Json.Serialization;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
-namespace Domain.Converters.DateTimes
+namespace Domain.Converters.DatesTimes
 {
-    public class ShortDateFormatConverter : JsonConverter<DateTime>
+    public class TimeFormatConverter : JsonConverter<DateTime>
     {
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
@@ -13,9 +12,7 @@ namespace Domain.Converters.DateTimes
 
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(value.ToString("d", new CultureInfo("pt-BR")));
+            writer.WriteStringValue(value.ToString("G"));
         }
     }
-
-   
 }

@@ -1,4 +1,4 @@
-﻿namespace Domain.Converters.DateTimes
+﻿namespace Domain.Converters.DatesTimes
 {
     public class DateTimeZoneProvider
     {
