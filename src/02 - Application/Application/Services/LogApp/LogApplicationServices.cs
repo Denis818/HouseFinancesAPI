@@ -45,7 +45,7 @@ namespace Application.Services.LogApp
                 logEntry.ExceptionMessage = ReduzirString(message, 250);
             }
 
-         //   await LogRepository.InsertAsync(logEntry);
+            await LogRepository.InsertAsync(logEntry);
         }
 
         private string ReduzirString(string message, int max)

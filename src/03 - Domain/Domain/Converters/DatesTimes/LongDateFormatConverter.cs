@@ -27,7 +27,6 @@ namespace Domain.Converters.DatesTimes
                 throw new JsonException($"A data {dateString} não está no formato esperado {DateFormat}.");
             }
         }
-
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
         {
             // Use o formato longo de data com cultura pt-BR ao escrever a data de volta ao JSON.
