@@ -1,4 +1,4 @@
-﻿using Domain.Converters;
+﻿using Domain.Converters.DateTimes;
 using System.Text.Json.Serialization;
 
 namespace Domain.Models
@@ -16,7 +16,7 @@ namespace Domain.Models
         [JsonIgnore]
         public int CategoriaId { get; set; }
 
-        [JsonConverter(typeof(DateFormatConverter))]
+        [JsonConverter(typeof(LongDateFormatConverter))]
         public DateTime DataCompra { get; set; }
     }
 

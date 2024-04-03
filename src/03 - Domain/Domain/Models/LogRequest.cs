@@ -1,4 +1,4 @@
-﻿using Domain.Converters;
+﻿using Domain.Converters.DateTimes;
 using System.Text.Json.Serialization;
 
 namespace Domain.Models
@@ -13,7 +13,6 @@ namespace Domain.Models
         public string Path { get; set; }
         public string QueryString { get; set; }
 
-        [JsonConverter(typeof(DateFormatConverter))]
         public DateTime InclusionDate { get; set; }
 
         public string ExceptionMessage { get; set; }

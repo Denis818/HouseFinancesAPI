@@ -1,4 +1,9 @@
-﻿namespace Domain.Dtos.Finance
+﻿using Domain.Converters.DateTimes;
+using Domain.Models;
+using Domain.Models.Dtos.Finance;
+using System.Text.Json.Serialization;
+
+namespace Domain.Dtos.Finance
 {
     public class DespesaDto
     {
@@ -7,6 +12,8 @@
         public decimal Preco { get; set; }
         public int Quantidade { get; set; }
         public string Fornecedor { get; set; }
+
+        [JsonConverter(typeof(ShortDateFormatConverter))]
         public DateTime DataCompra { get; set; }
     }
 }

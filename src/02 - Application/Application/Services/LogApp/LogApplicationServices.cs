@@ -1,5 +1,5 @@
 ﻿using Application.Interfaces.Services.LogApp;
-using Domain.Converters;
+using Domain.Converters.DateTimes;
 using Domain.Enumeradores;
 using Domain.Interfaces;
 using Domain.Models;

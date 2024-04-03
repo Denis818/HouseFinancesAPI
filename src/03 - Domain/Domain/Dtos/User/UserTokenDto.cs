@@ -1,4 +1,4 @@
-﻿using Domain.Converters;
+﻿using Domain.Converters.DateTimes;
 using System.Text.Json.Serialization;
 
 namespace Domain.Dtos.User
