@@ -170,7 +170,7 @@ namespace Application.Services.Finance
                 new DespesasTotalPorCategoria(list.Key, list.Sum(despesa => despesa.Total))).ToListAsync();
         }
 
-        public async Task<PagedResult<DespesasPorMesDto>> GetTotaisComprasPorMesAsync(int paginaAtual, int itensPorPagina)
+        public async Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorMesAsync(int paginaAtual, int itensPorPagina)
         {
             var despesasPorMes = _repository.Get()
                                             .GroupBy(d => new { d.DataCompra.Month, d.DataCompra.Year })
@@ -180,7 +180,7 @@ namespace Application.Services.Finance
                                             ));
 
 
-            return await Pagination.PaginateResultAsync(despesasPorMes, paginaAtual, itensPorPagina);
+            return await despesasPorMes.ToListAsync();
         }
 
         public async Task<RelatorioDespesasMensais> GetTotalParaCadaMembroAsync()
