@@ -23,7 +23,7 @@ namespace HouseFinancesAPI.Extensios.Application
 
             builder.Configuration.AddJsonFile($"appsettings.{env}.json", optional: false, reloadOnChange: true);
 
-            builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+          //  builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
             builder.Services.AddControllers(options =>
             {

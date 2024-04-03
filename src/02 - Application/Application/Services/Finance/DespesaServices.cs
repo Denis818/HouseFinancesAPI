@@ -107,7 +107,7 @@ namespace Application.Services.Finance
 
         public async Task<IEnumerable<Despesa>> InsertRangeAsync(IAsyncEnumerable<DespesaDto> listDespesasDto)
         {
-            var totalRecebido = 0;
+            int totalRecebido = 0;
             var despesasParaInserir = new List<Despesa>();
 
             await foreach (var despesaDto in listDespesasDto)
@@ -127,7 +127,11 @@ namespace Application.Services.Finance
                 despesasParaInserir.Add(despesa);
             }
 
-            if (despesasParaInserir.Count == 0) return [];
+            if (despesasParaInserir.Count == 0)
+            {
+                Notificar(EnumTipoNotificacao.ClientError, "Nunhuma das despesa é valida para inserir.");
+                return null;
+            }
 
             await _repository.InsertRangeAsync(despesasParaInserir);
             if (!await _repository.SaveChangesAsync())
@@ -136,8 +140,12 @@ namespace Application.Services.Finance
                 return null;
             }
 
-            Notificar(EnumTipoNotificacao.Informacao,
-                $"{despesasParaInserir.Count} de {totalRecebido} despesas foram inseridas com sucesso. Algumas não eram validas.");
+            if (totalRecebido > despesasParaInserir.Count)
+            {
+                Notificar(EnumTipoNotificacao.Informacao,
+                    $"{despesasParaInserir.Count} de {totalRecebido} despesas foram inseridas. " +
+                    $"verifique as {totalRecebido - despesasParaInserir.Count} restantes.");
+            }
 
             var ids = despesasParaInserir.Select(d => d.Id).ToList();
             var despesasInseridas = await _repository.Get(d => ids
@@ -193,7 +201,7 @@ namespace Application.Services.Finance
             decimal totalAluguelPara3Membros = CalculaTotalAluguelPara3Membros(despesasRecentes, idAluguel).RoundTo(2);
             decimal totalAlmocoComAbateJhon = CalculaTotalAlmocoComAbateJhon(despesasRecentes, idAlmoco).RoundTo(2);
 
-            decimal totalDespesaForaAluguel = totalDespesaForaAlmocoAluguel + totalAlmocoComAbateJhon;  
+            decimal totalDespesaForaAluguel = totalDespesaForaAlmocoAluguel + totalAlmocoComAbateJhon;
             decimal despesaPorMembroForaAluguel = totalDespesaForaAluguel / listMembers.Count - 100; //desconto do estacionamento que alugamos
 
 
