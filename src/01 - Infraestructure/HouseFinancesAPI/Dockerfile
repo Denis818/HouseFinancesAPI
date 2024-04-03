@@ -7,7 +7,7 @@ EXPOSE 8080
 EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
+
 WORKDIR /src
 COPY ["src/01 - Infraestructure/HouseFinancesAPI/HouseFinancesAPI.csproj", "src/01 - Infraestructure/HouseFinancesAPI/"]
 COPY ["src/02 - Application/Application/Application.csproj", "src/02 - Application/Application/"]
@@ -19,11 +19,11 @@ RUN dotnet restore "./src/01 - Infraestructure/HouseFinancesAPI/HouseFinancesAPI
 COPY . .
 WORKDIR "/src/src/01 - Infraestructure/HouseFinancesAPI"
 
-RUN dotnet build "./HouseFinancesAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./HouseFinancesAPI.csproj" -c PRD -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./HouseFinancesAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+RUN dotnet publish "./HouseFinancesAPI.csproj" -c PRD -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

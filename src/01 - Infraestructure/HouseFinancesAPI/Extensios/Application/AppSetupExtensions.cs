@@ -23,8 +23,9 @@ namespace HouseFinancesAPI.Extensios.Application
 
             builder.Configuration.AddJsonFile($"appsettings.{env}.json", optional: false, reloadOnChange: true);
 
-          //  builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
-
+#if (PRD)
+            builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+#endif
             builder.Services.AddControllers(options =>
             {
                 options.Filters.Add(typeof(LogInformationFilter));
