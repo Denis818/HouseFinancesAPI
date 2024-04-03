@@ -29,6 +29,12 @@ namespace Application.Services.Finance
         {
             if (Validator(categoriaDto)) return null;
 
+            var categoriaExist = _repository.Get(c => c.Descricao == categoriaDto.Descricao);
+            if (categoriaExist is not null)
+            {
+                Notificar(EnumTipoNotificacao.ClientError, $"Categoria {categoriaDto.Descricao} já existe.");
+                return null;
+            }
             var categoria = MapToModel(categoriaDto);
             await _repository.InsertAsync(categoria);
 
