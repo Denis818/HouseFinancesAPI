@@ -15,6 +15,6 @@ namespace Application.Interfaces.Services.Finance
         Task<IEnumerable<Despesa>> InsertRangeAsync(IAsyncEnumerable<DespesaDto> listDespesasDto);
         Task<RelatorioDespesasMensais> GetTotalParaCadaMembroAsync();
         Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync();
-        Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorMesAsync(int paginaAtual, int itensPorPagina);
+        Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorMesAsync();
     }
 }

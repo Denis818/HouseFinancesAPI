@@ -56,7 +56,7 @@ namespace HouseFinancesAPI.Controllers.Finance
             => await DespesaServices.GetTotalPorCategoriaAsync();
 
         [HttpGet("total-por-mes")]
-        public async Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorMesAsync(int paginaAtual = 1, int itensPorPagina = 10)
-            => await DespesaServices.GetTotaisComprasPorMesAsync(paginaAtual, itensPorPagina);
+        public async Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorMesAsync()
+            => await DespesaServices.GetTotaisComprasPorMesAsync();
     }
 }
