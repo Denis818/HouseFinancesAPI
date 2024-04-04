@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HouseFinancesAPI.Controllers.Base;
 using Application.Interfaces.Services.Finance;
-using Domain.Dtos.Finance.Records;
+using Domain.Dtos.Membro;
 
 namespace HouseFinancesAPI.Controllers.Finance
 {

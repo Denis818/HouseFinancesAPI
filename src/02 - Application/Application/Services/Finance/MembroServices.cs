@@ -1,7 +1,7 @@
 ﻿using Application.Constants;
 using Application.Interfaces.Services.Finance;
 using Application.Services.Base;
-using Domain.Dtos.Finance.Records;
+using Domain.Dtos.Membro;
 using Domain.Enumeradores;
 using Domain.Interfaces;
 using Domain.Models;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
+using Domain.Dtos.Categoria;
 using Domain.Dtos.Finance;
-using Domain.Dtos.Finance.Records;
+using Domain.Dtos.Membro;
 using Domain.Models;
 
 namespace DadosInCached.Configurations.PerfisAutoMapper

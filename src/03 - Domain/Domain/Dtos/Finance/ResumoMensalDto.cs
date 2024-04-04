@@ -1,10 +1,8 @@
-﻿using Domain.Dtos.Finance.Records;
-
-namespace Domain.Dtos.Finance
+﻿namespace Domain.Dtos.Finance
 {
-    public record RelatorioDespesasMensais(
+    public record ResumoMensalDto(
         string Mes,
         RelatorioGastosDoMesDto RelatorioGastosDoMes,
         IEnumerable<DespesaPorMembroDto> DespesasPorMembros
-    );  
+    );
 }

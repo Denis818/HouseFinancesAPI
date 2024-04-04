@@ -1,4 +1,4 @@
-﻿namespace Domain.Dtos.Finance.Records
+﻿namespace Domain.Dtos.Finance
 {
     public record RelatorioGastosDoMesDto(
         decimal TotalAluguelCondominio,

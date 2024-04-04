@@ -5,7 +5,6 @@ using Application.Services.Base;
 using AutoMapper.Execution;
 using Data.Repository.Finance;
 using Domain.Dtos.Finance;
-using Domain.Dtos.Finance.Records;
 using Domain.Enumeradores;
 using Domain.Interfaces;
 using Domain.Models;
@@ -187,7 +186,7 @@ namespace Application.Services.Finance
             return await despesasPorMes.ToListAsync();
         }
 
-        public async Task<RelatorioDespesasMensais> GetRelatorioDespesasMensaisAsync()
+        public async Task<ResumoMensalDto> GetResumoDespesasMensalAsync()
         {
             var (idAlmoco, idAluguel) = CategoriaRepository.GetIdsAluguelAlmoco();
 
@@ -216,12 +215,12 @@ namespace Application.Services.Finance
             decimal despesaPorMembroForaAluguel = (totalDespesaForaAluguel - 100) / listMembersForaJhon.Count; //desconto do estacionamento que alugamos
 
 
-        
-            return new RelatorioDespesasMensais(
+
+            return new ResumoMensalDto(
                 mesAtual,
                 GetRelatorioDeGastosDoMes(despesasAtuais),
-                DistribuirDespesasEntreMembros(despesaPorMembroForaAluguel, 
-                                               totalAluguelParaMembros, 
+                DistribuirDespesasEntreMembros(despesaPorMembroForaAluguel,
+                                               totalAluguelParaMembros,
                                                totalAlmocoParteDoJhon
             ));
         }
@@ -302,11 +301,8 @@ namespace Application.Services.Finance
                 }
             }
 
-            return members.Select(member => new DespesaPorMembroDto
-            {
-                Nome = member.Nome,
-                Valor = CalculaValorPorMembro(member).RoundTo(2)
-            });
+            return members.Select(member => 
+                    new DespesaPorMembroDto(member.Nome, CalculaValorPorMembro(member).RoundTo(2)));
         }
 
         public RelatorioGastosDoMesDto GetRelatorioDeGastosDoMes(List<Despesa> despesas)

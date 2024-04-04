@@ -1,4 +1,4 @@
-﻿using Domain.Dtos.Finance.Records;
+﻿using Domain.Dtos.Membro;
 using Domain.Models;
 using HouseFinancesAPI.Utilities;
 
