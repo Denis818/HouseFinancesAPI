@@ -1,13 +1,10 @@
 ﻿using Application.Constants;
 using Application.Interfaces.Services.Finance;
 using Application.Services.Base;
-using Application.Services.Finance;
-using Domain.Dtos.Finance;
+using Domain.Dtos.Finance.Records;
 using Domain.Enumeradores;
 using Domain.Interfaces;
 using Domain.Models;
-using HouseFinancesAPI.Utilities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Interfaces.Services
 {
@@ -18,16 +15,16 @@ namespace Application.Interfaces.Services
 
         public async Task<Membro> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
 
-        public async Task<Membro> InsertAsync(MembroDto memberDto)
+        public async Task<Membro> InsertAsync(MembroDto membroDto)
         {
-            if (Validator(memberDto)) return null;
+            if (Validator(membroDto)) return null;
 
-            if (_repository.Get().Any(m => m.Nome == memberDto.Nome)) 
-                Notificar(EnumTipoNotificacao.ClientError, $"O membro {memberDto.Nome} já existe.");
+            if (await _repository.ExisteAsync(membroDto.Nome) != null) 
+                Notificar(EnumTipoNotificacao.ClientError, $"O membro {membroDto.Nome} já existe.");
 
-            var member = MapToModel(memberDto);
+            var membro = MapToModel(membroDto);
 
-            await _repository.InsertAsync(member);
+            await _repository.InsertAsync(membro);
 
             if (!await _repository.SaveChangesAsync())
             {
@@ -35,24 +32,40 @@ namespace Application.Interfaces.Services
                 return null;
             }
 
-            return member;
+            return membro;
         }
 
-        public async Task<Membro> UpdateAsync(int id, MembroDto memberDto)
+        public async Task<Membro> UpdateAsync(int id, MembroDto membroDto)
         {
-            if (Validator(memberDto)) return null;
+            if (Validator(membroDto)) return null;
 
-            var member = await _repository.GetByIdAsync(id);
+            var membro = await _repository.GetByIdAsync(id);
 
-            if (member == null)
+            if (membro is null)
             {
                 Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
                 return null;
             }
 
-            MapDtoToModel(memberDto, member);
+            if (_repository.ValidaMembroParaAcao(membro.Id))
+            {
+                Notificar(EnumTipoNotificacao.ClientError,
+                    "Esse membro faz parta da regra de negócio. Não pode ser alterado.");
+                return null;
+            }
 
-            _repository.Update(member);
+            if (await _repository.ExisteAsync(membroDto.Nome) is Membro membroExiste)
+            {
+                if (membro.Id != membroExiste.Id)
+                {
+                    Notificar(EnumTipoNotificacao.ClientError, $"Categoria {membroDto.Nome} já existe.");
+                    return null;
+                }
+            }
+
+            MapDtoToModel(membroDto, membro);
+
+            _repository.Update(membro);
 
             if (!await _repository.SaveChangesAsync())
             {
@@ -60,20 +73,27 @@ namespace Application.Interfaces.Services
                 return null;
             }
 
-            return member;
+            return membro;
         }
 
         public async Task DeleteAsync(int id)
         {
-            var member = await _repository.GetByIdAsync(id);
+            var membro = await _repository.GetByIdAsync(id);
 
-            if (member == null)
+            if (membro == null)
             {
                 Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
                 return;
             }
 
-            _repository.Delete(member);
+            if (_repository.ValidaMembroParaAcao(membro.Id))
+            {
+                Notificar(EnumTipoNotificacao.ClientError,
+                    "Esse membro faz parta da regra de negócio. Não pode ser alterado.");
+                return;
+            }
+
+            _repository.Delete(membro);
 
             if (!await _repository.SaveChangesAsync())
             {

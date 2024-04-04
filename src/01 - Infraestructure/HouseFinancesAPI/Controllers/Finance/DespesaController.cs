@@ -6,6 +6,7 @@ using HouseFinancesAPI.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using HouseFinancesAPI.Controllers.Base;
 using Application.Interfaces.Services.Finance;
+using Domain.Dtos.Finance.Records;
 
 namespace HouseFinancesAPI.Controllers.Finance
 {
@@ -47,9 +48,9 @@ namespace HouseFinancesAPI.Controllers.Finance
         public async Task<IEnumerable<Despesa>> PostRange(IAsyncEnumerable<DespesaDto> vendaDto)
            => await DespesaServices.InsertRangeAsync(vendaDto);
 
-        [HttpGet("total-por-membro")]
-        public async Task<RelatorioDespesasMensais> GetTotalParaCadaMembro() 
-            => await DespesaServices.GetTotalParaCadaMembroAsync();
+        [HttpGet("relatorio-despesas-mensais")]
+        public async Task<RelatorioDespesasMensais> GetRelatorioDespesasMensaisAsync() 
+            => await DespesaServices.GetRelatorioDespesasMensaisAsync();
 
         [HttpGet("total-por-categoria")]
         public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoria()

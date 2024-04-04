@@ -1,15 +1,10 @@
-﻿namespace Domain.Dtos.Finance
-{
-    public class RelatorioDespesasMensais()
-    {
-        public decimal TotalDoMes { get; set; }
-        public string Mes { get; set; }
-        public List<DespesaPorMembro> DespesasPorMembros { get; set; }
-    }
+﻿using Domain.Dtos.Finance.Records;
 
-    public class DespesaPorMembro
-    {
-        public string Nome { get; set; }
-        public decimal Valor { get; set; }
-    }
+namespace Domain.Dtos.Finance
+{
+    public record RelatorioDespesasMensais(
+        string Mes,
+        RelatorioGastosDoMesDto RelatorioGastosDoMes,
+        IEnumerable<DespesaPorMembroDto> DespesasPorMembros
+    );  
 }

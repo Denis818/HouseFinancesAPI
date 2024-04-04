@@ -1,4 +1,4 @@
-﻿namespace Domain.Dtos.Finance
+﻿namespace Domain.Dtos.Finance.Records
 {
     public record MembroDto(string Nome);
 }

@@ -1,4 +1,5 @@
 ﻿using Domain.Dtos.Finance;
+using Domain.Dtos.Finance.Records;
 using Domain.Models;
 using HouseFinancesAPI.Utilities;
 
@@ -13,7 +14,7 @@ namespace Application.Interfaces.Services.Finance
         Task<Despesa> UpdateAsync(int id, DespesaDto despesaDto);
 
         Task<IEnumerable<Despesa>> InsertRangeAsync(IAsyncEnumerable<DespesaDto> listDespesasDto);
-        Task<RelatorioDespesasMensais> GetTotalParaCadaMembroAsync();
+        Task<RelatorioDespesasMensais> GetRelatorioDespesasMensaisAsync();
         Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync();
         Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorMesAsync();
     }

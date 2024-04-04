@@ -3,7 +3,6 @@ using Data.DataContext.Context;
 using Domain.Enumeradores;
 using Domain.Interfaces;
 using Domain.Models;
-using Domain.Models.Dtos.Finance;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -101,6 +100,7 @@ namespace Application.Configurations.UserMain
             var listCategoria = new List<Categoria>
             {
                 new() { Descricao = "Almoço/Janta" },
+                new() { Descricao = "Condomínio" },
                 new() { Descricao = "Aluguel" },
                 new() { Descricao = "Limpeza" },
                 new() { Descricao = "Lanches" },
@@ -116,7 +116,8 @@ namespace Application.Configurations.UserMain
                 new() { Nome = "Bruno" },
                 new() { Nome = "Denis" },
                 new() { Nome = "Valdirene" },
-                new() { Nome = "Peu" }
+                new() { Nome = "Peu" },
+                new() { Nome = "Jhon Lenon" }
             };
 
             categoriaRepository.InsertRangeAsync(listCategoria).Wait();

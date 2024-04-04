@@ -1,6 +1,4 @@
 ﻿using Domain.Converters.DatesTimes;
-using Domain.Models;
-using Domain.Models.Dtos.Finance;
 using System.Text.Json.Serialization;
 
 namespace Domain.Dtos.Finance

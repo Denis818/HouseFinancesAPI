@@ -19,7 +19,7 @@ namespace Application.Services.Base
         private readonly IValidator<TEntityDto> _validator = service.GetRequiredService<IValidator<TEntityDto>>();
 
         protected readonly TIRepository _repository = service.GetRequiredService<TIRepository>();
-        protected readonly HttpContext _context = service.GetRequiredService<IHttpContextAccessor>().HttpContext;
+        protected readonly HttpContext _httpContext = service.GetRequiredService<IHttpContextAccessor>().HttpContext;
 
         public void MapDtoToModel(TEntityDto entityDto, TEntity entity)
           => _mapper.Map(entityDto, entity);

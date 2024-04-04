@@ -2,10 +2,10 @@
 using Application.Constants;
 using Application.Interfaces.Services.Finance;
 using Application.Services.Base;
+using Domain.Dtos.Finance.Records;
 using Domain.Enumeradores;
 using Domain.Interfaces;
 using Domain.Models;
-using Domain.Models.Dtos.Finance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IO;
@@ -22,19 +22,16 @@ namespace Application.Services.Finance
 
         public async Task<Categoria> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
 
-        public async Task<bool> Existe(int id)
-            => await _repository.Get().AnyAsync(c => c.Id == id);
-
         public async Task<Categoria> InsertAsync(CategoriaDto categoriaDto)
         {
             if (Validator(categoriaDto)) return null;
 
-            var categoriaExist = _repository.Get(c => c.Descricao == categoriaDto.Descricao);
-            if (categoriaExist is not null)
+            if (await _repository.ExisteAsync(nome:categoriaDto.Descricao) != null)
             {
                 Notificar(EnumTipoNotificacao.ClientError, $"Categoria {categoriaDto.Descricao} já existe.");
                 return null;
             }
+
             var categoria = MapToModel(categoriaDto);
             await _repository.InsertAsync(categoria);
 
@@ -59,13 +56,20 @@ namespace Application.Services.Finance
                 return null;
             }
 
-            (int idAlmoco, int idAluguel) = await GetIdsAluguelAlmocoAsync();
-
-            if (categoria.Id == idAlmoco || categoria.Id == idAluguel)
+            if (_repository.ValidaCategoriaParaAcao(categoria.Id))
             {
-                Notificar(EnumTipoNotificacao.Informacao,
+                Notificar(EnumTipoNotificacao.ClientError,
                     "Essa categoria faz parta da regra de negócio. Não pode ser alterada.");
                 return null;
+            }          
+
+            if (await _repository.ExisteAsync(nome: categoriaDto.Descricao) is Categoria catergoriaExiste)
+            {
+                if (categoria.Id != catergoriaExiste.Id)
+                {
+                    Notificar(EnumTipoNotificacao.ClientError, $"Categoria {categoriaDto.Descricao} já existe.");
+                    return null;
+                }
             }
 
             MapDtoToModel(categoriaDto, categoria);
@@ -91,11 +95,10 @@ namespace Application.Services.Finance
                 return;
             }
 
-            (int idAlmoco, int idAluguel) = await GetIdsAluguelAlmocoAsync();
-            if (categoria.Id == idAlmoco || categoria.Id == idAluguel)
+            if (_repository.ValidaCategoriaParaAcao(categoria.Id))
             {
-                Notificar(EnumTipoNotificacao.Informacao, 
-                    "Essa categoria faz parta da regra de negócio. Não pode ser deletada");
+                Notificar(EnumTipoNotificacao.ClientError,
+                    "Essa categoria faz parta da regra de negócio. Não pode ser alterada");
                 return;
             }
 
@@ -110,14 +113,5 @@ namespace Application.Services.Finance
             Notificar(EnumTipoNotificacao.Informacao, "Registro Deletado");
         }
         #endregion
-
-        public async Task<(int, int)> GetIdsAluguelAlmocoAsync()
-        {
-            var categorias = await GetAllAsync();
-            var idAlmoco = categorias.FirstOrDefault(c => c.Descricao.StartsWith("Almoço"));
-            var idAluguel = categorias.FirstOrDefault(c => c.Descricao.StartsWith("Aluguel"));
-
-            return (idAlmoco.Id, idAluguel.Id);
-        }
     }
 }
