@@ -195,7 +195,7 @@ namespace Application.Services.Finance
             List<Membro> listMembersForaJhon = await MembroRepository
                                            .Get(m => m.Nome != "Jhon Lenon").ToListAsync();
 
-            string mesAtual = inicioDoMes.ToString("Y");
+            string mesAtual = inicioDoMes.ToString("Y", new CultureInfo("pt-BR"));
 
             List<Despesa> despesasAtuais = await _repository.Get(d => d.DataCompra >= inicioDoMes &&
                                                                       d.DataCompra <= fimDoMes)
