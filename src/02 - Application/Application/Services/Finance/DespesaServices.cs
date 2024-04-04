@@ -217,12 +217,9 @@ namespace Application.Services.Finance
 
 
             return new ResumoMensalDto(
-                mesAtual,
-                GetRelatorioDeGastosDoMes(despesasAtuais),
-                DistribuirDespesasEntreMembros(despesaPorMembroForaAluguel,
-                                               totalAluguelParaMembros,
-                                               totalAlmocoParteDoJhon
-            ));
+                GetRelatorioDeGastosDoMes(mesAtual, despesasAtuais),
+                DistribuirDespesasEntreMembros(despesaPorMembroForaAluguel, totalAluguelParaMembros, totalAlmocoParteDoJhon)
+            );
         }
 
 
@@ -301,11 +298,11 @@ namespace Application.Services.Finance
                 }
             }
 
-            return members.Select(member => 
+            return members.Select(member =>
                     new DespesaPorMembroDto(member.Nome, CalculaValorPorMembro(member).RoundTo(2)));
         }
 
-        public RelatorioGastosDoMesDto GetRelatorioDeGastosDoMes(List<Despesa> despesas)
+        public RelatorioGastosDoMesDto GetRelatorioDeGastosDoMes(string mesAtual, List<Despesa> despesas)
         {
             decimal totalAluguelMaisCondominio = despesas
                                                  .Where(d => d.Categoria.Descricao == "Aluguel" ||
@@ -316,7 +313,7 @@ namespace Application.Services.Finance
 
             decimal totalGastosGerais = totalGeral - totalAluguelMaisCondominio;
 
-            return new RelatorioGastosDoMesDto(totalAluguelMaisCondominio, totalGastosGerais, totalGeral);
+            return new RelatorioGastosDoMesDto(mesAtual, totalAluguelMaisCondominio, totalGastosGerais, totalGeral);
         }
         #endregion
     }
