@@ -178,7 +178,7 @@ namespace Application.Services.Finance
             var despesasPorMes = _repository.Get()
                                             .GroupBy(d => new { d.DataCompra.Month, d.DataCompra.Year })
                                             .Select(group => new DespesasPorMesDto(
-                                                new DateTime(group.Key.Year, group.Key.Month, 1).ToString("Y", new CultureInfo("pt-BR")),
+                                                new DateTime(group.Key.Year, group.Key.Month, 1).Month.ToString("Y", new CultureInfo("pt-BR")),
                                                 group.Sum(d => d.Total).RoundTo(2)
                                             ));
 
