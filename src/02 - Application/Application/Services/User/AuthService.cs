@@ -1,8 +1,8 @@
 ﻿using Application.Interfaces.Services.User;
 using Application.Services.Base;
-using Data.Repository.User;
 using Domain.Dtos.User;
 using Domain.Enumeradores;
+using Domain.Interfaces;
 using Domain.Models.Users;
 using Domain.Utilities;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;

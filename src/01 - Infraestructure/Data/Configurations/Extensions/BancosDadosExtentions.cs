@@ -9,7 +9,7 @@ using Domain.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Application.Configurations.UserMain
+namespace Data.Configurations.Extensions
 {
     public static class SeedUser
     {
@@ -32,10 +32,9 @@ namespace Application.Configurations.UserMain
             }
 
             PrepareUserAdmin(services);
-            //PrepareUserMember(services);
         }
 
-        public static  void PrepareUserAdmin(IServiceProvider serviceProvider)
+        public static void PrepareUserAdmin(IServiceProvider serviceProvider)
         {
             var usuarioRepository = serviceProvider.GetRequiredService<IUsuarioRepository>();
 
