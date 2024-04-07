@@ -9,7 +9,7 @@ using Domain.Models.Finance;
 namespace Application.Interfaces.Services
 {
     public class MembroServices(IServiceProvider service) :
-        BaseService<Membro, MembroDto, IMembroRepository>(service), IMembroServices
+        BaseService<Membro, IMembroRepository>(service), IMembroServices
     {
         public IQueryable<Membro> GetAllAsync() => _repository.Get();
 
@@ -22,7 +22,7 @@ namespace Application.Interfaces.Services
             if (await _repository.ExisteAsync(membroDto.Nome) != null) 
                 Notificar(EnumTipoNotificacao.ClientError, $"O membro {membroDto.Nome} já existe.");
 
-            var membro = MapToModel(membroDto);
+            var membro = _mapper.Map<Membro>(membroDto);
 
             await _repository.InsertAsync(membro);
 
@@ -63,7 +63,7 @@ namespace Application.Interfaces.Services
                 }
             }
 
-            MapDtoToModel(membroDto, membro);
+            _mapper.Map(membroDto, membro);
 
             _repository.Update(membro);
 

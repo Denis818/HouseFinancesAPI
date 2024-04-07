@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.Utility;
+using Domain.Enumeradores;
 
 namespace Application.Utilities
 {
@@ -6,14 +7,14 @@ namespace Application.Utilities
     {
         public List<Notificacao> ListNotificacoes { get; } = new List<Notificacao>();
 
-        public void Add(Notificacao notificacao)
-        {
-            ListNotificacoes.Add(notificacao);
-        }
-
         public void Clear()
         {
             ListNotificacoes.Clear();
         }
+
+        public void Notificar(EnumTipoNotificacao tipo, string message) 
+            => ListNotificacoes.Add(new Notificacao(message, tipo));
+
+        
     }
 }

@@ -17,6 +17,7 @@ namespace Application.Configurations.Extensions.DependencyManagers
             services.AddConectionsString(config);
             services.AddDependecyUtilities();
             services.AddDependecyRepositories();
+            services.AddDependecyServicesDomain();
             services.AddDependecyServices();
 
             services.AddAuthenticationJwt(config);

@@ -12,7 +12,7 @@ using Application.Interfaces.Services.LogApp;
 using Application.Services.User;
 using Data.Repository.User;
 using Application.Interfaces.Services.User;
-using Domain.Utilities;
+using Domain.Services;
 
 namespace Application.Configurations.Extensions.DependencyManagers
 {
@@ -21,7 +21,6 @@ namespace Application.Configurations.Extensions.DependencyManagers
         public static void AddDependecyUtilities(this IServiceCollection services)
         {
             services.AddHttpContextAccessor();
-            services.AddScoped<PasswordHasher>();
             services.AddScoped<INotificador, Notificador>();
         }
 
@@ -41,6 +40,11 @@ namespace Application.Configurations.Extensions.DependencyManagers
             services.AddScoped<IDespesaServices, DespesaServices>();
             services.AddScoped<IMembroServices, MembroServices>();
             services.AddScoped<ICategoriaServices, CategoriaServices>();
+        }
+
+        public static void AddDependecyServicesDomain(this IServiceCollection services)
+        {
+            services.AddScoped<IFinanceServices, FinanceServices>();
         }
     }
 }

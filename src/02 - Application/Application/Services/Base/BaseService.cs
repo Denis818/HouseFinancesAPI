@@ -10,35 +10,31 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Services.Base
 {
-    public abstract class BaseService<TEntity, TEntityDto, TIRepository>(IServiceProvider service)
+    public abstract class BaseService<TEntity, TIRepository>(IServiceProvider service)
       where TEntity : class, new()
       where TIRepository : class, IRepositoryBase<TEntity>
     {
-        private readonly IMapper _mapper = service.GetRequiredService<IMapper>();
-        private readonly INotificador _notificador = service.GetRequiredService<INotificador>();
-        private readonly IValidator<TEntityDto> _validator = service.GetRequiredService<IValidator<TEntityDto>>();
+        protected readonly IMapper _mapper = 
+            service.GetRequiredService<IMapper>();
 
-        protected readonly TIRepository _repository = service.GetRequiredService<TIRepository>();
-        protected readonly HttpContext _httpContext = service.GetRequiredService<IHttpContextAccessor>().HttpContext;
+        private readonly INotificador _notificador =
+            service.GetRequiredService<INotificador>();
 
-        public void MapDtoToModel(TEntityDto entityDto, TEntity entity)
-          => _mapper.Map(entityDto, entity);
+        protected readonly TIRepository _repository =         
+            service.GetRequiredService<TIRepository>();
 
-        public TEntityDto MapToDto(TEntity entity)
-            => _mapper.Map<TEntityDto>(entity);
+        protected readonly HttpContext _httpContext = 
+            service.GetRequiredService<IHttpContextAccessor>().HttpContext;
 
-        public TEntity MapToModel(TEntityDto entityDto)
-            => _mapper.Map<TEntity>(entityDto);
-
-        public IEnumerable<TEntityDto> MapToListDto(IEnumerable<TEntity> entityDto)
-            => _mapper.Map<IEnumerable<TEntityDto>>(entityDto);
-
+   
         public void Notificar(EnumTipoNotificacao tipo, string message)
-            => _notificador.Add(new Notificacao(message, tipo));
+            => _notificador.Notificar(tipo, message);
 
-        public bool Validator(TEntityDto entityDto)
+        public bool Validator<TEntityDto>(TEntityDto entityDto)
         {
-            ValidationResult results = _validator.Validate(entityDto);
+            var validator = service.GetService<IValidator<TEntityDto>>();
+
+            ValidationResult results = validator.Validate(entityDto);
 
             if (!results.IsValid)
             {
@@ -52,7 +48,7 @@ namespace Application.Services.Base
 
                 foreach (var failure in groupedFailures)
                 {
-                    Notificar(EnumTipoNotificacao.Informacao, $"{failure.PropertyName}: {failure.Errors}");
+                    _notificador.Notificar(EnumTipoNotificacao.Informacao, $"{failure.PropertyName}: {failure.Errors}");
                 }
 
                 return true;

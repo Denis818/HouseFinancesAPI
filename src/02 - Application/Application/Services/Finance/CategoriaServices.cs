@@ -1,5 +1,4 @@
-﻿using Application.Configurations.Extensions.Help;
-using Application.Constants;
+﻿using Application.Constants;
 using Application.Interfaces.Services.Finance;
 using Application.Services.Base;
 using Domain.Dtos.Categoria;
@@ -7,14 +6,11 @@ using Domain.Enumeradores;
 using Domain.Interfaces;
 using Domain.Models.Finance;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IO;
-using System.Text.RegularExpressions;
 
 namespace Application.Services.Finance
 {
-    public class CategoriaServices(IServiceProvider Service) :
-        BaseService<Categoria, CategoriaDto, ICategoriaRepository>(Service), ICategoriaServices
+    public class CategoriaServices(IServiceProvider service) :
+        BaseService<Categoria, ICategoriaRepository>(service), ICategoriaServices
     {
         #region CRUD
         public async Task<IEnumerable<Categoria>> GetAllAsync()
@@ -32,7 +28,7 @@ namespace Application.Services.Finance
                 return null;
             }
 
-            var categoria = MapToModel(categoriaDto);
+            var categoria = _mapper.Map<Categoria>(categoriaDto);
             await _repository.InsertAsync(categoria);
 
             if (!await _repository.SaveChangesAsync())
@@ -72,7 +68,7 @@ namespace Application.Services.Finance
                 }
             }
 
-            MapDtoToModel(categoriaDto, categoria);
+            _mapper.Map(categoriaDto, categoria);
 
             _repository.Update(categoria);
 

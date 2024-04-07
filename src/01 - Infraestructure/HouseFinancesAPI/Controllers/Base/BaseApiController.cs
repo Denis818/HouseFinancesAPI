@@ -60,8 +60,8 @@ namespace HouseFinancesAPI.Controllers.Base
             });
         }
 
-        protected void Notificar(EnumTipoNotificacao tipo, string mesage)
-            => _notificador.Add(new Notificacao(mesage, tipo));
+        protected void Notificar(EnumTipoNotificacao tipo, string mesage) 
+            => _notificador.Notificar(tipo, mesage);
     }
 
     public class ResponseResultDTO<TResponse>

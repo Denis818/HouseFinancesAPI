@@ -8,6 +8,7 @@ using Domain.Dtos.Finance;
 using Domain.Enumeradores;
 using Domain.Interfaces;
 using Domain.Models.Finance;
+using Domain.Services;
 using HouseFinancesAPI.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.WebEncoders.Testing;
@@ -15,10 +16,10 @@ using System.Globalization;
 
 namespace Application.Services.Finance
 {
-    public class DespesaServices(IServiceProvider Service,
-        IMembroRepository MembroRepository,
-        ICategoriaRepository CategoriaRepository) :
-        BaseService<Despesa, DespesaDto, IDespesaRepository>(Service), IDespesaServices
+    public class DespesaServices(IServiceProvider service,
+        IFinanceServices _financeServices,
+        IMembroRepository _membroRepository,
+        ICategoriaRepository _categoriaRepository) : BaseService<Despesa, IDespesaRepository>(service), IDespesaServices
     {
         #region CRUD
         public async Task<Despesa> GetByIdAsync(int id)
@@ -38,15 +39,15 @@ namespace Application.Services.Finance
         {
             if (Validator(despesaDto)) return null;
 
-            if (await CategoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
+            if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
             {
                 Notificar(EnumTipoNotificacao.ClientError, $"Categoria com id:{despesaDto.CategoriaId} não existe.");
                 return null;
             }
 
-            var despesa = MapToModel(despesaDto);
+            var despesa = _mapper.Map<Despesa>(despesaDto);
 
-            despesa.Total = despesa.Preco * despesa.Quantidade;
+            despesa.Total = (despesa.Preco * despesa.Quantidade).RoundTo(2);
 
             await _repository.InsertAsync(despesa);
 
@@ -57,6 +58,57 @@ namespace Application.Services.Finance
             }
 
             return await GetByIdAsync(despesa.Id);
+        }
+
+        public async Task<IEnumerable<Despesa>> InsertRangeAsync(IAsyncEnumerable<DespesaDto> listDespesasDto)
+        {
+            int totalRecebido = 0;
+            var despesasParaInserir = new List<Despesa>();
+
+            await foreach (var despesaDto in listDespesasDto)
+            {
+                totalRecebido++;
+
+                if (Validator(despesaDto)) continue;
+
+                if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
+                {
+                    Notificar(EnumTipoNotificacao.Informacao, $"Categoria com id:{despesaDto.CategoriaId} não existe.");
+                    continue;
+                }
+
+                var despesa = _mapper.Map<Despesa>(despesaDto);
+                despesa.Total = (despesa.Preco * despesa.Quantidade).RoundTo(2);
+                despesasParaInserir.Add(despesa);
+            }
+
+            if (despesasParaInserir.Count == 0)
+            {
+                Notificar(EnumTipoNotificacao.ClientError, "Nunhuma das despesa é valida para inserir.");
+                return null;
+            }
+
+            await _repository.InsertRangeAsync(despesasParaInserir);
+            if (!await _repository.SaveChangesAsync())
+            {
+                Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.InsertError);
+                return null;
+            }
+
+            if (totalRecebido > despesasParaInserir.Count)
+            {
+                Notificar(EnumTipoNotificacao.Informacao,
+                    $"{despesasParaInserir.Count} de {totalRecebido} despesas foram inseridas. " +
+                    $"total de {totalRecebido - despesasParaInserir.Count} invalidas.");
+            }
+
+            var ids = despesasParaInserir.Select(d => d.Id).ToList();
+            var despesasInseridas = await _repository.Get(d => ids
+                                                     .Contains(d.Id))
+                                                     .Include(c => c.Categoria)
+                                                     .ToListAsync();
+
+            return despesasInseridas;
         }
 
         public async Task<Despesa> UpdateAsync(int id, DespesaDto despesaDto)
@@ -71,7 +123,7 @@ namespace Application.Services.Finance
                 return null;
             }
 
-            MapDtoToModel(despesaDto, despesa);
+            _mapper.Map(despesaDto, despesa);
 
             despesa.Total = despesa.Preco * despesa.Quantidade;
 
@@ -108,58 +160,6 @@ namespace Application.Services.Finance
         }
         #endregion
 
-        public async Task<IEnumerable<Despesa>> InsertRangeAsync(IAsyncEnumerable<DespesaDto> listDespesasDto)
-        {
-            int totalRecebido = 0;
-            var despesasParaInserir = new List<Despesa>();
-
-            await foreach (var despesaDto in listDespesasDto)
-            {
-                totalRecebido++;
-
-                if (Validator(despesaDto)) continue;
-
-                if (await CategoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
-                {
-                    Notificar(EnumTipoNotificacao.Informacao, $"Categoria com id:{despesaDto.CategoriaId} não existe.");
-                    continue;
-                }
-
-                var despesa = MapToModel(despesaDto);
-                despesa.Total = despesa.Preco * despesa.Quantidade;
-                despesasParaInserir.Add(despesa);
-            }
-
-            if (despesasParaInserir.Count == 0)
-            {
-                Notificar(EnumTipoNotificacao.ClientError, "Nunhuma das despesa é valida para inserir.");
-                return null;
-            }
-
-            await _repository.InsertRangeAsync(despesasParaInserir);
-            if (!await _repository.SaveChangesAsync())
-            {
-                Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.InsertError);
-                return null;
-            }
-
-            if (totalRecebido > despesasParaInserir.Count)
-            {
-                Notificar(EnumTipoNotificacao.Informacao,
-                    $"{despesasParaInserir.Count} de {totalRecebido} despesas foram inseridas. " +
-                    $"total de {totalRecebido - despesasParaInserir.Count} invalidas.");
-            }
-
-            var ids = despesasParaInserir.Select(d => d.Id).ToList();
-            var despesasInseridas = await _repository.Get(d => ids
-                                                     .Contains(d.Id))
-                                                     .Include(c => c.Categoria)
-                                                     .ToListAsync();
-
-            return despesasInseridas;
-        }
-
-
         public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync()
         {
             var (inicioDoMes, fimDoMes) = await GetPeriodoParaCalculoAsync();
@@ -188,11 +188,12 @@ namespace Application.Services.Finance
 
         public async Task<ResumoMensalDto> GetResumoDespesasMensalAsync()
         {
-            var (idAlmoco, idAluguel) = CategoriaRepository.GetIdsAluguelAlmoco();
-
+            var (idAlmoco, idAluguel) = _categoriaRepository.GetIdsAluguelAlmoco();
             var (inicioDoMes, fimDoMes) = await GetPeriodoParaCalculoAsync();
 
-            List<Membro> listMembersForaJhon = await MembroRepository
+
+
+            List<Membro> listMembersForaJhon = await _membroRepository
                                            .Get(m => m.Nome != "Jhon Lenon").ToListAsync();
 
             string mesAtual = inicioDoMes.ToString("Y", new CultureInfo("pt-BR"));
@@ -203,13 +204,13 @@ namespace Application.Services.Finance
                                                             .ToListAsync();
 
             decimal totalDespesaForaAlmocoAluguel =
-                CalculaTotalDespesaForaAlmocoAluguel(despesasAtuais, idAlmoco, idAluguel).RoundTo(2);
+                _financeServices.CalculaTotalDespesaForaAlmocoAluguel(despesasAtuais, idAlmoco, idAluguel).RoundTo(2);
 
             decimal totalAluguelParaMembros =
                 CalculaTotalAluguelParaMembros(despesasAtuais, idAluguel).RoundTo(2);
 
             var (totalAlmocoDividioComJhon, totalAlmocoParteDoJhon) =
-                CalculaTotalAlmocoDivididoComJhon(despesasAtuais, idAlmoco);
+                _financeServices.CalculaTotalAlmocoDivididoComJhon(despesasAtuais, idAlmoco);
 
             decimal totalDespesaForaAluguel = totalDespesaForaAlmocoAluguel + totalAlmocoDividioComJhon;
             decimal despesaPorMembroForaAluguel = (totalDespesaForaAluguel - 100) / listMembersForaJhon.Count; //desconto do estacionamento que alugamos
@@ -217,7 +218,7 @@ namespace Application.Services.Finance
 
 
             return new ResumoMensalDto(
-                GetRelatorioDeGastosDoMes(mesAtual, despesasAtuais),
+                _financeServices.GetRelatorioDeGastosDoMes(mesAtual, despesasAtuais),
                 DistribuirDespesasEntreMembros(despesaPorMembroForaAluguel, totalAluguelParaMembros, totalAlmocoParteDoJhon)
             );
         }
@@ -238,19 +239,11 @@ namespace Application.Services.Finance
             return (inicioDoMes, fimDoMes);
         }
 
-        #endregion
-
-        #region Calculos para despesa por membros
-
-        private decimal CalculaTotalDespesaForaAlmocoAluguel(List<Despesa> despesas, int idAlmoco, int idAluguel)
-            => despesas.Where(d => d.CategoriaId != idAlmoco && d.CategoriaId != idAluguel).Sum(d => d.Total);
-
-
         private decimal CalculaTotalAluguelParaMembros(List<Despesa> despesas, int idAluguel)
         {
-            var (idJhon, idPeu) = MembroRepository.GetIdsJhonPeu();
+            var (idJhon, idPeu) = _membroRepository.GetIdsJhonPeu();
 
-            var membros = MembroRepository.Get(membro => membro.Id != idJhon &&
+            var membros = _membroRepository.Get(membro => membro.Id != idJhon &&
                                                          membro.Id != idPeu).ToList();
 
             var totalAluguel = despesas.Where(d => d.CategoriaId == idAluguel)
@@ -259,27 +252,13 @@ namespace Application.Services.Finance
             return (totalAluguel - 300) / membros.Count;
         }
 
-        private (decimal, decimal) CalculaTotalAlmocoDivididoComJhon(
-            List<Despesa> despesas,
-            int idAlmoco)
-        {
-            var totalAlmoco = despesas.Where(d => d.CategoriaId == idAlmoco)
-                                      .Sum(d => d.Total);
-
-            decimal totalAlmocoParteDoJhon = (totalAlmoco / 5).RoundTo(2);
-
-            decimal totalAlmocoAbatido = (totalAlmoco - totalAlmocoParteDoJhon).RoundTo(2);
-
-            return (totalAlmocoAbatido, totalAlmocoParteDoJhon);
-        }
-
         private IEnumerable<DespesaPorMembroDto> DistribuirDespesasEntreMembros(
             decimal despesaPorMembroForaAluguel,
             decimal totalAluguelPara3Membros,
             decimal totalAlmocoDividioComJhon)
         {
-            var members = MembroRepository.Get().ToList();
-            var (idJhon, idPeu) = MembroRepository.GetIdsJhonPeu();
+            var members = _membroRepository.Get().ToList();
+            var (idJhon, idPeu) = _membroRepository.GetIdsJhonPeu();
 
 
             decimal CalculaValorPorMembro(Membro membro)
@@ -300,21 +279,7 @@ namespace Application.Services.Finance
 
             return members.Select(member =>
                     new DespesaPorMembroDto(member.Nome, CalculaValorPorMembro(member).RoundTo(2)));
-        }
-
-        public RelatorioGastosDoMesDto GetRelatorioDeGastosDoMes(string mesAtual, List<Despesa> despesas)
-        {
-            decimal totalAluguelMaisCondominio = despesas
-                                                 .Where(d => d.Categoria.Descricao == "Aluguel" ||
-                                                             d.Categoria.Descricao == "Condomínio")
-                                                 .Sum(d => d.Total);
-
-            decimal totalGeral = despesas.Sum(d => d.Total);
-
-            decimal totalGastosGerais = totalGeral - totalAluguelMaisCondominio;
-
-            return new RelatorioGastosDoMesDto(mesAtual, totalAluguelMaisCondominio, totalGastosGerais, totalGeral);
-        }
+        }  
         #endregion
     }
 }

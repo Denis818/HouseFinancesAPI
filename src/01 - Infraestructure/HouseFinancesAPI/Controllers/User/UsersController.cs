@@ -12,7 +12,7 @@ namespace Controllers.User
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController(
-        IAuthService UserService,
+        IAuthService _authService,
         IServiceProvider service) : BaseApiController(service)
     {
         [HttpPost("login")]
@@ -27,7 +27,7 @@ namespace Controllers.User
             if (userDto.Email.Replace(" ", "").ToLower() == "master")
                 userDto.Email = _configuration["UserMaster:Email"];
 
-            var token = await UserService.AutenticarUsuario(userDto);
+            var token = await _authService.AutenticarUsuario(userDto);
 
             if (token == null)
             {
@@ -40,13 +40,13 @@ namespace Controllers.User
 
         [HttpGet("add-permission")]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
-        public async Task AddPermissaoAsync(AddUserPermissionDto userPermissao) 
-            => await UserService.AddPermissaoAsync(userPermissao);
-        
+        public async Task AddPermissaoAsync(AddUserPermissionDto userPermissao)
+            => await _authService.AddPermissaoAsync(userPermissao);
+
         [HttpGet("info")]
         [AutorizationFinance]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public UserInfoDto UserInfo() 
-            => new(UserService.Name, UserService.PossuiPermissao(EnumPermissoes.USU_000001));
+        public UserInfoDto UserInfo()
+            => new(HttpContext.User.Identity.Name, _authService.PossuiPermissao(EnumPermissoes.USU_000001));
     }
 }

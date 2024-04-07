@@ -16,20 +16,15 @@ using System.Text;
 
 namespace Application.Services.User
 {
-    public class AuthService(
-        IHttpContextAccessor Acessor,
-        IConfiguration _configuration,
-        IServiceProvider Service, PasswordHasher hashService)
-        : BaseService<Usuario, UserDto, IUsuarioRepository>(Service), IAuthService
+    public class AuthService(IServiceProvider service,
+        IConfiguration _configuration)
+        : BaseService<Usuario, IUsuarioRepository>(service), IAuthService
     {
-        public string Name => Acessor.HttpContext.User.Identity.Name;
-
-
         public async Task CadastrarUsuario(UserDto userDto)
         {
             if (Validator(userDto)) return;
 
-            var (Salt, passwordHash) = hashService.CriarHashSenha(userDto.Password);
+            var (Salt, passwordHash) = new PasswordHasher().CriarHashSenha(userDto.Password);
 
             Usuario novoUsuario = new()
             {
@@ -66,7 +61,7 @@ namespace Application.Services.User
 
         public bool PossuiPermissao(params EnumPermissoes[] permissoesParaValidar)
         {
-            var permissoes = Acessor.HttpContext?.User?
+            var permissoes = _httpContext?.User?
                                     .Claims?.Select(claim => claim.Value.ToString());
 
             var possuiPermissao = permissoesParaValidar

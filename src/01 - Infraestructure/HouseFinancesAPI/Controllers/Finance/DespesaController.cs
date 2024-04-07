@@ -13,50 +13,50 @@ namespace HouseFinancesAPI.Controllers.Finance
     [AutorizationFinance]
     [Route("api/[controller]")]
     public class DespesaController(IServiceProvider service,
-        IDespesaServices DespesaServices) :
+        IDespesaServices _despesaServices) :
         BaseApiController(service)
     {
         #region CRUD
         [HttpGet]
         public async Task<PagedResult<Despesa>> GetAllAsync(int paginaAtual = 1, int itensPorPagina = 10)
-            => await DespesaServices.GetAllAsync(paginaAtual, itensPorPagina);
+            => await _despesaServices.GetAllAsync(paginaAtual, itensPorPagina);
 
         [HttpGet("{id}")]
         public async Task<Despesa> GetById(int id)
-            => await DespesaServices.GetByIdAsync(id);
+            => await _despesaServices.GetByIdAsync(id);
 
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<Despesa> Post(DespesaDto vendaDto)
-            => await DespesaServices.InsertAsync(vendaDto);
+            => await _despesaServices.InsertAsync(vendaDto);
 
         [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<Despesa> Put(int id, DespesaDto vendaDto)
-            => await DespesaServices.UpdateAsync(id, vendaDto);
+            => await _despesaServices.UpdateAsync(id, vendaDto);
 
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task Delete(int id)
-            => await DespesaServices.DeleteAsync(id);
+            => await _despesaServices.DeleteAsync(id);
         #endregion
 
 
         [HttpPost("inserir-lote")]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<IEnumerable<Despesa>> PostRange(IAsyncEnumerable<DespesaDto> vendaDto)
-           => await DespesaServices.InsertRangeAsync(vendaDto);
+           => await _despesaServices.InsertRangeAsync(vendaDto);
 
         [HttpGet("resumo-despesas-mensal")]
         public async Task<ResumoMensalDto> GetResumoDespesasMensalAsync() 
-            => await DespesaServices.GetResumoDespesasMensalAsync();
+            => await _despesaServices.GetResumoDespesasMensalAsync();
 
         [HttpGet("total-por-categoria")]
         public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoria()
-            => await DespesaServices.GetTotalPorCategoriaAsync();
+            => await _despesaServices.GetTotalPorCategoriaAsync();
 
         [HttpGet("total-por-mes")]
         public async Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorMesAsync()
-            => await DespesaServices.GetTotaisComprasPorMesAsync();
+            => await _despesaServices.GetTotaisComprasPorMesAsync();
     }
 }

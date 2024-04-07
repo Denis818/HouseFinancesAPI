@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace Application.Services.LogApp
 {
-    public class LogApplicationServices(ILogApplicationRepository LogRepository) : ILogApplicationServices
+    public class LogApplicationServices(ILogApplicationRepository _logRepository) : ILogApplicationServices
     {
         public async Task RegisterLog(EnumTypeLog typeLog,
             HttpContext context,
@@ -45,7 +45,7 @@ namespace Application.Services.LogApp
                 logEntry.ExceptionMessage = ReduzirString(message, 250);
             }
 
-           // await LogRepository.InsertAsync(logEntry);
+           // await _logRepository.InsertAsync(logEntry);
         }
 
         private string ReduzirString(string message, int max)

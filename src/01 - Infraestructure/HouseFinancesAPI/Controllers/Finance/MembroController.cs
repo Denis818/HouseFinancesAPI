@@ -13,30 +13,30 @@ namespace HouseFinancesAPI.Controllers.Finance
     [AutorizationFinance]
     [Route("api/[controller]")]
     public class MembroController(IServiceProvider service,
-        IMembroServices MemberServices) :
+        IMembroServices _membroServices) :
         BaseApiController(service)
     {
         [HttpGet]
         public async Task<IEnumerable<Membro>> GetAllDespesaAsync() =>
-            await MemberServices.GetAllAsync().ToListAsync();
+            await _membroServices.GetAllAsync().ToListAsync();
 
         [HttpGet("{id}")]
         public async Task<Membro> GetById(int id)
-           => await MemberServices.GetByIdAsync(id);
+           => await _membroServices.GetByIdAsync(id);
 
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<Membro> Post(MembroDto vendaDto)
-            => await MemberServices.InsertAsync(vendaDto);
+            => await _membroServices.InsertAsync(vendaDto);
 
         [HttpPatch]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<Membro> Put(int id, MembroDto vendaDto)
-            => await MemberServices.UpdateAsync(id, vendaDto);
+            => await _membroServices.UpdateAsync(id, vendaDto);
 
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task Delete(int id)
-            => await MemberServices.DeleteAsync(id);
+            => await _membroServices.DeleteAsync(id);
     }
 }
