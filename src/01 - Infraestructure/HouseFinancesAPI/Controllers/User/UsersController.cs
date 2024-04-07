@@ -12,47 +12,42 @@ namespace Controllers.User
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController(
-        UserManager<IdentityUser> UserManager,
-        SignInManager<IdentityUser> SignInManager,
-        IUserServices UserService, 
+        IAuthService UserService,
         IServiceProvider service) : BaseApiController(service)
     {
         [HttpPost("login")]
         public async Task<UserTokenDto> Login(UserDto userDto)
         {
-            if(userDto.Email.IsNullOrEmpty() || userDto.Password.IsNullOrEmpty())
+            if (userDto.Email.IsNullOrEmpty() || userDto.Password.IsNullOrEmpty())
             {
                 Notificar(EnumTipoNotificacao.ClientError, "Email ou Senha incorretos.");
                 return null;
             }
 
-            if (userDto.Email.Replace(" ", "").ToLower() == "master") 
+            if (userDto.Email.Replace(" ", "").ToLower() == "master")
                 userDto.Email = _configuration["UserMaster:Email"];
 
-            var userLogin = await SignInManager.PasswordSignInAsync(userDto.Email, userDto.Password,
-                                                                     isPersistent: false, lockoutOnFailure: false);
+            var token = await UserService.AutenticarUsuario(userDto);
 
-            if (!userLogin.Succeeded)
+            if (token == null)
             {
                 Notificar(EnumTipoNotificacao.ClientError, "Email ou Senha incorretos.");
                 return null;
             }
 
-            var user = await UserManager.FindByEmailAsync(userDto.Email);
-            var claims = await UserManager.GetClaimsAsync(user);
-
-            return UserService.GerarToken(userDto, claims.ToArray());
+            return token;
         }
+
 
         [HttpGet("info")]
         [AutorizationFinance]
         [ApiExplorerSettings(IgnoreApi = true)]
         public UserInfoDto UserInfo() => new(UserService.Name, UserService.PossuiPermissao(EnumPermissoes.USU_000001));
 
-        [HttpGet("logout")]
-        [AutorizationFinance]
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task Logout() => await SignInManager.SignOutAsync();
+        //[HttpGet("logout")]
+        //[AutorizationFinance]
+        //[ApiExplorerSettings(IgnoreApi = true)]
+        //  public async Task Logout() => await SignInManager.SignOutAsync();
 
     }
 }

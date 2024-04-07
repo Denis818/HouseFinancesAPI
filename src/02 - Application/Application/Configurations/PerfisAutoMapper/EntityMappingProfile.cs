@@ -2,7 +2,7 @@
 using Domain.Dtos.Categoria;
 using Domain.Dtos.Finance;
 using Domain.Dtos.Membro;
-using Domain.Models;
+using Domain.Models.Finance;
 
 namespace DadosInCached.Configurations.PerfisAutoMapper
 {

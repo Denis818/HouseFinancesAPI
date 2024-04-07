@@ -1,12 +1,13 @@
 ﻿using Data.DataContext;
 using Data.DataContext.Context;
+using Data.Repository.User;
 using Domain.Enumeradores;
 using Domain.Interfaces;
-using Domain.Models;
-using Microsoft.AspNetCore.Identity;
+using Domain.Models.Finance;
+using Domain.Models.Users;
+using Domain.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Security.Claims;
 
 namespace Application.Configurations.UserMain
 {
@@ -31,65 +32,45 @@ namespace Application.Configurations.UserMain
             }
 
             PrepareUserAdmin(services);
-            PrepareUserMember(services);
+            //PrepareUserMember(services);
         }
 
-        public static void PrepareUserAdmin(IServiceProvider service)
+        public static  void PrepareUserAdmin(IServiceProvider serviceProvider)
         {
-            var _userManager = service.GetRequiredService<UserManager<IdentityUser>>();
+            var usuarioRepository = serviceProvider.GetRequiredService<IUsuarioRepository>();
 
-            var usuarioInicial = _userManager.FindByEmailAsync("master@gmail.com").GetAwaiter().GetResult();
+            string email = "master@gmail.com";
+            string senha = "Master@123456";
 
-            if (usuarioInicial is null)
+            if (usuarioRepository.Get(u => u.Email == email) != null)
             {
-                IdentityUser user = new()
-                {
-                    UserName = "master@gmail.com",
-                    Email = "master@gmail.com",
-                    NormalizedUserName = "master@gmail.com",
-                    NormalizedEmail = "MASTER@GMAIL.COM",
-                    EmailConfirmed = true,
-                    LockoutEnabled = false,
-                    SecurityStamp = Guid.NewGuid().ToString()
-                };
-
-                IdentityResult result = _userManager.CreateAsync(user, "Master@123456").Result;
-
-                if (result.Succeeded)
-                {
-                    var listPermissoesPadroesAdmin = new[]
-                    {
-                        EnumPermissoes.USU_000001,
-                        EnumPermissoes.USU_000002
-                    };
-
-                    var claims = listPermissoesPadroesAdmin.Select(p =>
-                    new Claim(nameof(EnumPermissoes), p.ToString())).ToList();
-
-                    _userManager.AddClaimsAsync(user, claims).Wait();
-                }
+                return;
             }
-        }
-        public static void PrepareUserMember(IServiceProvider service)
-        {
-            var _userManager = service.GetRequiredService<UserManager<IdentityUser>>();
-            var usuarioInicial = _userManager.FindByEmailAsync("visitante@gmail.com").GetAwaiter().GetResult();
 
-            if (usuarioInicial is null)
+            var generetaHash = new PasswordHasher();
+            var (Salt, PasswordHash) = generetaHash.CriarHashSenha(senha);
+
+            var usuario = new Usuario
             {
-                IdentityUser user = new()
-                {
-                    UserName = "visitante@gmail.com",
-                    Email = "visitante@gmail.com",
-                    NormalizedUserName = "visitante@gmail.com",
-                    NormalizedEmail = "VISITANTE@GMAIL.COM",
-                    EmailConfirmed = true,
-                    LockoutEnabled = false,
-                    SecurityStamp = Guid.NewGuid().ToString()
-                };
+                Email = email,
+                Password = PasswordHash,
+                Salt = Salt,
+                Permissoes = []
+            };
 
-                _userManager.CreateAsync(user, "Abc@123456").Wait();
+            var permissoes = new[]
+            {
+                EnumPermissoes.USU_000001,
+                EnumPermissoes.USU_000002
+            };
+
+            foreach (var permissao in permissoes)
+            {
+                usuario.Permissoes.Add(new Permissao { Nome = permissao.ToString() });
             }
+
+            usuarioRepository.InsertAsync(usuario).Wait();
+            usuarioRepository.SaveChangesAsync().Wait();
         }
 
         public static void PrepareCategoryAndMember(IServiceProvider service)

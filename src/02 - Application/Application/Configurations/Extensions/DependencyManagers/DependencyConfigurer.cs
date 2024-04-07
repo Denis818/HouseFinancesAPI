@@ -15,6 +15,7 @@ namespace Application.Configurations.Extensions.DependencyManagers
         public static void AddApiDependencyServices(this IServiceCollection services, IConfiguration config)
         {
             services.AddConectionsString(config);
+            services.AddDependecyUtilities();
             services.AddDependecyRepositories();
             services.AddDependecyServices();
 
@@ -24,17 +25,26 @@ namespace Application.Configurations.Extensions.DependencyManagers
 
         public static void AddAuthenticationJwt(this IServiceCollection services, IConfiguration config)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
+            var key = Encoding.ASCII.GetBytes(config["Jwt:key"]);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidAudience = config["TokenConfiguration:Audience"],
                     ValidIssuer = config["TokenConfiguration:Issuer"],
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:key"]))
-                });
+                    ValidAudience = config["TokenConfiguration:Audience"]
+                };
+            });
         }
 
         public static void AddAutoConfigs(this IServiceCollection services)

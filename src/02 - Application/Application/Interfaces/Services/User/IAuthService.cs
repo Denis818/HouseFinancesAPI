@@ -1,13 +1,13 @@
 ﻿using Domain.Dtos.User;
 using Domain.Enumeradores;
-using System.Security.Claims;
 
 namespace Application.Interfaces.Services.User
 {
-    public interface IUserServices
+    public interface IAuthService
     {
-        public string Name { get; }
+        string Name { get; }
+        Task<UserTokenDto> AutenticarUsuario(UserDto userDto);
+        Task CadastrarUsuario(UserDto userDto);
         bool PossuiPermissao(params EnumPermissoes[] permissoesParaValidar);
-        UserTokenDto GerarToken(UserDto userDto, Claim[] permissoes);
     }
 }

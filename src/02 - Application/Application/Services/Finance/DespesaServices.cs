@@ -7,7 +7,7 @@ using Data.Repository.Finance;
 using Domain.Dtos.Finance;
 using Domain.Enumeradores;
 using Domain.Interfaces;
-using Domain.Models;
+using Domain.Models.Finance;
 using HouseFinancesAPI.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.WebEncoders.Testing;
@@ -18,7 +18,7 @@ namespace Application.Services.Finance
     public class DespesaServices(IServiceProvider Service,
         IMembroRepository MembroRepository,
         ICategoriaRepository CategoriaRepository) :
-        ServiceAppBase<Despesa, DespesaDto, IDespesaRepository>(Service), IDespesaServices
+        BaseService<Despesa, DespesaDto, IDespesaRepository>(Service), IDespesaServices
     {
         #region CRUD
         public async Task<Despesa> GetByIdAsync(int id)

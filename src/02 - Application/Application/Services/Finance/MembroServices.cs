@@ -4,12 +4,12 @@ using Application.Services.Base;
 using Domain.Dtos.Membro;
 using Domain.Enumeradores;
 using Domain.Interfaces;
-using Domain.Models;
+using Domain.Models.Finance;
 
 namespace Application.Interfaces.Services
 {
     public class MembroServices(IServiceProvider service) :
-        ServiceAppBase<Membro, MembroDto, IMembroRepository>(service), IMembroServices
+        BaseService<Membro, MembroDto, IMembroRepository>(service), IMembroServices
     {
         public IQueryable<Membro> GetAllAsync() => _repository.Get();
 

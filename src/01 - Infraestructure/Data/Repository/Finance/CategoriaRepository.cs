@@ -1,7 +1,7 @@
 ﻿using Data.DataContext.Context;
 using Data.Repository.Base;
 using Domain.Interfaces;
-using Domain.Models;
+using Domain.Models.Finance;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository.Finance

@@ -1,7 +1,7 @@
 ﻿using Domain.Converters.DatesTimes;
 using System.Text.Json.Serialization;
 
-namespace Domain.Models
+namespace Domain.Models.Finance
 {
     public class Despesa
     {

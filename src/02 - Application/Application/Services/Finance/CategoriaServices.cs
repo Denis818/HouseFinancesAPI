@@ -5,7 +5,7 @@ using Application.Services.Base;
 using Domain.Dtos.Categoria;
 using Domain.Enumeradores;
 using Domain.Interfaces;
-using Domain.Models;
+using Domain.Models.Finance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IO;
@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 namespace Application.Services.Finance
 {
     public class CategoriaServices(IServiceProvider Service) :
-        ServiceAppBase<Categoria, CategoriaDto, ICategoriaRepository>(Service), ICategoriaServices
+        BaseService<Categoria, CategoriaDto, ICategoriaRepository>(Service), ICategoriaServices
     {
         #region CRUD
         public async Task<IEnumerable<Categoria>> GetAllAsync()

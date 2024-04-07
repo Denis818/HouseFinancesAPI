@@ -1,5 +1,5 @@
 ﻿using Domain.Dtos.Categoria;
-using Domain.Models;
+using Domain.Models.Finance;
 
 namespace Application.Interfaces.Services.Finance
 {

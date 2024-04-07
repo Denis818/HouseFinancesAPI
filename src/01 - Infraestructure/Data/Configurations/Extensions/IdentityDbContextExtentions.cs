@@ -20,10 +20,6 @@ namespace Data.Configurations.Extensions
 
             services.AddDbContext<LogDbContext>(options =>
              options.UseMySql(connectionLog, ServerVersion.AutoDetect(connectionLog)));
-
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                    .AddEntityFrameworkStores<FinanceDbContext>()
-                    .AddDefaultTokenProviders();
         }
     }
 }

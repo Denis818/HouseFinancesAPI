@@ -1,11 +1,11 @@
 ﻿using Domain.Enumeradores;
-using Domain.Models;
 using HouseFinancesAPI.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HouseFinancesAPI.Controllers.Base;
 using Application.Interfaces.Services.Finance;
 using Domain.Dtos.Categoria;
+using Domain.Models.Finance;
 
 namespace HouseFinancesAPI.Controllers.Finance
 {

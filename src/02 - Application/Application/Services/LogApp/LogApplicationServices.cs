@@ -2,7 +2,7 @@
 using Domain.Converters.DatesTimes;
 using Domain.Enumeradores;
 using Domain.Interfaces;
-using Domain.Models;
+using Domain.Models.LogApp;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
