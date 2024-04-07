@@ -41,7 +41,7 @@ namespace Data.Configurations.Extensions
             string email = "master@gmail.com";
             string senha = "Master@123456";
 
-            if (usuarioRepository.Get(u => u.Email == email) != null)
+            if (usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
             {
                 return;
             }
