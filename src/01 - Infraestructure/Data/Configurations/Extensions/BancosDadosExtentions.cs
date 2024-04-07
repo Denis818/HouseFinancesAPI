@@ -8,6 +8,7 @@ using Domain.Models.Users;
 using Domain.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Data.Configurations.Extensions
 {
@@ -41,10 +42,8 @@ namespace Data.Configurations.Extensions
             string email = "master@gmail.com";
             string senha = "Master@123456";
 
-            if (usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
-            {
-                return;
-            }
+            if (usuarioRepository.Get(u => u.Email == email)
+                                 .FirstOrDefault() != null) return;
 
             var generetaHash = new PasswordHasher();
             var (Salt, PasswordHash) = generetaHash.CriarHashSenha(senha);
@@ -57,19 +56,11 @@ namespace Data.Configurations.Extensions
                 Permissoes = []
             };
 
-            var permissoes = new[]
-            {
-                EnumPermissoes.USU_000001,
-                EnumPermissoes.USU_000002
-            };
-
-            foreach (var permissao in permissoes)
-            {
-                usuario.Permissoes.Add(new Permissao { Nome = permissao.ToString() });
-            }
+            usuario.Permissoes.Add(new Permissao { Nome = EnumPermissoes.USU_000001.ToString() });
+            usuario.Permissoes.Add(new Permissao { Nome = EnumPermissoes.USU_000002.ToString() });
+            usuario.Permissoes.Add(new Permissao { Nome = EnumPermissoes.USU_000003.ToString() });
 
             usuarioRepository.InsertAsync(usuario).Wait();
-            usuarioRepository.SaveChangesAsync().Wait();
         }
 
         public static void PrepareCategoryAndMember(IServiceProvider service)

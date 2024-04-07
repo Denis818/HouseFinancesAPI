@@ -14,6 +14,12 @@ namespace Domain.Enumeradores
         /// Vizualizar logs de requests
         /// </summary>
         [Description("Vizualizar logs de requests")]
-        USU_000002 = 2
+        USU_000002 = 2,
+
+        /// <summary>
+        /// Dar permissões ao usuário
+        /// </summary>
+        [Description("Dar permissões ao usuário")]
+        USU_000003 = 3,
     }
 }

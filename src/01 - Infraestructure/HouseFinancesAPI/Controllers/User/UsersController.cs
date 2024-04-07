@@ -38,16 +38,15 @@ namespace Controllers.User
             return token;
         }
 
-
+        [HttpGet("add-permission")]
+        [PermissoesFinance(EnumPermissoes.USU_000003)]
+        public async Task AddPermissaoAsync(int idUsuario, params EnumPermissoes[] permissoes) 
+            => await UserService.AddPermissaoAsync(idUsuario, permissoes);
+        
         [HttpGet("info")]
         [AutorizationFinance]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public UserInfoDto UserInfo() => new(UserService.Name, UserService.PossuiPermissao(EnumPermissoes.USU_000001));
-
-        //[HttpGet("logout")]
-        //[AutorizationFinance]
-        //[ApiExplorerSettings(IgnoreApi = true)]
-        //  public async Task Logout() => await SignInManager.SignOutAsync();
-
+        public UserInfoDto UserInfo() 
+            => new(UserService.Name, UserService.PossuiPermissao(EnumPermissoes.USU_000001));
     }
 }
