@@ -14,17 +14,16 @@ namespace Data.DataContext.Context
 
         #region Usuário
         public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Permissao> UsuarioPermissoes { get; set; }
+        public DbSet<Permissao> Permissoes { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Permissao>()
-          .HasOne(up => up.Usuario)
-          .WithMany(u => u.Permissoes)
-          .HasForeignKey(up => up.UsuarioId);
+            modelBuilder.Entity<Usuario>()
+                     .HasMany(u => u.Permissoes)
+                     .WithMany(p => p.Usuarios);
 
         }
     }

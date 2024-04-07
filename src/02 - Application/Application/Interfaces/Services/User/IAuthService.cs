@@ -9,6 +9,6 @@ namespace Application.Interfaces.Services.User
         Task<UserTokenDto> AutenticarUsuario(UserDto userDto);
         Task CadastrarUsuario(UserDto userDto);
         bool PossuiPermissao(params EnumPermissoes[] permissoesParaValidar);
-        Task AddPermissaoAsync(int usuarioId, params EnumPermissoes[] permissoes);
+        Task AddPermissaoAsync(AddUserPermissionDto userPermissao);
     }
 }

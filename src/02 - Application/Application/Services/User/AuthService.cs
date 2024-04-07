@@ -76,28 +76,9 @@ namespace Application.Services.User
             return possuiPermissao;
         }
 
-        public async Task AddPermissaoAsync(int usuarioId, params EnumPermissoes[] permissoes)
-        {
-            var usuario = await _repository.Get(user => user.Id == usuarioId)
-                                 .Include(p => p.Permissoes)
-                                 .FirstOrDefaultAsync();
-
-            foreach (var permissao in permissoes)
-            {
-                var possuiPermissao = usuario.Permissoes
-                                             .Where(p => p.Nome == permissao.ToString())
-                                             .FirstOrDefault();
-
-                if (possuiPermissao is null)
-                {
-                    usuario.Permissoes.Add(new Permissao { Nome = permissao.ToString() });
-                }
-            }
-
-            _repository.Update(usuario);
-            await _repository.SaveChangesAsync();
-        }
-
+        public async Task AddPermissaoAsync(AddUserPermissionDto userPermissao) 
+            => await _repository.AddPermissaoAsync(userPermissao);
+             
         #region Supports Methods
         private bool VerificarSenhaHash(string senha, string senhaHash, string salt)
         {

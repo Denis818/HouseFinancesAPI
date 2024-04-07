@@ -31,7 +31,7 @@ namespace Data.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Descricao")
-                        .HasColumnType("varchar(40)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -53,19 +53,19 @@ namespace Data.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Fornecedor")
-                        .HasColumnType("varchar(40)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Item")
-                        .HasColumnType("varchar(40)");
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("Preco")
-                        .HasColumnType("decimal(6,2)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<int>("Quantidade")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Total")
-                        .HasColumnType("decimal(6,2)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.HasKey("Id");
 
@@ -83,7 +83,7 @@ namespace Data.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
-                        .HasColumnType("varchar(30)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -99,16 +99,11 @@ namespace Data.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
-                        .HasColumnType("varchar(30)");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Permissao");
+                    b.ToTable("Permissoes");
                 });
 
             modelBuilder.Entity("Domain.Models.Users.Usuario", b =>
@@ -120,17 +115,32 @@ namespace Data.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
-                        .HasColumnType("varchar(40)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Password")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Salt")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Usuario");
+                    b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("PermissaoUsuario", b =>
+                {
+                    b.Property<int>("PermissoesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuariosId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PermissoesId", "UsuariosId");
+
+                    b.HasIndex("UsuariosId");
+
+                    b.ToTable("PermissaoUsuario");
                 });
 
             modelBuilder.Entity("Domain.Models.Finance.Despesa", b =>
@@ -144,25 +154,24 @@ namespace Data.Migrations
                     b.Navigation("Categoria");
                 });
 
-            modelBuilder.Entity("Domain.Models.Users.Permissao", b =>
+            modelBuilder.Entity("PermissaoUsuario", b =>
                 {
-                    b.HasOne("Domain.Models.Users.Usuario", "Usuario")
-                        .WithMany("Permissoes")
-                        .HasForeignKey("UsuarioId")
+                    b.HasOne("Domain.Models.Users.Permissao", null)
+                        .WithMany()
+                        .HasForeignKey("PermissoesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Usuario");
+                    b.HasOne("Domain.Models.Users.Usuario", null)
+                        .WithMany()
+                        .HasForeignKey("UsuariosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Models.Finance.Categoria", b =>
                 {
                     b.Navigation("Despesas");
-                });
-
-            modelBuilder.Entity("Domain.Models.Users.Usuario", b =>
-                {
-                    b.Navigation("Permissoes");
                 });
 #pragma warning restore 612, 618
         }

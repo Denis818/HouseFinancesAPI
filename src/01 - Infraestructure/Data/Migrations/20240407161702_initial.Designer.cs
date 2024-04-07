@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Data.Migrations.Finance
+namespace Data.Migrations
 {
     [DbContext(typeof(FinanceDbContext))]
-    [Migration("20240407014014_Finance")]
-    partial class Finance
+    [Migration("20240407161702_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -104,14 +104,9 @@ namespace Data.Migrations.Finance
                     b.Property<string>("Nome")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Permissao");
+                    b.ToTable("Permissoes");
                 });
 
             modelBuilder.Entity("Domain.Models.Users.Usuario", b =>
@@ -133,7 +128,22 @@ namespace Data.Migrations.Finance
 
                     b.HasKey("Id");
 
-                    b.ToTable("Usuario");
+                    b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("PermissaoUsuario", b =>
+                {
+                    b.Property<int>("PermissoesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuariosId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PermissoesId", "UsuariosId");
+
+                    b.HasIndex("UsuariosId");
+
+                    b.ToTable("PermissaoUsuario");
                 });
 
             modelBuilder.Entity("Domain.Models.Finance.Despesa", b =>
@@ -147,25 +157,24 @@ namespace Data.Migrations.Finance
                     b.Navigation("Categoria");
                 });
 
-            modelBuilder.Entity("Domain.Models.Users.Permissao", b =>
+            modelBuilder.Entity("PermissaoUsuario", b =>
                 {
-                    b.HasOne("Domain.Models.Users.Usuario", "Usuario")
-                        .WithMany("Permissoes")
-                        .HasForeignKey("UsuarioId")
+                    b.HasOne("Domain.Models.Users.Permissao", null)
+                        .WithMany()
+                        .HasForeignKey("PermissoesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Usuario");
+                    b.HasOne("Domain.Models.Users.Usuario", null)
+                        .WithMany()
+                        .HasForeignKey("UsuariosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Models.Finance.Categoria", b =>
                 {
                     b.Navigation("Despesas");
-                });
-
-            modelBuilder.Entity("Domain.Models.Users.Usuario", b =>
-                {
-                    b.Navigation("Permissoes");
                 });
 #pragma warning restore 612, 618
         }

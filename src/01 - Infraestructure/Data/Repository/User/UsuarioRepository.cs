@@ -1,10 +1,10 @@
 ﻿using Data.DataContext.Context;
 using Data.Repository.Base;
+using Domain.Dtos.User;
 using Domain.Enumeradores;
 using Domain.Interfaces;
 using Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace Data.Repository.User
 {
@@ -17,5 +17,27 @@ namespace Data.Repository.User
             await base.InsertAsync(usuario);
             await SaveChangesAsync();
         }
+
+        public async Task AddPermissaoAsync(AddUserPermissionDto userPermissao)
+        {
+            var usuario = await Get(user => user.Id == userPermissao.UsuarioId)
+                                 .Include(p => p.Permissoes)
+                                 .FirstOrDefaultAsync();
+
+            foreach (var permissao in userPermissao.Permissoes)
+            {
+                var possuiPermissao = usuario.Permissoes
+                                             .Where(p => p.Nome == permissao.ToString())
+                                             .FirstOrDefault();
+
+                if (possuiPermissao is null)
+                {
+                    usuario.Permissoes.Add(new Permissao { Nome = permissao.ToString() });
+                }
+            }
+
+            Update(usuario);
+            await SaveChangesAsync();
+        } 
     }
 }

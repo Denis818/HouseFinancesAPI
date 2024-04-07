@@ -40,8 +40,8 @@ namespace Controllers.User
 
         [HttpGet("add-permission")]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
-        public async Task AddPermissaoAsync(int idUsuario, params EnumPermissoes[] permissoes) 
-            => await UserService.AddPermissaoAsync(idUsuario, permissoes);
+        public async Task AddPermissaoAsync(AddUserPermissionDto userPermissao) 
+            => await UserService.AddPermissaoAsync(userPermissao);
         
         [HttpGet("info")]
         [AutorizationFinance]

@@ -1,6 +1,7 @@
 ﻿using Data.DataContext;
 using Data.DataContext.Context;
 using Data.Repository.User;
+using Domain.Dtos.User;
 using Domain.Enumeradores;
 using Domain.Interfaces;
 using Domain.Models.Finance;
@@ -56,11 +57,15 @@ namespace Data.Configurations.Extensions
                 Permissoes = []
             };
 
-            usuario.Permissoes.Add(new Permissao { Nome = EnumPermissoes.USU_000001.ToString() });
-            usuario.Permissoes.Add(new Permissao { Nome = EnumPermissoes.USU_000002.ToString() });
-            usuario.Permissoes.Add(new Permissao { Nome = EnumPermissoes.USU_000003.ToString() });
+            var permissoes = new EnumPermissoes[]
+            {
+                 EnumPermissoes.USU_000001,
+                 EnumPermissoes.USU_000002,
+                 EnumPermissoes.USU_000003,
+            };
 
             usuarioRepository.InsertAsync(usuario).Wait();
+            usuarioRepository.AddPermissaoAsync(new AddUserPermissionDto(usuario.Id, permissoes)).Wait();
         }
 
         public static void PrepareCategoryAndMember(IServiceProvider service)
