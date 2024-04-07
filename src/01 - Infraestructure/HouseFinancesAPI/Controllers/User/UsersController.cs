@@ -29,6 +29,7 @@ namespace Controllers.User
 
             var token = await _authService.AutenticarUsuario(userDto);
 
+            Notificar(EnumTipoNotificacao.Informacao, "Ola mundo teste");
             return token;
         }
 
