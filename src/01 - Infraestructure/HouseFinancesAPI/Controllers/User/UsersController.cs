@@ -27,10 +27,7 @@ namespace Controllers.User
             if (userDto.Email.Replace(" ", "").ToLower() == "master")
                 userDto.Email = _configuration["UserMaster:Email"];
 
-            var token = await _authService.AutenticarUsuario(userDto);
-
-            Notificar(EnumTipoNotificacao.Informacao, "Ola mundo teste");
-            return token;
+            return await _authService.AutenticarUsuario(userDto);
         }
 
         [HttpGet("add-permission")]
