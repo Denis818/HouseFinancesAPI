@@ -1,14 +1,12 @@
 ﻿using Data.DataContext;
 using Data.DataContext.Context;
-using Domain.Dtos.User;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Data.Configurations.Extensions
 {
-    public static class IdentityDbContextExtentions
+    public static class DbContextExtentions
     {
         public static void AddConectionsString(this IServiceCollection services, IConfiguration configuration)
         {

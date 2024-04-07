@@ -11,9 +11,9 @@ namespace Data.EntitesMaps.FinanceDataBase.User
             builder.ToTable("Permissoes");
             builder.Property(p => p.Id).IsRequired().HasColumnType("int").ValueGeneratedOnAdd();
 
-            builder.Property(p => p.Nome).HasColumnType("varchar(30)").IsRequired();
+            builder.Property(p => p.Descricao).HasColumnType("varchar(30)").IsRequired();
 
-            builder.HasIndex(p => p.Nome).HasDatabaseName("IX_Permissoes_Nome");
+            builder.HasIndex(p => p.Descricao).HasDatabaseName("IX_Permissoes_Descricao");
         }
     }
 }

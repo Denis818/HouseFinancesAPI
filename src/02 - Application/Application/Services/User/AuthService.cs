@@ -110,7 +110,7 @@ namespace Application.Services.User
             {
                 foreach (var permissao in usuario.Permissoes)
                 {
-                    claims.Add(new Claim("Permission", permissao.Nome));
+                    claims.Add(new Claim("Permission", permissao.Descricao));
                 }
             }
 

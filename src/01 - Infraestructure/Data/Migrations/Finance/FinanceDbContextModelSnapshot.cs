@@ -118,14 +118,14 @@ namespace Data.Migrations.Finance
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Nome")
+                    b.Property<string>("Descricao")
                         .IsRequired()
                         .HasColumnType("varchar(30)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Nome")
-                        .HasDatabaseName("IX_Permissoes_Nome");
+                    b.HasIndex("Descricao")
+                        .HasDatabaseName("IX_Permissoes_Descricao");
 
                     b.ToTable("Permissoes", (string)null);
                 });

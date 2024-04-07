@@ -27,12 +27,12 @@ namespace Data.Repository.User
             foreach (var permissao in userPermissao.Permissoes)
             {
                 var possuiPermissao = usuario.Permissoes
-                                             .Where(p => p.Nome == permissao.ToString())
+                                             .Where(p => p.Descricao == permissao.ToString())
                                              .FirstOrDefault();
 
                 if (possuiPermissao is null)
                 {
-                    usuario.Permissoes.Add(new Permissao { Nome = permissao.ToString() });
+                    usuario.Permissoes.Add(new Permissao { Descricao = permissao.ToString() });
                 }
             }
 

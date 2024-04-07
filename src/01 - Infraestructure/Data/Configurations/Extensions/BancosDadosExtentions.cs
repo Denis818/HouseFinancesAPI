@@ -1,6 +1,5 @@
 ﻿using Data.DataContext;
 using Data.DataContext.Context;
-using Data.Repository.User;
 using Domain.Dtos.User;
 using Domain.Enumeradores;
 using Domain.Interfaces;
@@ -9,7 +8,6 @@ using Domain.Models.Users;
 using Domain.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace Data.Configurations.Extensions
 {

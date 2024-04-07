@@ -51,7 +51,7 @@ namespace Data.Migrations.Finance
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Nome = table.Column<string>(type: "varchar(30)", nullable: false)
+                    Descricao = table.Column<string>(type: "varchar(30)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -168,9 +168,9 @@ namespace Data.Migrations.Finance
                 column: "UsuariosId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Permissoes_Nome",
+                name: "IX_Permissoes_Descricao",
                 table: "Permissoes",
-                column: "Nome");
+                column: "Descricao");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Email",
