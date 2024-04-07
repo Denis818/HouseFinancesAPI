@@ -13,8 +13,6 @@ namespace Application.Utilities
         }
 
         public void Notificar(EnumTipoNotificacao tipo, string message) 
-            => ListNotificacoes.Add(new Notificacao(message, tipo));
-
-        
+            => ListNotificacoes.Add(new Notificacao(message, tipo));    
     }
 }

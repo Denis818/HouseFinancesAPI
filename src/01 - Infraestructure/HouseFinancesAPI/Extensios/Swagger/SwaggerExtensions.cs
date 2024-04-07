@@ -24,7 +24,7 @@ namespace HouseFinancesAPI.Extensios.Swagger
 
                 var securitySchema = new OpenApiSecurityScheme
                 {
-                    Description = $"JWT Auth {TypeToken} Scheme",
+                    Description = $"Insira o token JWT desta maneira \"{TypeToken} <seu token>\" ",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,
