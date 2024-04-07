@@ -44,8 +44,7 @@ namespace Data.Configurations.Extensions
             if (usuarioRepository.Get(u => u.Email == email)
                                  .FirstOrDefault() != null) return;
 
-            var generetaHash = new PasswordHasher();
-            var (Salt, PasswordHash) = generetaHash.CriarHashSenha(senha);
+            var (Salt, PasswordHash) = new PasswordHasher().CriarHashSenha(senha);
 
             var usuario = new Usuario
             {

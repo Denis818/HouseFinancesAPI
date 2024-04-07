@@ -20,11 +20,14 @@ namespace Application.Services.User
         IConfiguration _configuration)
         : BaseService<Usuario, IUsuarioRepository>(service), IAuthService
     {
+
+        private readonly PasswordHasher PasswordHasher = new();
+
         public async Task CadastrarUsuario(UserDto userDto)
         {
             if (Validator(userDto)) return;
 
-            var (Salt, passwordHash) = new PasswordHasher().CriarHashSenha(userDto.Password);
+            var (Salt, passwordHash) = PasswordHasher.CriarHashSenha(userDto.Password);
 
             Usuario novoUsuario = new()
             {
@@ -75,20 +78,9 @@ namespace Application.Services.User
             => await _repository.AddPermissaoAsync(userPermissao);
              
         #region Supports Methods
-        private bool VerificarSenhaHash(string senha, string senhaHash, string salt)
-        {
-            byte[] saltBytes = Convert.FromBase64String(salt);
-
-            string hash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: senha,
-                salt: saltBytes,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 10000,
-                numBytesRequested: 256 / 8));
-
-            return hash == senhaHash;
-        }
-
+        private bool VerificarSenhaHash(string senha, string senhaHash, string salt) 
+            => PasswordHasher.CompareHash(senha, salt) == senhaHash;
+        
         private UserTokenDto GerarToken(Usuario usuario)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

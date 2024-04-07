@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Data.SqlTypes;
 using System.Security.Cryptography;
 
 
@@ -22,6 +23,18 @@ namespace Domain.Utilities
                 numBytesRequested: 256 / 8));
 
             return (Convert.ToBase64String(salt), hash);
+        }
+
+        public string CompareHash(string senha, string salt)
+        {
+            byte[] saltBytes = Convert.FromBase64String(salt);
+
+            return Convert.ToBase64String( KeyDerivation.Pbkdf2(
+                password: senha, 
+                salt: saltBytes,
+                prf: KeyDerivationPrf.HMACSHA256, 
+                iterationCount: 10000,
+                numBytesRequested: 256 / 8));
         }
     }
 }
