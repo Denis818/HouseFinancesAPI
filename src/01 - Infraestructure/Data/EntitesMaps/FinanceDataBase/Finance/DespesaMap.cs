@@ -13,10 +13,10 @@ namespace Data.EntitesMaps.FinanceDataBase.Finance
 
             builder.Property(d => d.DataCompra).HasColumnType("datetime(6)").IsRequired();
             builder.Property(d => d.Item).HasColumnType("varchar(40)").IsRequired();
-            builder.Property(d => d.Preco).HasColumnType("decimal(6, 2)").IsRequired();
+            builder.Property(d => d.Preco).HasColumnType("decimal(7, 2)").IsRequired();
             builder.Property(d => d.Quantidade).HasColumnType("int").IsRequired();
             builder.Property(d => d.Fornecedor).HasColumnType("varchar(20)").IsRequired();
-            builder.Property(d => d.Total).HasColumnType("decimal(6, 2)").IsRequired();
+            builder.Property(d => d.Total).HasColumnType("decimal(7, 2)").IsRequired();
             builder.Property(d => d.CategoriaId).HasColumnType("int").IsRequired();
 
             builder.HasOne(d => d.Categoria)

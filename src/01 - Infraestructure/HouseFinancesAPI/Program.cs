@@ -2,9 +2,6 @@ using Application.Configurations.Extensions.DependencyManagers;
 using HouseFinancesAPI.Extensios.Swagger;
 using ProEventos.API.Configuration.Middleware;
 using HouseFinancesAPI.Extensios.Application;
-using Domain.Dtos.User;
-using Domain.Enumeradores;
-using Application.Interfaces.Services.User;
 using Data.Configurations.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
