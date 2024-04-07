@@ -29,12 +29,6 @@ namespace Controllers.User
 
             var token = await _authService.AutenticarUsuario(userDto);
 
-            if (token == null)
-            {
-                Notificar(EnumTipoNotificacao.ClientError, "Email ou Senha incorretos.");
-                return null;
-            }
-
             return token;
         }
 
