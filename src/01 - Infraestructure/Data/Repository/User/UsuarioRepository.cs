@@ -1,5 +1,6 @@
 ﻿using Data.DataContext.Context;
 using Data.Repository.Base;
+using Domain.Interfaces;
 using Domain.Models.Users;
 
 namespace Data.Repository.User

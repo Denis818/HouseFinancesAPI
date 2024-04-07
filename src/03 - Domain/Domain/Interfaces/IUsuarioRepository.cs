@@ -1,7 +1,7 @@
 ﻿using Domain.Interfaces;
 using Domain.Models.Users;
 
-namespace Data.Repository.User
+namespace Domain.Interfaces
 {
     public interface IUsuarioRepository : IRepositoryBase<Usuario>
     {
