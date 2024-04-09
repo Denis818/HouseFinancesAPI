@@ -1,4 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Application.Interfaces.Services.User;
@@ -27,13 +27,12 @@ namespace Application.Services.User
 
             var (Salt, passwordHash) = PasswordHasher.CriarHashSenha(userDto.Password);
 
-            Usuario novoUsuario =
-                new()
-                {
-                    Email = userDto.Email,
-                    Password = passwordHash,
-                    Salt = Salt
-                };
+            var novoUsuario = new Usuario()
+            {
+                Email = userDto.Email,
+                Password = passwordHash,
+                Salt = Salt
+            };
 
             await _repository.InsertAsync(novoUsuario);
             await _repository.SaveChangesAsync();
