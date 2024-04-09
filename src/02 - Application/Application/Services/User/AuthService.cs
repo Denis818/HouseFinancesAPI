@@ -1,40 +1,39 @@
-﻿using Application.Interfaces.Services.User;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Application.Interfaces.Services.User;
 using Application.Services.Base;
 using Domain.Dtos.User;
 using Domain.Enumeradores;
 using Domain.Interfaces;
 using Domain.Models.Users;
 using Domain.Utilities;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Application.Services.User
 {
-    public class AuthService(IServiceProvider service,
-        IConfiguration _configuration)
-        : BaseService<Usuario, IUsuarioRepository>(service), IAuthService
+    public class AuthService(IServiceProvider service, IConfiguration _configuration)
+        : BaseService<Usuario, IUsuarioRepository>(service),
+            IAuthService
     {
-
         private readonly PasswordHasher PasswordHasher = new();
 
         public async Task CadastrarUsuario(UserDto userDto)
         {
-            if (Validator(userDto)) return;
+            if (Validator(userDto))
+                return;
 
             var (Salt, passwordHash) = PasswordHasher.CriarHashSenha(userDto.Password);
 
-            Usuario novoUsuario = new()
-            {
-                Email = userDto.Email,
-                Password = passwordHash,
-                Salt = Salt
-            };
+            Usuario novoUsuario =
+                new()
+                {
+                    Email = userDto.Email,
+                    Password = passwordHash,
+                    Salt = Salt
+                };
 
             await _repository.InsertAsync(novoUsuario);
             await _repository.SaveChangesAsync();
@@ -42,8 +41,10 @@ namespace Application.Services.User
 
         public async Task<UserTokenDto> AutenticarUsuario(UserDto userDto)
         {
-            var usuario = await _repository.Get().Include(c => c.Permissoes)
-                                .SingleOrDefaultAsync(u => u.Email == userDto.Email);
+            var usuario = await _repository
+                .Get()
+                .Include(c => c.Permissoes)
+                .SingleOrDefaultAsync(u => u.Email == userDto.Email);
 
             if (usuario == null)
             {
@@ -64,8 +65,7 @@ namespace Application.Services.User
 
         public bool PossuiPermissao(params EnumPermissoes[] permissoesParaValidar)
         {
-            var permissoes = _httpContext?.User?
-                                    .Claims?.Select(claim => claim.Value.ToString());
+            var permissoes = _httpContext?.User?.Claims?.Select(claim => claim.Value.ToString());
 
             var possuiPermissao = permissoesParaValidar
                 .Select(permissao => permissao.ToString())
@@ -74,26 +74,30 @@ namespace Application.Services.User
             return possuiPermissao;
         }
 
-        public async Task AddPermissaoAsync(AddUserPermissionDto userPermissao) 
-            => await _repository.AddPermissaoAsync(userPermissao);
-             
+        public async Task AddPermissaoAsync(AddUserPermissionDto userPermissao) =>
+            await _repository.AddPermissaoAsync(userPermissao);
+
         #region Supports Methods
-        private bool VerificarSenhaHash(string senha, string senhaHash, string salt) 
-            => PasswordHasher.CompareHash(senha, salt) == senhaHash;
-        
+        private bool VerificarSenhaHash(string senha, string senhaHash, string salt) =>
+            PasswordHasher.CompareHash(senha, salt) == senhaHash;
+
         private UserTokenDto GerarToken(Usuario usuario)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var expirationFormat = DateTime.UtcNow.AddHours(double.Parse(_configuration["TokenConfiguration:ExpireHours"]));
+
+            var tokenExpirationTime = DateTime.UtcNow.AddDays(
+                int.Parse(_configuration["TokenConfiguration:ExpireDays"])
+            );
+
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:key"]);
 
             var claims = new List<Claim>
             {
-                 new(ClaimTypes.Name, usuario.Email),
-                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new(ClaimTypes.Name, usuario.Email),
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            if(usuario.Permissoes.Count > 0)
+            if (usuario.Permissoes.Count > 0)
             {
                 foreach (var permissao in usuario.Permissoes)
                 {
@@ -104,8 +108,11 @@ namespace Application.Services.User
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = expirationFormat,
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                Expires = tokenExpirationTime,
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature
+                ),
                 Audience = _configuration["TokenConfiguration:Audience"],
                 Issuer = _configuration["TokenConfiguration:Issuer"]
             };
@@ -116,7 +123,7 @@ namespace Application.Services.User
             {
                 Authenticated = true,
                 Token = tokenHandler.WriteToken(token),
-                Expiration = expirationFormat,
+                Expiration = tokenExpirationTime,
             };
         }
         #endregion
