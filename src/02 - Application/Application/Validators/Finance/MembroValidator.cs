@@ -7,8 +7,13 @@ namespace Application.Validators.Finance
     {
         public MembroValidator()
         {
-            RuleFor(x => x.Nome).NotEmpty().WithMessage("É obrigatório.")
-                                .Length(3, 25).WithMessage("Deve ter entre 3 a 25 caracteres.");
+            RuleFor(x => x.Nome)
+                .NotEmpty()
+                .WithMessage("O {PropertyName} é obrigatório.")
+                .Length(3, 25)
+                .WithMessage(
+                    "O {PropertyName} deve ter entre {MinLength} a {MaxLength} caracteres."
+                );
         }
     }
 }

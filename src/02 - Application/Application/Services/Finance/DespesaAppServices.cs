@@ -13,12 +13,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Finance
 {
-    public class DespesaServices(
+    public class DespesaAppServices(
         IServiceProvider service,
         IFinanceServices _financeServices,
         IMembroRepository _membroRepository,
         ICategoriaRepository _categoriaRepository
-    ) : BaseService<Despesa, IDespesaRepository>(service), IDespesaServices
+    ) : BaseAppService<Despesa, IDespesaRepository>(service), IDespesaAppServices
     {
         #region CRUD
         public async Task<Despesa> GetByIdAsync(int id)

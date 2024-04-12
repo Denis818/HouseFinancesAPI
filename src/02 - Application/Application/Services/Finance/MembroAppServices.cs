@@ -8,8 +8,9 @@ using Domain.Models.Finance;
 
 namespace Application.Interfaces.Services
 {
-    public class MembroServices(IServiceProvider service) :
-        BaseService<Membro, IMembroRepository>(service), IMembroServices
+    public class MembroAppServices(IServiceProvider service)
+        : BaseAppService<Membro, IMembroRepository>(service),
+            IMembroAppServices
     {
         public IQueryable<Membro> GetAllAsync() => _repository.Get();
 
@@ -17,9 +18,10 @@ namespace Application.Interfaces.Services
 
         public async Task<Membro> InsertAsync(MembroDto membroDto)
         {
-            if (Validator(membroDto)) return null;
+            if (Validator(membroDto))
+                return null;
 
-            if (await _repository.ExisteAsync(membroDto.Nome) != null) 
+            if (await _repository.ExisteAsync(membroDto.Nome) != null)
                 Notificar(EnumTipoNotificacao.ClientError, $"O membro {membroDto.Nome} já existe.");
 
             var membro = _mapper.Map<Membro>(membroDto);
@@ -37,7 +39,8 @@ namespace Application.Interfaces.Services
 
         public async Task<Membro> UpdateAsync(int id, MembroDto membroDto)
         {
-            if (Validator(membroDto)) return null;
+            if (Validator(membroDto))
+                return null;
 
             var membro = await _repository.GetByIdAsync(id);
 
@@ -49,8 +52,10 @@ namespace Application.Interfaces.Services
 
             if (_repository.ValidaMembroParaAcao(membro.Id))
             {
-                Notificar(EnumTipoNotificacao.ClientError,
-                    "Esse membro faz parta da regra de negócio. Não pode ser alterado.");
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    "Esse membro faz parta da regra de negócio. Não pode ser alterado."
+                );
                 return null;
             }
 
@@ -58,7 +63,10 @@ namespace Application.Interfaces.Services
             {
                 if (membro.Id != membroExiste.Id)
                 {
-                    Notificar(EnumTipoNotificacao.ClientError, $"Categoria {membroDto.Nome} já existe.");
+                    Notificar(
+                        EnumTipoNotificacao.ClientError,
+                        $"Categoria {membroDto.Nome} já existe."
+                    );
                     return null;
                 }
             }
@@ -88,8 +96,10 @@ namespace Application.Interfaces.Services
 
             if (_repository.ValidaMembroParaAcao(membro.Id))
             {
-                Notificar(EnumTipoNotificacao.ClientError,
-                    "Esse membro faz parta da regra de negócio. Não pode ser alterado.");
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    "Esse membro faz parta da regra de negócio. Não pode ser alterado."
+                );
                 return;
             }
 
@@ -103,6 +113,5 @@ namespace Application.Interfaces.Services
 
             Notificar(EnumTipoNotificacao.Informacao, "Registro Deletado");
         }
-
     }
 }

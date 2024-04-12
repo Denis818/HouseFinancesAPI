@@ -1,17 +1,16 @@
 ﻿using Data.DataContext.Context;
 using Data.Repository.Base;
 using Domain.Dtos.User;
-using Domain.Enumeradores;
 using Domain.Interfaces;
 using Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository.User
 {
-    public class UsuarioRepository(IServiceProvider service) :
-        RepositoryBase<Usuario, FinanceDbContext>(service), IUsuarioRepository
+    public class UsuarioRepository(IServiceProvider service)
+        : RepositoryBase<Usuario, FinanceDbContext>(service),
+            IUsuarioRepository
     {
-
         public override async Task InsertAsync(Usuario usuario)
         {
             await base.InsertAsync(usuario);
@@ -21,14 +20,14 @@ namespace Data.Repository.User
         public async Task AddPermissaoAsync(AddUserPermissionDto userPermissao)
         {
             var usuario = await Get(user => user.Id == userPermissao.UsuarioId)
-                                 .Include(p => p.Permissoes)
-                                 .FirstOrDefaultAsync();
+                .Include(p => p.Permissoes)
+                .FirstOrDefaultAsync();
 
             foreach (var permissao in userPermissao.Permissoes)
             {
-                var possuiPermissao = usuario.Permissoes
-                                             .Where(p => p.Descricao == permissao.ToString())
-                                             .FirstOrDefault();
+                var possuiPermissao = usuario
+                    .Permissoes.Where(p => p.Descricao == permissao.ToString())
+                    .FirstOrDefault();
 
                 if (possuiPermissao is null)
                 {
@@ -38,6 +37,6 @@ namespace Data.Repository.User
 
             Update(usuario);
             await SaveChangesAsync();
-        } 
+        }
     }
 }

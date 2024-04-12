@@ -1,8 +1,8 @@
 using Application.Configurations.Extensions.DependencyManagers;
+using Data.Configurations.Extensions;
+using HouseFinancesAPI.Extensios.Application;
 using HouseFinancesAPI.Extensios.Swagger;
 using ProEventos.API.Configuration.Middleware;
-using HouseFinancesAPI.Extensios.Application;
-using Data.Configurations.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.SetupApplication();
@@ -29,14 +29,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapGet("/{*path}", async context =>
-{
-    context.Response.Redirect("/Doc");
-    await Task.CompletedTask;
-});
+app.MapGet(
+    "/{*path}",
+    async context =>
+    {
+        context.Response.Redirect("/Doc");
+        await Task.CompletedTask;
+    }
+);
 
 app.Run();
-
-
-
-

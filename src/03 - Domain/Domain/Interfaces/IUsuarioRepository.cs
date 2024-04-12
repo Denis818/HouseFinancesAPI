@@ -1,6 +1,4 @@
 ﻿using Domain.Dtos.User;
-using Domain.Enumeradores;
-using Domain.Interfaces;
 using Domain.Models.Users;
 
 namespace Domain.Interfaces

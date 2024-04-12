@@ -3,11 +3,10 @@ using Domain.Enumeradores;
 
 namespace Application.Interfaces.Services.User
 {
-    public interface IAuthService
+    public interface IAuthAppService
     {
         Task<UserTokenDto> AutenticarUsuario(UserDto userDto);
-        Task CadastrarUsuario(UserDto userDto);
-        bool PossuiPermissao(params EnumPermissoes[] permissoesParaValidar);
+        bool VerificarPermissao(params EnumPermissoes[] permissoesParaValidar);
         Task AddPermissaoAsync(AddUserPermissionDto userPermissao);
     }
 }

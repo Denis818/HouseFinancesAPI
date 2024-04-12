@@ -7,8 +7,13 @@ namespace Application.Validators.Finance
     {
         public CategoriaValidator()
         {
-            RuleFor(x => x.Descricao).NotEmpty().WithMessage("É obrigatório.")
-                                .Length(3, 20).WithMessage("Deve ter entre 3 a 25 caracteres.");
+            RuleFor(x => x.Descricao)
+                .NotEmpty()
+                .WithMessage("A {PropertyName} é obrigatória.")
+                .Length(3, 25)
+                .WithMessage(
+                    "A {PropertyName} deve ter entre {MinLength} a {MaxLength} caracteres."
+                );
         }
     }
 }

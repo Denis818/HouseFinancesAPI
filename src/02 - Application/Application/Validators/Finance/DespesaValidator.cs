@@ -7,24 +7,41 @@ namespace Application.Validators.Finance
     {
         public DespesaValidator()
         {
-            
+            RuleFor(x => x.Item)
+                .NotEmpty()
+                .WithMessage("O {PropertyName} é obrigatório.")
+                .Length(3, 25)
+                .WithMessage(
+                    "O {PropertyName} deve ter entre {MinLength} a {MaxLength} caracteres."
+                );
 
-            RuleFor(x => x.Item).NotEmpty().WithMessage("É obrigatório.")
-                                .Length(3, 25).WithMessage("Deve ter entre 3 a 25 caracteres.");
+            RuleFor(x => (double)x.Preco)
+                .InclusiveBetween(0.01, 9999)
+                .WithMessage(
+                    "O {PropertyName} não pode ser menor que {MinLength}, e maior que {MaxLength}."
+                );
 
-            RuleFor(x => (double)x.Preco).InclusiveBetween(0.01, 9999)
-                                         .WithMessage("Não pode ser menor que 0.1, e maior que 9999.");
+            RuleFor(x => x.Quantidade)
+                .InclusiveBetween(1, 999)
+                .WithMessage(
+                    "A {PropertyName} não pode ser menor que {MinLength}, e maior que {MaxLength}."
+                );
 
-            RuleFor(x => x.Quantidade).InclusiveBetween(1, 999)
-                                      .WithMessage("Não pode ser menor que 1, e maior que 999.");
+            RuleFor(x => x.Fornecedor)
+                .NotEmpty()
+                .WithMessage("O {PropertyName} é obrigatório.")
+                .Length(3, 25)
+                .WithMessage(
+                    "O {PropertyName} deve ter entre {MinLength} a {MaxLength} caracteres."
+                );
 
-            RuleFor(x => x.Fornecedor).NotEmpty().WithMessage("É obrigatório.")
-                                      .Length(3, 25).WithMessage("Deve ter entre 3 a 25 caracteres.");
-
-            RuleFor(x => x.DataCompra).NotEmpty().WithMessage("É obrigatório.")
-                                      .Must(data => data <= DateTime.Today).WithMessage("Não pode ser no futuro.")
-                                      .Must(data => data.Year >= DateTime.Now.Year).WithMessage("Não pode ser de um ano anterior ao ano atual.");
-
+            RuleFor(x => x.DataCompra)
+                .NotEmpty()
+                .WithMessage("A {PropertyName} é obrigatório.")
+                .Must(data => data <= DateTime.Today)
+                .WithMessage("A {PropertyName} não pode ser no futuro.")
+                .Must(data => data.Year >= DateTime.Now.Year)
+                .WithMessage("A {PropertyName} não pode ser de um ano anterior ao ano atual.");
         }
     }
 }

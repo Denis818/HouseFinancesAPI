@@ -4,7 +4,7 @@ using HouseFinancesAPI.Utilities;
 
 namespace Application.Interfaces.Services.Finance
 {
-    public interface IDespesaServices
+    public interface IDespesaAppServices
     {
         Task DeleteAsync(int id);
         Task<PagedResult<Despesa>> GetAllAsync(int paginaAtual, int itensPorPagina);

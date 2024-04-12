@@ -14,32 +14,18 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Services.User
 {
-    public class AuthService(IServiceProvider service, IConfiguration _configuration)
-        : BaseService<Usuario, IUsuarioRepository>(service),
-            IAuthService
+    public class AuthAppService(IServiceProvider service, IConfiguration _configuration)
+        : BaseAppService<Usuario, IUsuarioRepository>(service),
+            IAuthAppService
     {
-        private readonly PasswordHasher PasswordHasher = new();
-
-        public async Task CadastrarUsuario(UserDto userDto)
-        {
-            if (Validator(userDto))
-                return;
-
-            var (Salt, passwordHash) = PasswordHasher.CriarHashSenha(userDto.Password);
-
-            var novoUsuario = new Usuario()
-            {
-                Email = userDto.Email,
-                Password = passwordHash,
-                Salt = Salt
-            };
-
-            await _repository.InsertAsync(novoUsuario);
-            await _repository.SaveChangesAsync();
-        }
-
         public async Task<UserTokenDto> AutenticarUsuario(UserDto userDto)
         {
+            if (userDto == null)
+            {
+                Notificar(EnumTipoNotificacao.ClientError, "Modelo não é valido.");
+                return null;
+            }
+
             var usuario = await _repository
                 .Get()
                 .Include(c => c.Permissoes)
@@ -62,7 +48,7 @@ namespace Application.Services.User
             return GerarToken(usuario);
         }
 
-        public bool PossuiPermissao(params EnumPermissoes[] permissoesParaValidar)
+        public bool VerificarPermissao(params EnumPermissoes[] permissoesParaValidar)
         {
             var permissoes = _httpContext?.User?.Claims?.Select(claim => claim.Value.ToString());
 
@@ -78,7 +64,7 @@ namespace Application.Services.User
 
         #region Supports Methods
         private bool VerificarSenhaHash(string senha, string senhaHash, string salt) =>
-            PasswordHasher.CompareHash(senha, salt) == senhaHash;
+            new PasswordHasher().CompareHash(senha, salt) == senhaHash;
 
         private UserTokenDto GerarToken(Usuario usuario)
         {

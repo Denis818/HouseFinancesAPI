@@ -4,7 +4,7 @@ using HouseFinancesAPI.Utilities;
 
 namespace Application.Interfaces.Services.Finance
 {
-    public interface IMembroServices
+    public interface IMembroAppServices
     {
         Task DeleteAsync(int id);
         IQueryable<Membro> GetAllAsync();

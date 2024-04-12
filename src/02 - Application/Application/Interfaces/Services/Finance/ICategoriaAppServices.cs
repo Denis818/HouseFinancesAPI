@@ -3,7 +3,7 @@ using Domain.Models.Finance;
 
 namespace Application.Interfaces.Services.Finance
 {
-    public interface ICategoriaServices
+    public interface ICategoriaAppServices
     {
         Task DeleteAsync(int id);
         Task<IEnumerable<Categoria>> GetAllAsync();

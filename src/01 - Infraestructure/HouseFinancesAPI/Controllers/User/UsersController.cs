@@ -1,19 +1,17 @@
-﻿using Domain.Dtos.User;
+﻿using Application.Interfaces.Services.User;
+using Domain.Dtos.User;
 using Domain.Enumeradores;
 using HouseFinancesAPI.Attributes;
-using Microsoft.AspNetCore.Identity;
+using HouseFinancesAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using HouseFinancesAPI.Controllers.Base;
-using Application.Interfaces.Services.User;
 
-namespace Controllers.User
+namespace HouseFinancesAPI.Controllers.User
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController(
-        IAuthService _authService,
-        IServiceProvider service) : BaseApiController(service)
+    public class UsersController(IAuthAppService _authService, IServiceProvider service)
+        : BaseApiController(service)
     {
         [HttpPost("login")]
         public async Task<UserTokenDto> Login(UserDto userDto)
@@ -32,13 +30,16 @@ namespace Controllers.User
 
         [HttpGet("add-permission")]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
-        public async Task AddPermissaoAsync(AddUserPermissionDto userPermissao)
-            => await _authService.AddPermissaoAsync(userPermissao);
+        public async Task AddPermissaoAsync(AddUserPermissionDto userPermissao) =>
+            await _authService.AddPermissaoAsync(userPermissao);
 
         [HttpGet("info")]
         [AutorizationFinance]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public UserInfoDto UserInfo()
-            => new(HttpContext.User.Identity.Name, _authService.PossuiPermissao(EnumPermissoes.USU_000001));
+        public UserInfoDto UserInfo() =>
+            new(
+                HttpContext.User.Identity.Name,
+                _authService.VerificarPermissao(EnumPermissoes.USU_000001)
+            );
     }
 }

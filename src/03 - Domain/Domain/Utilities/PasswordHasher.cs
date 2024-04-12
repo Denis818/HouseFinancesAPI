@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using System.Data.SqlTypes;
-using System.Security.Cryptography;
-
+﻿using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace Domain.Utilities
 {
@@ -15,12 +13,15 @@ namespace Domain.Utilities
                 rng.GetBytes(salt);
             }
 
-            string hash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: senha,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 10000,
-                numBytesRequested: 256 / 8));
+            string hash = Convert.ToBase64String(
+                KeyDerivation.Pbkdf2(
+                    password: senha,
+                    salt: salt,
+                    prf: KeyDerivationPrf.HMACSHA256,
+                    iterationCount: 10000,
+                    numBytesRequested: 256 / 8
+                )
+            );
 
             return (Convert.ToBase64String(salt), hash);
         }
@@ -29,12 +30,15 @@ namespace Domain.Utilities
         {
             byte[] saltBytes = Convert.FromBase64String(salt);
 
-            return Convert.ToBase64String( KeyDerivation.Pbkdf2(
-                password: senha, 
-                salt: saltBytes,
-                prf: KeyDerivationPrf.HMACSHA256, 
-                iterationCount: 10000,
-                numBytesRequested: 256 / 8));
+            return Convert.ToBase64String(
+                KeyDerivation.Pbkdf2(
+                    password: senha,
+                    salt: saltBytes,
+                    prf: KeyDerivationPrf.HMACSHA256,
+                    iterationCount: 10000,
+                    numBytesRequested: 256 / 8
+                )
+            );
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using Application.Interfaces.Services.LogApp;
+﻿using System.Text.Json;
+using Application.Interfaces.Services.LogApp;
 using Domain.Enumeradores;
 using HouseFinancesAPI.Controllers.Base;
-using System.Text.Json;
 
 namespace ProEventos.API.Configuration.Middleware
 {
@@ -18,10 +18,12 @@ namespace ProEventos.API.Configuration.Middleware
             }
             catch (Exception ex)
             {
-                await context.RequestServices.GetService<ILogApplicationServices>()
-                                             .RegisterLog(EnumTypeLog.Exception, context, exception: ex);
+                await context
+                    .RequestServices.GetService<ILogAppServices>()
+                    .RegisterLog(EnumTypeLog.Exception, context, exception: ex);
 
-                var message = $"Erro interno no servidor. {(_environmentHost.IsDevelopment() ? ex.Message : "")}";
+                var message =
+                    $"Erro interno no servidor. {(_environmentHost.IsDevelopment() ? ex.Message : "")}";
 
                 var response = new ResponseResultDTO<string>()
                 {

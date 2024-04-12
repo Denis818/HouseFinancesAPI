@@ -5,21 +5,33 @@ namespace Domain.Enumeradores
     public enum EnumPermissoes
     {
         /// <summary>
-        /// Permite ao usuário criar, atualizar e deletar.
+        /// Permissão para atualizar.
         /// </summary>
-        [Description("Permite ao usuário criar, atualizar e deletar.")]
+        [Description("Permissao para atualizar.")]
         USU_000001 = 1,
 
         /// <summary>
-        /// Vizualizar logs de requests
+        /// Permissão para deletar.
         /// </summary>
-        [Description("Vizualizar logs de requests")]
+        [Description("Permissao para deletar.")]
         USU_000002 = 2,
 
         /// <summary>
-        /// Dar permissões ao usuário
+        /// Permissão para criar.
         /// </summary>
-        [Description("Dar permissões ao usuário")]
+        [Description("Permissao para criar.")]
         USU_000003 = 3,
+
+        /// <summary>
+        /// Permissão para atualizar outros membros.
+        /// </summary>
+        [Description("Permissao para atualizar outros membros.")]
+        USU_000004 = 4,
+
+        /// <summary>
+        /// Permissão para deletar outros membros.
+        /// </summary>
+        [Description("Permissao para deletar outros membros.")]
+        USU_000005 = 5,
     }
 }

@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
-using Application.Utilities;
+﻿using Application.Utilities;
 using HouseFinancesAPI.Controllers.Base;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace HouseFinancesAPI.Attributes
 {

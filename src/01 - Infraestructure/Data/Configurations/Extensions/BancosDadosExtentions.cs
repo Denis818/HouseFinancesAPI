@@ -41,8 +41,8 @@ namespace Data.Configurations.Extensions
             string email = "master@gmail.com";
             string senha = "Master@123456";
 
-            if (usuarioRepository.Get(u => u.Email == email)
-                                 .FirstOrDefault() != null) return;
+            if (usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
+                return;
 
             var (Salt, PasswordHash) = new PasswordHasher().CriarHashSenha(senha);
 
@@ -56,13 +56,15 @@ namespace Data.Configurations.Extensions
 
             var permissoes = new EnumPermissoes[]
             {
-                 EnumPermissoes.USU_000001,
-                 EnumPermissoes.USU_000002,
-                 EnumPermissoes.USU_000003,
+                EnumPermissoes.USU_000001,
+                EnumPermissoes.USU_000002,
+                EnumPermissoes.USU_000003,
             };
 
             usuarioRepository.InsertAsync(usuario).Wait();
-            usuarioRepository.AddPermissaoAsync(new AddUserPermissionDto(usuario.Id, permissoes)).Wait();
+            usuarioRepository
+                .AddPermissaoAsync(new AddUserPermissionDto(usuario.Id, permissoes))
+                .Wait();
         }
 
         public static void PrepareCategoryAndMember(IServiceProvider service)
@@ -81,7 +83,6 @@ namespace Data.Configurations.Extensions
                 new() { Descricao = "Internet" },
                 new() { Descricao = "Conta de Água" },
                 new() { Descricao = "Conta de Luz" }
-
             };
 
             var listMember = new List<Membro>

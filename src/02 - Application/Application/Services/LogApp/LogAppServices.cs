@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Services.LogApp;
+﻿using System.Text.Json;
+using Application.Interfaces.Services.LogApp;
 using Domain.Converters.DatesTimes;
 using Domain.Enumeradores;
 using Domain.Interfaces;
@@ -6,16 +7,17 @@ using Domain.Models.LogApp;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.Text.Json;
 
 namespace Application.Services.LogApp
 {
-    public class LogApplicationServices(ILogApplicationRepository _logRepository) : ILogApplicationServices
+    public class LogAppServices(ILogApplicationRepository _logRepository) : ILogAppServices
     {
-        public async Task RegisterLog(EnumTypeLog typeLog,
+        public async Task RegisterLog(
+            EnumTypeLog typeLog,
             HttpContext context,
             ObjectResult objectResult,
-            Exception ex)
+            Exception ex
+        )
         {
             var request = context.Request;
             string method = $"{request.Method} - StatusCode {context.Response.StatusCode}";
@@ -34,7 +36,6 @@ namespace Application.Services.LogApp
                 QueryString = request.QueryString.ToString(),
                 StackTrace = "",
                 ExceptionMessage = ""
-
             };
 
             if (typeLog is EnumTypeLog.Exception)
@@ -45,12 +46,13 @@ namespace Application.Services.LogApp
                 logEntry.ExceptionMessage = ReduzirString(message, 250);
             }
 
-           // await _logRepository.InsertAsync(logEntry);
+            // await _logRepository.InsertAsync(logEntry);
         }
 
         private string ReduzirString(string message, int max)
         {
-            if (message.IsNullOrEmpty()) message = "";
+            if (message.IsNullOrEmpty())
+                message = "";
 
             return message.Substring(0, Math.Min(max, message.Length));
         }

@@ -9,22 +9,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Finance
 {
-    public class CategoriaServices(IServiceProvider service) :
-        BaseService<Categoria, ICategoriaRepository>(service), ICategoriaServices
+    public class CategoriaAppServices(IServiceProvider service)
+        : BaseAppService<Categoria, ICategoriaRepository>(service),
+            ICategoriaAppServices
     {
         #region CRUD
-        public async Task<IEnumerable<Categoria>> GetAllAsync()
-            => await _repository.Get().ToListAsync();
+        public async Task<IEnumerable<Categoria>> GetAllAsync() =>
+            await _repository.Get().ToListAsync();
 
         public async Task<Categoria> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
 
         public async Task<Categoria> InsertAsync(CategoriaDto categoriaDto)
         {
-            if (Validator(categoriaDto)) return null;
+            if (Validator(categoriaDto))
+                return null;
 
-            if (await _repository.ExisteAsync(nome:categoriaDto.Descricao) != null)
+            if (await _repository.ExisteAsync(nome: categoriaDto.Descricao) != null)
             {
-                Notificar(EnumTipoNotificacao.ClientError, $"Categoria {categoriaDto.Descricao} já existe.");
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    $"Categoria {categoriaDto.Descricao} já existe."
+                );
                 return null;
             }
 
@@ -42,7 +47,8 @@ namespace Application.Services.Finance
 
         public async Task<Categoria> UpdateAsync(int id, CategoriaDto categoriaDto)
         {
-            if (Validator(categoriaDto)) return null;
+            if (Validator(categoriaDto))
+                return null;
 
             var categoria = await _repository.GetByIdAsync(id);
 
@@ -54,16 +60,24 @@ namespace Application.Services.Finance
 
             if (_repository.ValidaCategoriaParaAcao(categoria.Id))
             {
-                Notificar(EnumTipoNotificacao.ClientError,
-                    "Essa categoria faz parta da regra de negócio. Não pode ser alterada.");
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    "Essa categoria faz parta da regra de negócio. Não pode ser alterada."
+                );
                 return null;
-            }          
+            }
 
-            if (await _repository.ExisteAsync(nome: categoriaDto.Descricao) is Categoria catergoriaExiste)
+            if (
+                await _repository.ExisteAsync(nome: categoriaDto.Descricao)
+                is Categoria catergoriaExiste
+            )
             {
                 if (categoria.Id != catergoriaExiste.Id)
                 {
-                    Notificar(EnumTipoNotificacao.ClientError, $"Categoria {categoriaDto.Descricao} já existe.");
+                    Notificar(
+                        EnumTipoNotificacao.ClientError,
+                        $"Categoria {categoriaDto.Descricao} já existe."
+                    );
                     return null;
                 }
             }
@@ -93,8 +107,10 @@ namespace Application.Services.Finance
 
             if (_repository.ValidaCategoriaParaAcao(categoria.Id))
             {
-                Notificar(EnumTipoNotificacao.ClientError,
-                    "Essa categoria faz parta da regra de negócio. Não pode ser alterada");
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    "Essa categoria faz parta da regra de negócio. Não pode ser alterada"
+                );
                 return;
             }
 
