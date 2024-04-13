@@ -2,7 +2,7 @@
 {
     public static class HelpExtensios
     {
-        public static decimal RoundTo(this decimal soucer, int decimalPlaces)
-            => Math.Round(soucer, decimalPlaces);
+        public static double RoundTo(this double soucer, int doublePlaces) =>
+            Math.Round(soucer, doublePlaces);
     }
 }

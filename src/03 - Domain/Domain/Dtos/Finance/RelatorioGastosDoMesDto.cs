@@ -2,7 +2,8 @@
 {
     public record RelatorioGastosDoMesDto(
         string MesAtual,
-        decimal TotalAluguelCondominio,
-        decimal TotalGastosGerais,
-        decimal TotalGeral);
+        double TotalAluguelCondominio,
+        double TotalGastosGerais,
+        double TotalGeral
+    );
 }

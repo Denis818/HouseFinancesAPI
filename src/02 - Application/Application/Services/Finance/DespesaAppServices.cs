@@ -3,6 +3,7 @@ using Application.Configurations.Extensions.Help;
 using Application.Constants;
 using Application.Interfaces.Services.Finance;
 using Application.Services.Base;
+using Domain.Dtos.Categoria;
 using Domain.Dtos.Finance;
 using Domain.Enumeradores;
 using Domain.Interfaces;
@@ -210,8 +211,7 @@ namespace Application.Services.Finance
 
         public async Task<ResumoMensalDto> GetResumoDespesasMensalAsync()
         {
-            var (idAlmoco, idAluguel, idCondominio, idContaDeLuz) =
-                _categoriaRepository.GetIdsAluguelAlmoco();
+            var categoriaIds = _categoriaRepository.GetCategoriaIds();
 
             var (inicioDoMes, fimDoMes) = await GetPeriodoParaCalculoAsync();
 
@@ -226,64 +226,57 @@ namespace Application.Services.Finance
                 .Include(c => c.Categoria)
                 .ToListAsync();
 
-            //Despesas Gerais Limpesa, Higiêne etc...
-            decimal totalDespesaGerais = CalculaTotalDespesaForaAlmocoAluguelCondominioContaDeLuz(
+            //Despesas gerais Limpesa, Higiêne etc...
+            double totalDespesaGerais = CalculaTotalDespesaForaAlmocoAluguelCondominioContaDeLuz(
                 despesasAtuais,
-                idAlmoco,
-                idAluguel,
-                idCondominio,
-                idContaDeLuz
+                categoriaIds
             );
 
             //Aluguel + Condomínio + Conta de Luz
             var (aluguelCondominioContaLuzPorMembroForaPeu, aluguelCondominioContaLuzParaPeu) =
                 await CalcularTotalAluguelCondominioContaDeLuzPorMembro(
                     despesasAtuais,
-                    idAluguel,
-                    idCondominio,
-                    idContaDeLuz
+                    categoriaIds
                 );
 
             //Almoço divido com Jhon
-            var (almocoDividioComJhon, almocoParteDoJhon) = CalculaTotalAlmocoDivididoComJhon(
-                despesasAtuais,
-                idAlmoco
-            );
+            var (totalAlmocoDividioComJhon, totalAlmocoParteDoJhon) =
+                CalculaTotalAlmocoDivididoComJhon(despesasAtuais, categoriaIds.IdAlmoco);
 
-            //Despesa total da casa FORA aluguel e Conta de luz
-            decimal totalDespesaGeraisMaisAlmocoDividio = totalDespesaGerais + almocoDividioComJhon;
-
-            decimal totalDespesaGeraisMaisAlmocoPorMembro =
-                totalDespesaGeraisMaisAlmocoDividio / listMembersForaJhon.Count;
+            //Despesa gerais Limpesa, Higiêne etc... + Almoço divido com Jhon
+            double despesaGeraisMaisAlmocoDividioPorMembro =
+                (totalDespesaGerais + totalAlmocoDividioComJhon) / listMembersForaJhon.Count;
 
             return new ResumoMensalDto
             {
-                RelatorioGastosDoMes = GetRelatorioDeGastosDoMes(mesAtual, despesasAtuais),
+                RelatorioGastosDoMes = GetRelatorioDeGastosDoMes(
+                    mesAtual,
+                    categoriaIds,
+                    despesasAtuais
+                ),
+
                 DespesasPorMembros = DistribuirDespesasEntreMembros(
-                    totalDespesaGeraisMaisAlmocoPorMembro,
+                    despesaGeraisMaisAlmocoDividioPorMembro,
                     aluguelCondominioContaLuzPorMembroForaPeu,
                     aluguelCondominioContaLuzParaPeu,
-                    almocoParteDoJhon
+                    totalAlmocoParteDoJhon
                 )
             };
         }
 
         #region Support Methods
 
-        public decimal CalculaTotalDespesaForaAlmocoAluguelCondominioContaDeLuz(
+        public double CalculaTotalDespesaForaAlmocoAluguelCondominioContaDeLuz(
             List<Despesa> despesas,
-            int idAlmoco,
-            int idAluguel,
-            int idCondominio,
-            int idContaDeLuz
+            CategoriaIdsDto categoriaIds
         )
         {
-            decimal total = despesas
+            double total = despesas
                 .Where(d =>
-                    d.CategoriaId != idAlmoco
-                    && d.CategoriaId != idAluguel
-                    && d.CategoriaId != idContaDeLuz
-                    && d.CategoriaId != idCondominio
+                    d.CategoriaId != categoriaIds.IdAluguel
+                    && d.CategoriaId != categoriaIds.IdCondominio
+                    && d.CategoriaId != categoriaIds.IdContaDeLuz
+                    && d.CategoriaId != categoriaIds.IdAlmoco
                 )
                 .Sum(d => d.Total);
 
@@ -292,18 +285,19 @@ namespace Application.Services.Finance
 
         public RelatorioGastosDoMesDto GetRelatorioDeGastosDoMes(
             string mesAtual,
+            CategoriaIdsDto categIds,
             List<Despesa> despesas
         )
         {
-            decimal aluguelMaisCondominio = despesas
+            double aluguelMaisCondominio = despesas
                 .Where(d =>
-                    d.Categoria.Descricao == "Aluguel" || d.Categoria.Descricao == "Condomínio"
+                    d.Categoria.Id == categIds.IdAluguel || d.Categoria.Id == categIds.IdCondominio
                 )
                 .Sum(d => d.Total);
 
-            decimal totalGeral = despesas.Sum(d => d.Total);
+            double totalGeral = despesas.Sum(d => d.Total);
 
-            decimal totalGastosGerais = totalGeral - aluguelMaisCondominio;
+            double totalGastosGerais = totalGeral - aluguelMaisCondominio;
 
             return new RelatorioGastosDoMesDto(
                 mesAtual,
@@ -313,25 +307,23 @@ namespace Application.Services.Finance
             );
         }
 
-        public (decimal, decimal) CalculaTotalAlmocoDivididoComJhon(
+        public (double, double) CalculaTotalAlmocoDivididoComJhon(
             List<Despesa> despesas,
             int idAlmoco
         )
         {
-            decimal almoco = despesas.Where(d => d.CategoriaId == idAlmoco).Sum(d => d.Total);
+            double almoco = despesas.Where(d => d.CategoriaId == idAlmoco).Sum(d => d.Total);
 
-            decimal almocoParteDoJhon = almoco / 5;
+            double almocoParteDoJhon = almoco / 5;
 
-            decimal almocoAbatido = almoco - almocoParteDoJhon;
+            double almocoAbatido = almoco - almocoParteDoJhon;
 
             return (almocoAbatido, almocoParteDoJhon);
         }
 
-        private async Task<(decimal, decimal)> CalcularTotalAluguelCondominioContaDeLuzPorMembro(
+        private async Task<(double, double)> CalcularTotalAluguelCondominioContaDeLuzPorMembro(
             List<Despesa> despesas,
-            int idAluguel,
-            int idCondominio,
-            int idContaDeLuz
+            CategoriaIdsDto categoriaIds
         )
         {
             var (idJhon, idPeu) = _membroRepository.GetIdsJhonPeu();
@@ -344,36 +336,36 @@ namespace Application.Services.Finance
                 .Where(membro => membro.Id != idPeu)
                 .ToList();
 
-            decimal valorAluguel = despesas
-                .Where(d => d.CategoriaId == idAluguel)
+            double valorAluguel = despesas
+                .Where(d => d.CategoriaId == categoriaIds.IdAluguel)
                 .Sum(aluguel => aluguel.Total);
 
-            decimal valorCondominio = despesas
-                .Where(d => d.CategoriaId == idCondominio)
+            double valorCondominio = despesas
+                .Where(d => d.CategoriaId == categoriaIds.IdCondominio)
                 .Sum(condominio => condominio.Total);
 
-            decimal valorContaDeLuz = despesas
-                .Where(d => d.CategoriaId == idContaDeLuz)
+            double valorContaDeLuz = despesas
+                .Where(d => d.CategoriaId == categoriaIds.IdContaDeLuz)
                 .Sum(despesa => despesa.Total);
 
-            decimal luzMaisCondominioPorMembro =
+            double luzMaisCondominioPorMembro =
                 (valorCondominio + valorContaDeLuz - 100) / todosMembrosDaCasa.Count; //100 reais referente ao estacionamento que alugamos.
 
-            decimal aluguelPorMembroForaPeu = (valorAluguel - 300) / membrosMenosPeu.Count; //300 reais é o valor do aluguel do peu.
+            double aluguelPorMembroForaPeu = (valorAluguel - 300) / membrosMenosPeu.Count; //300 reais é o valor do aluguel do peu.
 
-            decimal aluguelCondominioContaLuzPorMembroForaPeu =
+            double aluguelCondominioContaLuzPorMembroForaPeu =
                 aluguelPorMembroForaPeu + luzMaisCondominioPorMembro;
 
-            decimal aluguelCondominioContaLuzParaPeu = 300 + luzMaisCondominioPorMembro;
+            double aluguelCondominioContaLuzParaPeu = 300 + luzMaisCondominioPorMembro;
 
             return (aluguelCondominioContaLuzPorMembroForaPeu, aluguelCondominioContaLuzParaPeu);
         }
 
         private IEnumerable<DespesaPorMembroDto> DistribuirDespesasEntreMembros(
-            decimal totalDespesaGeraisMaisAlmocoPorMembro,
-            decimal aluguelCondominioContaLuzPorMembroForaPeu,
-            decimal aluguelCondominioContaLuzParaPeu,
-            decimal almocoDividioComJhon
+            double despesaGeraisMaisAlmocoDividioPorMembro,
+            double aluguelCondominioContaLuzPorMembroForaPeu,
+            double aluguelCondominioContaLuzParaPeu,
+            double totalAlmocoDividioComJhon
         )
         {
             var members = _membroRepository.Get().ToList();
@@ -385,8 +377,8 @@ namespace Application.Services.Finance
 
                 ValorDespesasCasa =
                     member.Id == idJhon
-                        ? almocoDividioComJhon.RoundTo(2)
-                        : totalDespesaGeraisMaisAlmocoPorMembro.RoundTo(2),
+                        ? totalAlmocoDividioComJhon.RoundTo(2)
+                        : despesaGeraisMaisAlmocoDividioPorMembro.RoundTo(2),
 
                 ValorCondominioAluguelContaDeLuz =
                     member.Id == idPeu

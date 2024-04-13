@@ -1,5 +1,5 @@
-﻿using Domain.Converters.DatesTimes;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using Domain.Converters.DatesTimes;
 
 namespace Domain.Dtos.Finance
 {
@@ -7,7 +7,7 @@ namespace Domain.Dtos.Finance
     {
         public int CategoriaId { get; set; }
         public string Item { get; set; }
-        public decimal Preco { get; set; }
+        public double Preco { get; set; }
         public int Quantidade { get; set; }
         public string Fornecedor { get; set; }
 

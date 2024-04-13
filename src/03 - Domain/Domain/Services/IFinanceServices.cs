@@ -5,8 +5,12 @@ namespace Domain.Services
 {
     public interface IFinanceServices
     {
-        decimal CalculaTotalDespesaForaAlmocoAluguel(List<Despesa> despesas, int idAlmoco, int idAluguel);
+        double CalculaTotalDespesaForaAlmocoAluguel(
+            List<Despesa> despesas,
+            int idAlmoco,
+            int idAluguel
+        );
         RelatorioGastosDoMesDto GetRelatorioDeGastosDoMes(string mesAtual, List<Despesa> despesas);
-        (decimal, decimal) CalculaTotalAlmocoDivididoComJhon(List<Despesa> despesas, int idAlmoco);
+        (double, double) CalculaTotalAlmocoDivididoComJhon(List<Despesa> despesas, int idAlmoco);
     }
 }

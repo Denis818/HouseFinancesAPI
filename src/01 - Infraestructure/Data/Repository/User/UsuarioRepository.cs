@@ -1,4 +1,4 @@
-﻿using Data.DataContext.Context;
+﻿using Data.DataContext;
 using Data.Repository.Base;
 using Domain.Dtos.User;
 using Domain.Interfaces;

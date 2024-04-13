@@ -4,9 +4,10 @@ using Domain.Models.Finance;
 using Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.DataContext.Context
+namespace Data.DataContext
 {
-    public partial class FinanceDbContext(DbContextOptions<FinanceDbContext> options) : DbContext(options)
+    public partial class FinanceDbContext(DbContextOptions<FinanceDbContext> options)
+        : DbContext(options)
     {
         public DbSet<Despesa> Despesas { get; set; }
         public DbSet<Membro> Membros { get; set; }

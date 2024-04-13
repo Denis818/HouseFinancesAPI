@@ -3,7 +3,7 @@
     public class DespesaPorMembroDto
     {
         public string Nome { get; set; }
-        public decimal ValorDespesasCasa { get; set; }
-        public decimal ValorCondominioAluguelContaDeLuz { get; set; }
+        public double ValorDespesasCasa { get; set; }
+        public double ValorCondominioAluguelContaDeLuz { get; set; }
     }
 }
