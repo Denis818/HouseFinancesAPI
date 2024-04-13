@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Data.Repository.Base
 {
@@ -26,25 +26,19 @@ namespace Data.Repository.Base
             return DbSet.AsNoTracking();
         }
 
-        public async Task<TEntity> GetByIdAsync(int id) 
-            => await DbSet.FindAsync(id);
+        public async Task<TEntity> GetByIdAsync(int id) => await DbSet.FindAsync(id);
 
-        public virtual async Task InsertAsync(TEntity entity) 
-            => await DbSet.AddAsync(entity);
+        public virtual async Task InsertAsync(TEntity entity) => await DbSet.AddAsync(entity);
 
-        public async Task InsertRangeAsync(List<TEntity> entity) 
-            => await DbSet.AddRangeAsync(entity);
+        public async Task InsertRangeAsync(List<TEntity> entity) =>
+            await DbSet.AddRangeAsync(entity);
 
-        public void Update(TEntity entity) 
-            => DbSet.Update(entity);
+        public void Update(TEntity entity) => DbSet.Update(entity);
 
-        public void Delete(TEntity entity) 
-            => DbSet.Remove(entity);
+        public void Delete(TEntity entity) => DbSet.Remove(entity);
 
-        public void DeleteRange(TEntity[] entityArray) 
-            => DbSet.RemoveRange(entityArray);
+        public void DeleteRange(TEntity[] entityArray) => DbSet.RemoveRange(entityArray);
 
-        public async Task<bool> SaveChangesAsync() 
-            => await _context.SaveChangesAsync() > 0;     
+        public async Task<bool> SaveChangesAsync() => await _context.SaveChangesAsync() > 0;
     }
 }

@@ -21,7 +21,7 @@ namespace Data.Configurations.Extensions
             if (!vendasDbContext.Database.CanConnect())
             {
                 vendasDbContext.Database.Migrate();
-                PrepareCategoryAndMember(services);
+                PrepareCategoryAndMember(services).Wait();
             }
 
             var logDbContext = services.GetRequiredService<LogDbContext>();
@@ -66,7 +66,7 @@ namespace Data.Configurations.Extensions
                 .Wait();
         }
 
-        public static void PrepareCategoryAndMember(IServiceProvider service)
+        public static async Task PrepareCategoryAndMember(IServiceProvider service)
         {
             var categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
             var memberRepository = service.GetRequiredService<IMembroRepository>();
@@ -93,8 +93,8 @@ namespace Data.Configurations.Extensions
                 new() { Nome = "Jhon Lenon" }
             };
 
-            categoriaRepository.InsertRangeAsync(listCategoria).Wait();
-            memberRepository.InsertRangeAsync(listMember).Wait();
+            await categoriaRepository.InsertRangeAsync(listCategoria);
+            await memberRepository.InsertRangeAsync(listMember);
         }
     }
 }
