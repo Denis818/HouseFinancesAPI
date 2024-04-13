@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Application.Configurations.Extensions.Help;
+﻿using Application.Configurations.Extensions.Help;
 using Application.Constants;
 using Application.Interfaces.Services.Finance;
 using Application.Services.Base;
@@ -10,6 +9,7 @@ using Domain.Interfaces;
 using Domain.Models.Finance;
 using HouseFinancesAPI.Utilities;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace Application.Services.Finance
 {
@@ -36,10 +36,10 @@ namespace Application.Services.Finance
 
         public async Task<Despesa> InsertAsync(DespesaDto despesaDto)
         {
-            if (Validator(despesaDto))
+            if(Validator(despesaDto))
                 return null;
 
-            if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
+            if(await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -54,7 +54,7 @@ namespace Application.Services.Finance
 
             await _repository.InsertAsync(despesa);
 
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.InsertError);
                 return null;
@@ -70,14 +70,14 @@ namespace Application.Services.Finance
             int totalRecebido = 0;
             var despesasParaInserir = new List<Despesa>();
 
-            await foreach (var despesaDto in listDespesasDto)
+            await foreach(var despesaDto in listDespesasDto)
             {
                 totalRecebido++;
 
-                if (Validator(despesaDto))
+                if(Validator(despesaDto))
                     continue;
 
-                if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
+                if(await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
                 {
                     Notificar(
                         EnumTipoNotificacao.Informacao,
@@ -91,7 +91,7 @@ namespace Application.Services.Finance
                 despesasParaInserir.Add(despesa);
             }
 
-            if (despesasParaInserir.Count == 0)
+            if(despesasParaInserir.Count == 0)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -101,13 +101,13 @@ namespace Application.Services.Finance
             }
 
             await _repository.InsertRangeAsync(despesasParaInserir);
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.InsertError);
                 return null;
             }
 
-            if (totalRecebido > despesasParaInserir.Count)
+            if(totalRecebido > despesasParaInserir.Count)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -127,12 +127,12 @@ namespace Application.Services.Finance
 
         public async Task<Despesa> UpdateAsync(int id, DespesaDto despesaDto)
         {
-            if (Validator(despesaDto))
+            if(Validator(despesaDto))
                 return null;
 
             var despesa = await _repository.GetByIdAsync(id);
 
-            if (despesa == null)
+            if(despesa == null)
             {
                 Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
                 return null;
@@ -144,7 +144,7 @@ namespace Application.Services.Finance
 
             _repository.Update(despesa);
 
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.UpdateError);
                 return null;
@@ -157,7 +157,7 @@ namespace Application.Services.Finance
         {
             var despesa = await _repository.GetByIdAsync(id);
 
-            if (despesa == null)
+            if(despesa == null)
             {
                 Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
                 return;
@@ -165,7 +165,7 @@ namespace Application.Services.Finance
 
             _repository.Delete(despesa);
 
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.DeleteError);
                 return;
@@ -371,20 +371,43 @@ namespace Application.Services.Finance
             var members = _membroRepository.Get().ToList();
             var (idJhon, idPeu) = _membroRepository.GetIdsJhonPeu();
 
-            return members.Select(member => new DespesaPorMembroDto
+            double ValorCondominioAluguelContaDeLuz(Membro membro)
             {
-                Nome = member.Nome,
+                if(membro.Id == idPeu)
+                {
+                    return aluguelCondominioContaLuzParaPeu.RoundTo(2);
+                }
+                else
+                {
+                    return aluguelCondominioContaLuzPorMembroForaPeu.RoundTo(2);
+                }
+            }
 
-                ValorDespesasCasa =
-                    member.Id == idJhon
-                        ? totalAlmocoDividioComJhon.RoundTo(2)
-                        : despesaGeraisMaisAlmocoDividioPorMembro.RoundTo(2),
+            double ValorDespesasCasa(Membro membro)
+            {
+                if(membro.Id == idJhon)
+                {
+                    return totalAlmocoDividioComJhon.RoundTo(2);
+                }
+                else
+                {
+                    return despesaGeraisMaisAlmocoDividioPorMembro.RoundTo(2);
+                }
+            }
 
-                ValorCondominioAluguelContaDeLuz =
-                    member.Id == idPeu
-                        ? aluguelCondominioContaLuzParaPeu.RoundTo(2)
-                        : aluguelCondominioContaLuzPorMembroForaPeu.RoundTo(2)
-            });
+            var valoresPorMembro = members
+                .Select(member => new DespesaPorMembroDto
+                {
+                    Nome = member.Nome,
+
+                    ValorDespesasCasa = ValorDespesasCasa(member),
+
+                    ValorCondominioAluguelContaDeLuz =
+                        member.Id == idJhon ? 0 : ValorCondominioAluguelContaDeLuz(member)
+                })
+                .Where(d => d.ValorCondominioAluguelContaDeLuz != 0);
+
+            return valoresPorMembro;
         }
 
         private async Task<(DateTime, DateTime)> GetPeriodoParaCalculoAsync()
