@@ -28,12 +28,12 @@ namespace HouseFinancesAPI.Controllers.Finance
             await _membroServices.InsertAsync(vendaDto);
 
         [HttpPatch]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.USU_000002)]
         public async Task<Membro> Put(int id, MembroDto vendaDto) =>
             await _membroServices.UpdateAsync(id, vendaDto);
 
         [HttpDelete]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.USU_000003)]
         public async Task Delete(int id) => await _membroServices.DeleteAsync(id);
     }
 }

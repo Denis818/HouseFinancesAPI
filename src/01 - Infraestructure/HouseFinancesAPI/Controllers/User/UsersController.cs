@@ -28,11 +28,6 @@ namespace HouseFinancesAPI.Controllers.User
             return await _authService.AutenticarUsuario(userDto);
         }
 
-        [HttpGet("add-permission")]
-        [PermissoesFinance(EnumPermissoes.USU_000003)]
-        public async Task AddPermissaoAsync(AddUserPermissionDto userPermissao) =>
-            await _authService.AddPermissaoAsync(userPermissao);
-
         [HttpGet("info")]
         [AutorizationFinance]
         [ApiExplorerSettings(IgnoreApi = true)]

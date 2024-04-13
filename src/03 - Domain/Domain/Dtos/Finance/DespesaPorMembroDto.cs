@@ -1,4 +1,9 @@
 ﻿namespace Domain.Dtos.Finance
 {
-    public record DespesaPorMembroDto(string Nome, decimal Valor);
+    public class DespesaPorMembroDto
+    {
+        public string Nome { get; set; }
+        public decimal ValorDespesasCasa { get; set; }
+        public decimal ValorCondominioAluguelContaDeLuz { get; set; }
+    }
 }

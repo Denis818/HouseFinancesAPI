@@ -6,6 +6,6 @@ namespace Domain.Interfaces
     {
         Task<Categoria> ExisteAsync(int id = 0, string nome = null);
         bool ValidaCategoriaParaAcao(int idCategoria);
-        (int idAlmoco, int idAluguel) GetIdsAluguelAlmoco();
+        (int idAlmoco, int idAluguel, int idCondominio, int idContaDeLuz) GetIdsAluguelAlmoco();
     }
 }

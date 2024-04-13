@@ -1,7 +1,8 @@
 ﻿namespace Domain.Dtos.Finance
 {
-    public record ResumoMensalDto(
-        RelatorioGastosDoMesDto RelatorioGastosDoMes,
-        IEnumerable<DespesaPorMembroDto> DespesasPorMembros
-    );
+    public class ResumoMensalDto
+    {
+        public RelatorioGastosDoMesDto RelatorioGastosDoMes { get; set; }
+        public IEnumerable<DespesaPorMembroDto> DespesasPorMembros { get; set; }
+    }
 }

@@ -5,7 +5,6 @@ using Domain.Models.Finance;
 using HouseFinancesAPI.Attributes;
 using HouseFinancesAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace HouseFinancesAPI.Controllers.Finance
 {
@@ -31,12 +30,12 @@ namespace HouseFinancesAPI.Controllers.Finance
             await _categoriaServices.InsertAsync(vendaDto);
 
         [HttpPatch]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.USU_000002)]
         public async Task<Categoria> Put(int id, CategoriaDto vendaDto) =>
             await _categoriaServices.UpdateAsync(id, vendaDto);
 
         [HttpDelete]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.USU_000003)]
         public async Task Delete(int id) => await _categoriaServices.DeleteAsync(id);
         #endregion
     }
