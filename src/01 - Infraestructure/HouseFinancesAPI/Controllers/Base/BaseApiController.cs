@@ -50,17 +50,18 @@ namespace HouseFinancesAPI.Controllers.Base
                     {
                         Mensagens = listErrosInternos.ToArray()
 
-                    }) { StatusCode = 500 };
+                    })
+                    { StatusCode = 500 };
                 }
             }
 
             return Ok(new ResponseResultDTO<TResponse>(contentResponse)
             {
-                Mensagens = [ new Notificacao("") ]
+                Mensagens = [new Notificacao("")]
             });
         }
 
-        protected void Notificar(EnumTipoNotificacao tipo, string mesage) 
+        protected void Notificar(EnumTipoNotificacao tipo, string mesage)
             => _notificador.Notificar(tipo, mesage);
     }
 
