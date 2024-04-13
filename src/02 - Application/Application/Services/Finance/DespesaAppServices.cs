@@ -383,29 +383,18 @@ namespace Application.Services.Finance
                 }
             }
 
-            double ValorDespesasCasa(Membro membro)
+            var valoresPorMembro = members.Select(member => new DespesaPorMembroDto
             {
-                if(membro.Id == idJhon)
-                {
-                    return totalAlmocoDividioComJhon.RoundTo(2);
-                }
-                else
-                {
-                    return despesaGeraisMaisAlmocoDividioPorMembro.RoundTo(2);
-                }
-            }
+                Nome = member.Nome,
 
-            var valoresPorMembro = members
-                .Select(member => new DespesaPorMembroDto
-                {
-                    Nome = member.Nome,
+                ValorDespesasCasa =
+                    member.Id == idJhon
+                        ? totalAlmocoDividioComJhon.RoundTo(2)
+                        : despesaGeraisMaisAlmocoDividioPorMembro.RoundTo(2),
 
-                    ValorDespesasCasa = ValorDespesasCasa(member),
-
-                    ValorCondominioAluguelContaDeLuz =
-                        member.Id == idJhon ? 0 : ValorCondominioAluguelContaDeLuz(member)
-                })
-                .Where(d => d.ValorCondominioAluguelContaDeLuz != 0);
+                ValorCondominioAluguelContaDeLuz =
+                    member.Id == idJhon ? 0 : ValorCondominioAluguelContaDeLuz(member)
+            });
 
             return valoresPorMembro;
         }
