@@ -18,13 +18,13 @@ namespace Application.Validators.Finance
             RuleFor(x => (double)x.Preco)
                 .InclusiveBetween(0.01, 9999)
                 .WithMessage(
-                    "O {PropertyName} não pode ser menor que {MinLength}, e maior que {MaxLength}."
+                    "O {PropertyName} não pode ser menor que 0.01, e maior que 9999."
                 );
 
             RuleFor(x => x.Quantidade)
                 .InclusiveBetween(1, 999)
                 .WithMessage(
-                    "A {PropertyName} não pode ser menor que {MinLength}, e maior que {MaxLength}."
+                    "A {PropertyName} não pode ser menor que 1, e maior que 9999."
                 );
 
             RuleFor(x => x.Fornecedor)
