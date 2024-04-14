@@ -27,7 +27,7 @@ namespace HouseFinancesAPI.Controllers.Finance
         public async Task<Membro> Post(MembroDto vendaDto) =>
             await _membroServices.InsertAsync(vendaDto);
 
-        [HttpPatch]
+        [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
         public async Task<Membro> Put(int id, MembroDto vendaDto) =>
             await _membroServices.UpdateAsync(id, vendaDto);

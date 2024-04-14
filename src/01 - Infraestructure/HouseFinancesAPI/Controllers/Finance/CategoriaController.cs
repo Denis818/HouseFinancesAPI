@@ -29,7 +29,7 @@ namespace HouseFinancesAPI.Controllers.Finance
         public async Task<Categoria> Post(CategoriaDto vendaDto) =>
             await _categoriaServices.InsertAsync(vendaDto);
 
-        [HttpPatch]
+        [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
         public async Task<Categoria> Put(int id, CategoriaDto vendaDto) =>
             await _categoriaServices.UpdateAsync(id, vendaDto);
