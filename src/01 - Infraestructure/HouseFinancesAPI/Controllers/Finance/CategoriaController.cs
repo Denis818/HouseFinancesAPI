@@ -21,9 +21,6 @@ namespace HouseFinancesAPI.Controllers.Finance
         public async Task<IEnumerable<Categoria>> GetAllAsync() =>
             await _categoriaServices.GetAllAsync();
 
-        [HttpGet("{id}")]
-        public async Task<Categoria> GetById(int id) => await _categoriaServices.GetByIdAsync(id);
-
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<Categoria> Post(CategoriaDto vendaDto) =>

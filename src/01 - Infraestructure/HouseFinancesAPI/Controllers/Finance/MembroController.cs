@@ -19,9 +19,6 @@ namespace HouseFinancesAPI.Controllers.Finance
         public async Task<IEnumerable<Membro>> GetAllDespesaAsync() =>
             await _membroServices.GetAllAsync().ToListAsync();
 
-        [HttpGet("{id}")]
-        public async Task<Membro> GetById(int id) => await _membroServices.GetByIdAsync(id);
-
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<Membro> Post(MembroDto vendaDto) =>
