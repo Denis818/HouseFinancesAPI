@@ -2,12 +2,12 @@
 using Application.Extensions.Help;
 using Application.Interfaces.Services.Finance;
 using Application.Services.Base;
+using Application.Utilities;
 using Domain.Dtos.Categoria;
 using Domain.Dtos.Finance;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Finance;
-using HouseFinancesAPI.Utilities;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 

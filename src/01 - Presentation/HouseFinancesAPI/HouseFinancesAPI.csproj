@@ -27,7 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\03 - Infraestructure\DIContainer\DIContainer.csproj" />
+	  <ProjectReference Include="..\..\02 - Infraestructure\DIContainer\DIContainer.csproj" />
 	</ItemGroup>
 	
 	<ItemGroup>
