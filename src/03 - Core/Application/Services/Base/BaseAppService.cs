@@ -37,6 +37,7 @@ namespace Application.Services.Base
                     .Errors.GroupBy(failure => failure.PropertyName)
                     .Select(group => new
                     {
+                        PropertyName = group.Key,
                         Errors = string.Join(" ", group.Select(err => err.ErrorMessage))
                     });
 
