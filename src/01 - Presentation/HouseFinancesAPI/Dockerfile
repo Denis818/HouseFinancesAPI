@@ -5,17 +5,18 @@ EXPOSE 8080
 EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
 WORKDIR /src
-COPY ["src/04 - UI/HouseFinancesAPI/HouseFinancesAPI.csproj", "src/04 - UI/HouseFinancesAPI/"]
-COPY ["src/03 - Infraestructure/DIContainer/DIContainer.csproj", "src/03 - Infraestructure/DIContainer/"]
-COPY ["src/01 - Domain/Domain/Domain.csproj", "src/01 - Domain/Domain/"]
-COPY ["src/02 - Application/Application/Application.csproj", "src/02 - Application/Application/"]
-COPY ["src/03 - Infraestructure/Data/Data.csproj", "src/03 - Infraestructure/Data/"]
-RUN dotnet restore "./src/04 - UI/HouseFinancesAPI/HouseFinancesAPI.csproj"
+COPY ["src/01 - Presentation/HouseFinancesAPI/HouseFinancesAPI.csproj", "src/01 - Presentation/HouseFinancesAPI/"]
+COPY ["src/02 - Infraestructure/DIContainer/DIContainer.csproj", "src/02 - Infraestructure/DIContainer/"]
+COPY ["src/03 - Core/Application/Application.csproj", "src/03 - Core/Application/"]
+COPY ["src/03 - Core/Domain/Domain.csproj", "src/03 - Core/Domain/"]
+COPY ["src/02 - Infraestructure/Data/Data.csproj", "src/02 - Infraestructure/Data/"]
+RUN dotnet restore "./src/01 - Presentation/HouseFinancesAPI/HouseFinancesAPI.csproj"
 
 COPY . .
 
-WORKDIR "/src/src/04 - UI/HouseFinancesAPI"
+WORKDIR "/src/src/01 - Presentation/HouseFinancesAPI"
 RUN dotnet build "./HouseFinancesAPI.csproj" -c PRD -o /app/build
 
 FROM build AS publish
