@@ -1,4 +1,5 @@
-﻿using DIContainer.DataBaseConfiguration;
+﻿using Application.Validators.Finance;
+using DIContainer.DataBaseConfiguration;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -55,7 +56,7 @@ namespace DIContainer.DependencyManagers
         }
         public static void AddAssemblyConfigurations(this IServiceCollection services)
         {
-            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(DespesaValidator)));
         }
 
         public static void UseCorsPolicy(this IApplicationBuilder app)
