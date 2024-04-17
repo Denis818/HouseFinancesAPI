@@ -95,14 +95,14 @@ namespace Application.Services.Finance
             return categoria;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var categoria = await _repository.GetByIdAsync(id);
 
             if(categoria == null)
             {
                 Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
-                return;
+                return false;
             }
 
             if(_repository.ValidaCategoriaParaAcao(categoria.Id))
@@ -111,7 +111,7 @@ namespace Application.Services.Finance
                     EnumTipoNotificacao.ClientError,
                     "Essa categoria faz parta da regra de negócio. Não pode ser alterada"
                 );
-                return;
+                return false;
             }
 
             _repository.Delete(categoria);
@@ -119,10 +119,11 @@ namespace Application.Services.Finance
             if(!await _repository.SaveChangesAsync())
             {
                 Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.DeleteError);
-                return;
+                return false;
             }
 
             Notificar(EnumTipoNotificacao.Informacao, "Registro Deletado");
+            return true;
         }
         #endregion
     }

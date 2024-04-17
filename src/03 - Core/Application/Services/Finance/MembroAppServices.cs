@@ -86,14 +86,14 @@ namespace Application.Services.Finance
             return membro;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var membro = await _repository.GetByIdAsync(id);
 
             if(membro == null)
             {
                 Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
-                return;
+                return false;
             }
 
             if(_repository.ValidaMembroParaAcao(membro.Id))
@@ -102,7 +102,7 @@ namespace Application.Services.Finance
                     EnumTipoNotificacao.ClientError,
                     "Esse membro faz parta da regra de negócio. Não pode ser alterado."
                 );
-                return;
+                return false;
             }
 
             _repository.Delete(membro);
@@ -110,10 +110,11 @@ namespace Application.Services.Finance
             if(!await _repository.SaveChangesAsync())
             {
                 Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.DeleteError);
-                return;
+                return false;
             }
 
             Notificar(EnumTipoNotificacao.Informacao, "Registro Deletado");
+            return true;
         }
     }
 }

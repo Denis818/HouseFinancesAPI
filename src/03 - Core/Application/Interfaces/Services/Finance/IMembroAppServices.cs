@@ -5,7 +5,7 @@ namespace Application.Interfaces.Services.Finance
 {
     public interface IMembroAppServices
     {
-        Task DeleteAsync(int id);
+        Task<bool> DeleteAsync(int id);
         Task<IEnumerable<Membro>> GetAllAsync();
         Task<Membro> GetByIdAsync(int id);
         Task<Membro> InsertAsync(MembroDto memberDto);

@@ -22,28 +22,25 @@ namespace HouseFinancesAPI.Controllers.Finance
             int itensPorPagina = 10
         ) => await _despesaServices.GetAllAsync(paginaAtual, itensPorPagina);
 
-        [HttpGet("{id}")]
-        public async Task<Despesa> GetById(int id) => await _despesaServices.GetByIdAsync(id);
-
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task<Despesa> Post(DespesaDto vendaDto) =>
+        public async Task<Despesa> PostAsync(DespesaDto vendaDto) =>
             await _despesaServices.InsertAsync(vendaDto);
 
         [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task<Despesa> Put(int id, DespesaDto vendaDto) =>
+        public async Task<Despesa> PutAsync(int id, DespesaDto vendaDto) =>
             await _despesaServices.UpdateAsync(id, vendaDto);
 
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task Delete(int id) => await _despesaServices.DeleteAsync(id);
+        public async Task DeleteAsync(int id) => await _despesaServices.DeleteAsync(id);
         #endregion
 
 
         [HttpPost("inserir-lote")]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task<IEnumerable<Despesa>> PostRange(IAsyncEnumerable<DespesaDto> vendaDto) =>
+        public async Task<IEnumerable<Despesa>> PostRangeAsync(IAsyncEnumerable<DespesaDto> vendaDto) =>
             await _despesaServices.InsertRangeAsync(vendaDto);
 
         [HttpGet("resumo-despesas-mensal")]
@@ -51,7 +48,7 @@ namespace HouseFinancesAPI.Controllers.Finance
             await _despesaServices.GetResumoDespesasMensalAsync();
 
         [HttpGet("total-por-categoria")]
-        public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoria() =>
+        public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync() =>
             await _despesaServices.GetTotalPorCategoriaAsync();
 
         [HttpGet("total-por-mes")]
