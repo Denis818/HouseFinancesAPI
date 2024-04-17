@@ -21,6 +21,8 @@ namespace Application.Services.Finance
 
         public async Task<Categoria> InsertAsync(CategoriaDto categoriaDto)
         {
+            categoriaDto.Descricao = categoriaDto.Descricao.Trim();
+
             if(Validator(categoriaDto))
                 return null;
 
@@ -47,6 +49,8 @@ namespace Application.Services.Finance
 
         public async Task<Categoria> UpdateAsync(int id, CategoriaDto categoriaDto)
         {
+            categoriaDto.Descricao = categoriaDto.Descricao.Trim();
+
             if(Validator(categoriaDto))
                 return null;
 
@@ -57,6 +61,8 @@ namespace Application.Services.Finance
                 Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
                 return null;
             }
+
+            if(categoria.Descricao == categoriaDto.Descricao) return categoria;
 
             if(_repository.ValidaCategoriaParaAcao(categoria.Id))
             {

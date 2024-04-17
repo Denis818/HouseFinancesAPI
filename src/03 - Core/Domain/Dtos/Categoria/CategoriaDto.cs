@@ -1,4 +1,7 @@
 ﻿namespace Domain.Dtos.Categoria
 {
-    public record CategoriaDto(string Descricao);
+    public class CategoriaDto
+    {
+        public string Descricao { get; set; }
+    }
 }

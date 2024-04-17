@@ -36,6 +36,9 @@ namespace Application.Services.Finance
 
         public async Task<Despesa> InsertAsync(DespesaDto despesaDto)
         {
+            despesaDto.Item = despesaDto.Item.Trim();
+            despesaDto.Fornecedor = despesaDto.Fornecedor.Trim();
+
             if(Validator(despesaDto))
                 return null;
 
@@ -127,6 +130,9 @@ namespace Application.Services.Finance
 
         public async Task<Despesa> UpdateAsync(int id, DespesaDto despesaDto)
         {
+            despesaDto.Item = despesaDto.Item.Trim();
+            despesaDto.Fornecedor = despesaDto.Fornecedor.Trim();
+
             if(Validator(despesaDto))
                 return null;
 

@@ -23,13 +23,13 @@ namespace HouseFinancesAPI.Controllers.Finance
 
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task<Categoria> PostAsync(CategoriaDto vendaDto) =>
-            await _categoriaServices.InsertAsync(vendaDto);
+        public async Task<Categoria> PostAsync(CategoriaDto categoriaDto) =>
+            await _categoriaServices.InsertAsync(categoriaDto);
 
         [HttpPut]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
-        public async Task<Categoria> PutAsync(int id, CategoriaDto vendaDto) =>
-            await _categoriaServices.UpdateAsync(id, vendaDto);
+        public async Task<Categoria> PutAsync(int id, CategoriaDto categoriaDto) =>
+            await _categoriaServices.UpdateAsync(id, categoriaDto);
 
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000003)]

@@ -20,6 +20,8 @@ namespace Application.Services.Finance
 
         public async Task<Membro> InsertAsync(MembroDto membroDto)
         {
+            membroDto.Nome = membroDto.Nome.Trim();
+
             if(Validator(membroDto))
                 return null;
 
@@ -41,6 +43,8 @@ namespace Application.Services.Finance
 
         public async Task<Membro> UpdateAsync(int id, MembroDto membroDto)
         {
+            membroDto.Nome = membroDto.Nome.Trim();
+
             if(Validator(membroDto))
                 return null;
 

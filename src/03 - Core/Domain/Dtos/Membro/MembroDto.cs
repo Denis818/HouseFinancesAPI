@@ -1,4 +1,7 @@
 ﻿namespace Domain.Dtos.Membro
 {
-    public record MembroDto(string Nome);
+    public record MembroDto
+    {
+        public string Nome { get; set; }
+    }
 }
