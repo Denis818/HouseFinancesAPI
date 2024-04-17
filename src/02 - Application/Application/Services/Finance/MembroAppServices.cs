@@ -6,7 +6,7 @@ using Domain.Enumeradores;
 using Domain.Interfaces;
 using Domain.Models.Finance;
 
-namespace Application.Interfaces.Services
+namespace Application.Services.Finance
 {
     public class MembroAppServices(IServiceProvider service)
         : BaseAppService<Membro, IMembroRepository>(service),
@@ -18,17 +18,17 @@ namespace Application.Interfaces.Services
 
         public async Task<Membro> InsertAsync(MembroDto membroDto)
         {
-            if (Validator(membroDto))
+            if(Validator(membroDto))
                 return null;
 
-            if (await _repository.ExisteAsync(membroDto.Nome) != null)
+            if(await _repository.ExisteAsync(membroDto.Nome) != null)
                 Notificar(EnumTipoNotificacao.ClientError, $"O membro {membroDto.Nome} já existe.");
 
             var membro = _mapper.Map<Membro>(membroDto);
 
             await _repository.InsertAsync(membro);
 
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.InsertError);
                 return null;
@@ -39,18 +39,18 @@ namespace Application.Interfaces.Services
 
         public async Task<Membro> UpdateAsync(int id, MembroDto membroDto)
         {
-            if (Validator(membroDto))
+            if(Validator(membroDto))
                 return null;
 
             var membro = await _repository.GetByIdAsync(id);
 
-            if (membro is null)
+            if(membro is null)
             {
                 Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
                 return null;
             }
 
-            if (_repository.ValidaMembroParaAcao(membro.Id))
+            if(_repository.ValidaMembroParaAcao(membro.Id))
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -59,9 +59,9 @@ namespace Application.Interfaces.Services
                 return null;
             }
 
-            if (await _repository.ExisteAsync(membroDto.Nome) is Membro membroExiste)
+            if(await _repository.ExisteAsync(membroDto.Nome) is Membro membroExiste)
             {
-                if (membro.Id != membroExiste.Id)
+                if(membro.Id != membroExiste.Id)
                 {
                     Notificar(
                         EnumTipoNotificacao.ClientError,
@@ -75,7 +75,7 @@ namespace Application.Interfaces.Services
 
             _repository.Update(membro);
 
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.UpdateError);
                 return null;
@@ -88,13 +88,13 @@ namespace Application.Interfaces.Services
         {
             var membro = await _repository.GetByIdAsync(id);
 
-            if (membro == null)
+            if(membro == null)
             {
                 Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
                 return;
             }
 
-            if (_repository.ValidaMembroParaAcao(membro.Id))
+            if(_repository.ValidaMembroParaAcao(membro.Id))
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -105,7 +105,7 @@ namespace Application.Interfaces.Services
 
             _repository.Delete(membro);
 
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.DeleteError);
                 return;

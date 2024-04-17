@@ -21,10 +21,10 @@ namespace Application.Services.Finance
 
         public async Task<Categoria> InsertAsync(CategoriaDto categoriaDto)
         {
-            if (Validator(categoriaDto))
+            if(Validator(categoriaDto))
                 return null;
 
-            if (await _repository.ExisteAsync(nome: categoriaDto.Descricao) != null)
+            if(await _repository.ExisteAsync(nome: categoriaDto.Descricao) != null)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -36,7 +36,7 @@ namespace Application.Services.Finance
             var categoria = _mapper.Map<Categoria>(categoriaDto);
             await _repository.InsertAsync(categoria);
 
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.InsertError);
                 return null;
@@ -47,18 +47,18 @@ namespace Application.Services.Finance
 
         public async Task<Categoria> UpdateAsync(int id, CategoriaDto categoriaDto)
         {
-            if (Validator(categoriaDto))
+            if(Validator(categoriaDto))
                 return null;
 
             var categoria = await _repository.GetByIdAsync(id);
 
-            if (categoria is null)
+            if(categoria is null)
             {
                 Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
                 return null;
             }
 
-            if (_repository.ValidaCategoriaParaAcao(categoria.Id))
+            if(_repository.ValidaCategoriaParaAcao(categoria.Id))
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -67,12 +67,12 @@ namespace Application.Services.Finance
                 return null;
             }
 
-            if (
+            if(
                 await _repository.ExisteAsync(nome: categoriaDto.Descricao)
                 is Categoria catergoriaExiste
             )
             {
-                if (categoria.Id != catergoriaExiste.Id)
+                if(categoria.Id != catergoriaExiste.Id)
                 {
                     Notificar(
                         EnumTipoNotificacao.ClientError,
@@ -86,7 +86,7 @@ namespace Application.Services.Finance
 
             _repository.Update(categoria);
 
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.UpdateError);
                 return null;
@@ -99,13 +99,13 @@ namespace Application.Services.Finance
         {
             var categoria = await _repository.GetByIdAsync(id);
 
-            if (categoria == null)
+            if(categoria == null)
             {
                 Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
                 return;
             }
 
-            if (_repository.ValidaCategoriaParaAcao(categoria.Id))
+            if(_repository.ValidaCategoriaParaAcao(categoria.Id))
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -116,7 +116,7 @@ namespace Application.Services.Finance
 
             _repository.Delete(categoria);
 
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.DeleteError);
                 return;
