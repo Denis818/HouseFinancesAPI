@@ -5,7 +5,6 @@ using Domain.Models.Finance;
 using HouseFinancesAPI.Attributes;
 using HouseFinancesAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace HouseFinancesAPI.Controllers.Finance
 {
@@ -17,7 +16,7 @@ namespace HouseFinancesAPI.Controllers.Finance
     {
         [HttpGet]
         public async Task<IEnumerable<Membro>> GetAllDespesaAsync() =>
-            await _membroServices.GetAllAsync().ToListAsync();
+            await _membroServices.GetAllAsync();
 
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]

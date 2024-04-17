@@ -30,7 +30,7 @@ namespace Application.Services.Finance
 
         public async Task<PagedResult<Despesa>> GetAllAsync(int paginaAtual, int itensPorPagina)
         {
-            var query = _repository.Get().Include(c => c.Categoria);
+            var query = _repository.Get().Include(c => c.Categoria).OrderBy(d => d.Id);
             return await Pagination.PaginateResultAsync(query, paginaAtual, itensPorPagina);
         }
 

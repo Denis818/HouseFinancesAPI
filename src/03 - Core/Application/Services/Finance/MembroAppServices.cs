@@ -5,6 +5,7 @@ using Domain.Dtos.Membro;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Finance;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Finance
 {
@@ -12,7 +13,8 @@ namespace Application.Services.Finance
         : BaseAppService<Membro, IMembroRepository>(service),
             IMembroAppServices
     {
-        public IQueryable<Membro> GetAllAsync() => _repository.Get();
+        public async Task<IEnumerable<Membro>> GetAllAsync() =>
+            await _repository.Get().OrderBy(c => c.Nome).ToListAsync();
 
         public async Task<Membro> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
 

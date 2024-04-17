@@ -15,7 +15,7 @@ namespace Application.Services.Finance
     {
         #region CRUD
         public async Task<IEnumerable<Categoria>> GetAllAsync() =>
-            await _repository.Get().ToListAsync();
+            await _repository.Get().OrderBy(c => c.Descricao).ToListAsync();
 
         public async Task<Categoria> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
 
