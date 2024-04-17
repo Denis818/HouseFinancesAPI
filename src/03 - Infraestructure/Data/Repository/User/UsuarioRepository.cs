@@ -1,7 +1,7 @@
 ﻿using Data.DataContext;
 using Data.Repository.Base;
 using Domain.Dtos.User;
-using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,13 +23,13 @@ namespace Data.Repository.User
                 .Include(p => p.Permissoes)
                 .FirstOrDefaultAsync();
 
-            foreach (var permissao in userPermissao.Permissoes)
+            foreach(var permissao in userPermissao.Permissoes)
             {
                 var possuiPermissao = usuario
                     .Permissoes.Where(p => p.Descricao == permissao.ToString())
                     .FirstOrDefault();
 
-                if (possuiPermissao is null)
+                if(possuiPermissao is null)
                 {
                     usuario.Permissoes.Add(new Permissao { Descricao = permissao.ToString() });
                 }

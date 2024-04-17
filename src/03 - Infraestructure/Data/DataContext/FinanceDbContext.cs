@@ -1,6 +1,4 @@
-﻿using Data.EntitesMaps.FinanceDataBase.Finance;
-using Data.EntitesMaps.FinanceDataBase.User;
-using Domain.Models.Finance;
+﻿using Domain.Models.Finance;
 using Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,12 +18,7 @@ namespace Data.DataContext
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfiguration(new DespesaMap());
-            modelBuilder.ApplyConfiguration(new CategoriaMap());
-            modelBuilder.ApplyConfiguration(new MembroMap());
-
-            modelBuilder.ApplyConfiguration(new UsuarioMap());
-            modelBuilder.ApplyConfiguration(new PermissaoMap());
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(FinanceDbContext).Assembly);
         }
     }
 }

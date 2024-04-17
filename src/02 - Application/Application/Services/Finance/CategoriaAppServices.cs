@@ -3,7 +3,7 @@ using Application.Interfaces.Services.Finance;
 using Application.Services.Base;
 using Domain.Dtos.Categoria;
 using Domain.Enumeradores;
-using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Domain.Models.Finance;
 using Microsoft.EntityFrameworkCore;
 

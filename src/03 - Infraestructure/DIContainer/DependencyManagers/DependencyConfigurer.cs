@@ -1,4 +1,4 @@
-﻿using Data.Configurations.Extensions;
+﻿using DIContainer.DataBaseConfiguration;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

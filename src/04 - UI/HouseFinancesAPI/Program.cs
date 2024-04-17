@@ -1,4 +1,4 @@
-using Data.Configurations.Extensions;
+using DIContainer.DataBaseConfiguration;
 using DIContainer.DependencyManagers;
 using HouseFinancesAPI.Extensios.Application;
 using HouseFinancesAPI.Extensios.Swagger;

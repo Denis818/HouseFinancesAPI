@@ -1,7 +1,7 @@
 ﻿using Data.DataContext;
 using Data.Repository.Base;
 using Domain.Dtos.Categoria;
-using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Domain.Models.Finance;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +13,7 @@ namespace Data.Repository.Finance
     {
         public async Task<Categoria> ExisteAsync(int id, string nome)
         {
-            if (nome != null)
+            if(nome != null)
             {
                 return await Get(c => c.Descricao == nome).FirstOrDefaultAsync();
             }

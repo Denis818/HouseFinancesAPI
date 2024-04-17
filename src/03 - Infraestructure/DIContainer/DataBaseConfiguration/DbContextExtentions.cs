@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Data.Configurations.Extensions
+namespace DIContainer.DataBaseConfiguration
 {
     public static class DbContextExtentions
     {
@@ -13,14 +13,9 @@ namespace Data.Configurations.Extensions
         )
         {
             string connectionVendas = configuration.GetConnectionString("FINANCE");
-            string connectionLog = configuration.GetConnectionString("APPLICATIONLOG");
 
             services.AddDbContext<FinanceDbContext>(options =>
                 options.UseMySql(connectionVendas, ServerVersion.AutoDetect(connectionVendas))
-            );
-
-            services.AddDbContext<LogDbContext>(options =>
-                options.UseMySql(connectionLog, ServerVersion.AutoDetect(connectionLog))
             );
         }
     }

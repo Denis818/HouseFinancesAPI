@@ -1,5 +1,5 @@
-﻿using System.Text.Json.Serialization;
-using Domain.Converters.DatesTimes;
+﻿using Domain.Converters.DatesTimes;
+using System.Text.Json.Serialization;
 
 namespace Domain.Models.Finance
 {

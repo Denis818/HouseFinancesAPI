@@ -1,6 +1,6 @@
 ﻿using Data.DataContext;
 using Data.Repository.Base;
-using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Domain.Models.Finance;
 using Microsoft.EntityFrameworkCore;
 

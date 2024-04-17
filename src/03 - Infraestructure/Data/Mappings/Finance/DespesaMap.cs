@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Data.EntitesMaps.FinanceDataBase.Finance
+namespace Data.Mappings.Finance
 {
     internal class DespesaMap : IEntityTypeConfiguration<Despesa>
     {

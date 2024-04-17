@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
-using Domain.Models.Users;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Data.EntitesMaps.FinanceDataBase.User
+namespace Data.Mappings.User
 {
     public class PermissaoMap : IEntityTypeConfiguration<Permissao>
     {

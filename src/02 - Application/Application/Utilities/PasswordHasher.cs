@@ -1,14 +1,14 @@
-﻿using System.Security.Cryptography;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Cryptography;
 
-namespace Domain.Utilities
+namespace Application.Utilities
 {
     public class PasswordHasher
     {
         public (string Salt, string Hash) CriarHashSenha(string senha)
         {
             byte[] salt = new byte[128 / 8];
-            using (var rng = RandomNumberGenerator.Create())
+            using(var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(salt);
             }

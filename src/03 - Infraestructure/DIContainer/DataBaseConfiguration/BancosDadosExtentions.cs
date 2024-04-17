@@ -1,14 +1,14 @@
-﻿using Data.DataContext;
+﻿using Application.Utilities;
+using Data.DataContext;
 using Domain.Dtos.User;
 using Domain.Enumeradores;
-using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
 using Domain.Models.Finance;
 using Domain.Models.Users;
-using Domain.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Data.Configurations.Extensions
+namespace DIContainer.DataBaseConfiguration
 {
     public static class SeedUser
     {
@@ -18,16 +18,10 @@ namespace Data.Configurations.Extensions
             var services = serviceScope.ServiceProvider;
 
             var vendasDbContext = services.GetRequiredService<FinanceDbContext>();
-            if (!vendasDbContext.Database.CanConnect())
+            if(!vendasDbContext.Database.CanConnect())
             {
                 vendasDbContext.Database.Migrate();
                 PrepareCategoryAndMember(services).Wait();
-            }
-
-            var logDbContext = services.GetRequiredService<LogDbContext>();
-            if (!logDbContext.Database.CanConnect())
-            {
-                logDbContext.Database.Migrate();
             }
 
             PrepareUserAdmin(services);
@@ -40,7 +34,7 @@ namespace Data.Configurations.Extensions
             string email = "master@gmail.com";
             string senha = "Master@123456";
 
-            if (usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
+            if(usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
                 return;
 
             var (Salt, PasswordHash) = new PasswordHasher().CriarHashSenha(senha);
@@ -50,7 +44,7 @@ namespace Data.Configurations.Extensions
                 Email = email,
                 Password = PasswordHash,
                 Salt = Salt,
-                Permissoes = []
+                //Permissoes = []
             };
 
             var permissoes = new EnumPermissoes[]

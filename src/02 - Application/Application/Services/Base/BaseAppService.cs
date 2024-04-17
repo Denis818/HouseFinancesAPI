@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces.Utilities;
 using Domain.Enumeradores;
-using Domain.Interfaces;
+using Domain.Interfaces.Repositories.Base;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
