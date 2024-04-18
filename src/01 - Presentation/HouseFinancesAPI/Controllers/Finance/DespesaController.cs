@@ -4,16 +4,16 @@ using Domain.Dtos.Finance;
 using Domain.Enumeradores;
 using Domain.Models.Finance;
 using HouseFinancesAPI.Attributes;
-using HouseFinancesAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
 
 namespace HouseFinancesAPI.Controllers.Finance
 {
     [ApiController]
-    [AutorizationFinance]
+    // [AutorizationFinance]
     [Route("api/[controller]")]
-    public class DespesaController(IServiceProvider service, IDespesaAppServices _despesaServices)
-        : BaseApiController(service)
+    public class DespesaController(IServiceProvider service, IDespesaAppServices _despesaServices) : Controller
+
     {
         #region CRUD
         [HttpGet]
@@ -54,5 +54,23 @@ namespace HouseFinancesAPI.Controllers.Finance
         [HttpGet("total-por-mes")]
         public async Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorMesAsync() =>
             await _despesaServices.GetTotaisComprasPorMesAsync();
+
+        [HttpGet("gerar-pdf")]
+        public IActionResult fileContentResult()
+        {
+            // Gerar o PDF
+            byte[] pdfBytes = _despesaServices.PdfValoresAluguelCondominioLuz();
+
+            // Configurar o cabeçalho Content-Disposition para download
+            var contentDisposition = new ContentDisposition
+            {
+                FileName = "arquivo.pdf",
+                Inline = false  // Define como false para forçar o download
+            };
+            Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
+
+            // Retornar o PDF como um FileContentResult
+            return File(pdfBytes, "application/pdf");
+        }
     }
 }

@@ -19,9 +19,11 @@ namespace DIContainer.DependencyManagers
         )
         {
             services.AddConectionsString(config);
+
             services.AddDependecyUtilities();
             services.AddDependecyRepositories();
-            services.AddDependecyServices();
+            services.AddDependecyDomainServices();
+            services.AddDependecyAppServices();
 
             services.AddAuthenticationJwt(config);
             services.AddAssemblyConfigurations();
@@ -54,6 +56,7 @@ namespace DIContainer.DependencyManagers
                     };
                 });
         }
+
         public static void AddAssemblyConfigurations(this IServiceCollection services)
         {
             services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(DespesaValidator)));

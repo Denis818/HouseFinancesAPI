@@ -7,6 +7,8 @@ using Application.Utilities;
 using Data.Repository.Finance;
 using Data.Repository.User;
 using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Services.Finance;
+using Domain.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DIContainer.DependencyManagers
@@ -27,8 +29,12 @@ namespace DIContainer.DependencyManagers
             services.AddScoped<IMembroRepository, MembroRepository>();
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
         }
+        public static void AddDependecyDomainServices(this IServiceCollection services)
+        {
+            services.AddScoped<IDespesasDomainService, DespesasDomainService>();
+        }
 
-        public static void AddDependecyServices(this IServiceCollection services)
+        public static void AddDependecyAppServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthAppService, AuthAppService>();
 

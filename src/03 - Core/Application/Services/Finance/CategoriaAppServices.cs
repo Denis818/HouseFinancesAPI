@@ -62,7 +62,8 @@ namespace Application.Services.Finance
                 return null;
             }
 
-            if(categoria.Descricao == categoriaDto.Descricao) return categoria;
+            if(categoria.Descricao == categoriaDto.Descricao)
+                return categoria;
 
             if(_repository.ValidaCategoriaParaAcao(categoria.Id))
             {
