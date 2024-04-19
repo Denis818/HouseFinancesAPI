@@ -14,7 +14,7 @@ namespace Application.Helpers
         private readonly float BorderWidth = 1.5f;
         private readonly int Alinhamento = Element.ALIGN_CENTER;
         private readonly int Padding = 7;
-        private readonly int WidthPercentage = 70;
+        private readonly int WidthPercentage = 50;
         private readonly int NumColumns = 2;
         private readonly int Colspan = 2;
 
