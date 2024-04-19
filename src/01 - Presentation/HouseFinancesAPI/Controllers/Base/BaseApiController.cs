@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces.Utilities;
-using Application.Utilities;
 using Domain.Enumeradores;
+using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -8,105 +8,57 @@ namespace HouseFinancesAPI.Controllers.Base
 {
     public abstract class BaseApiController(IServiceProvider service) : Controller
     {
-        private readonly INotifier _notificador = service.GetRequiredService<INotifier>();
+        protected readonly INotifier _notifier = service.GetRequiredService<INotifier>();
+
         protected readonly IConfiguration _configuration =
             service.GetRequiredService<IConfiguration>();
 
-        protected void Notificar(EnumTipoNotificacao tipo, string mesage) =>
-            _notificador.Notificar(tipo, mesage);
+        protected void Notificar(EnumTipoNotificacao tipo, string message) =>
+            _notifier.Notify(tipo, message);
 
         public override void OnActionExecuted(ActionExecutedContext context)
         {
+            base.OnActionExecuted(context);
             if(context.Result is ObjectResult result)
             {
                 context.Result = CustomResponse(result.Value);
-                return;
             }
-            else if(context.Result is FileContentResult fileContent)
-            {
-                context.Result = CustomResponse(fileContent);
-                return;
-            }
-            context.Result = CustomResponse<object>(null);
         }
 
-        protected IActionResult CustomResponse<TResponse>(TResponse contentResponse)
+        private IActionResult CustomResponse<TResponse>(TResponse content)
         {
-            if(_notificador.ListNotificacoes.Count > 0)
+            if(_notifier.HasNotifications(EnumTipoNotificacao.ClientError, out var clientErrors))
             {
-                var listInformacoes = _notificador.ListNotificacoes.Where(item =>
-                    item.StatusCode == EnumTipoNotificacao.Informacao
-                );
-                if(listInformacoes.Any())
-                {
-                    return CustomOkResult(
-                        new ResponseResultDTO<TResponse>(contentResponse)
-                        {
-                            Mensagens = listInformacoes.ToArray()
-                        }
-                    );
-                }
-
-                var ListErros = _notificador.ListNotificacoes.Where(item =>
-                    item.StatusCode == EnumTipoNotificacao.ClientError
-                );
-                if(ListErros.Any())
-                {
-                    return BadRequest(
-                        new ResponseResultDTO<TResponse>(contentResponse)
-                        {
-                            Mensagens = ListErros.ToArray()
-                        }
-                    );
-                }
-
-                var listErrosInternos = _notificador.ListNotificacoes.Where(item =>
-                    item.StatusCode == EnumTipoNotificacao.ServerError
-                );
-                if(listErrosInternos.Any())
-                {
-                    return new ObjectResult(
-                        new ResponseResultDTO<TResponse>(contentResponse)
-                        {
-                            Mensagens = listErrosInternos.ToArray()
-                        }
-                    )
-                    {
-                        StatusCode = 500
-                    };
-                }
+                return BadRequest(new ResponseDTO<TResponse>(content) { Mensagens = clientErrors });
             }
 
-            return CustomOkResult(
-                new ResponseResultDTO<TResponse>(contentResponse)
-                {
-                    Mensagens = [new Notificacao("")]
-                }
-            );
-        }
-
-        private IActionResult CustomOkResult(object result)
-        {
-            if(result is ResponseResultDTO<FileContentResult> fileDto)
+            if(_notifier.HasNotifications(EnumTipoNotificacao.ServerError, out var serverErrors))
             {
-                return File(fileDto.Dados.FileContents, "application/pdf", "arquivo.pdf");
+                return StatusCode(
+                    500,
+                    new ResponseDTO<TResponse>(content) { Mensagens = serverErrors }
+                );
             }
 
-            return Ok(result);
+            _notifier.HasNotifications(EnumTipoNotificacao.Informacao, out var infoMessages);
+            return Ok(new ResponseDTO<TResponse>(content) { Mensagens = infoMessages });
         }
+
+        private ResponseDTO<T> ResponseDTO<T>(T data, Notificacao[] notifications = null) =>
+            new(data, notifications);
     }
 
-    public class ResponseResultDTO<TResponse>
+    public class ResponseDTO<T>
     {
-        public TResponse Dados { get; set; }
+        public T Dados { get; set; }
         public Notificacao[] Mensagens { get; set; }
 
-        public ResponseResultDTO(TResponse data, Notificacao[] notificacoes = null)
+        public ResponseDTO(T data, Notificacao[] messages = null)
         {
             Dados = data;
-            Mensagens = notificacoes;
+            Mensagens = messages ?? [];
         }
 
-        public ResponseResultDTO() { }
+        public ResponseDTO() { }
     }
 }

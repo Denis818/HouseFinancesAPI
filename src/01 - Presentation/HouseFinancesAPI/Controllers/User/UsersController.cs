@@ -16,13 +16,13 @@ namespace HouseFinancesAPI.Controllers.User
         [HttpPost("login")]
         public async Task<UserTokenDto> Login(UserDto userDto)
         {
-            if (userDto.Email.IsNullOrEmpty() || userDto.Password.IsNullOrEmpty())
+            if(userDto.Email.IsNullOrEmpty() || userDto.Password.IsNullOrEmpty())
             {
                 Notificar(EnumTipoNotificacao.ClientError, "Email ou Senha incorretos.");
                 return null;
             }
 
-            if (userDto.Email.Replace(" ", "").ToLower() == "master")
+            if(userDto.Email.Replace(" ", "").ToLower() == "master")
                 userDto.Email = _configuration["UserMaster:Email"];
 
             return await _authService.AutenticarUsuario(userDto);

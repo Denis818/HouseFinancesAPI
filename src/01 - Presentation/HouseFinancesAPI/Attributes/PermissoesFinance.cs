@@ -1,5 +1,5 @@
-﻿using Application.Utilities;
-using Domain.Enumeradores;
+﻿using Domain.Enumeradores;
+using Domain.Utilities;
 using HouseFinancesAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -20,9 +20,9 @@ namespace HouseFinancesAPI.Attributes
                 context.HttpContext.User.Claims.Any(claim => claim.Value == permissao)
             );
 
-            if (!possuiTodasPermissoes)
+            if(!possuiTodasPermissoes)
             {
-                var response = new ResponseResultDTO<string>()
+                var response = new ResponseDTO<string>()
                 {
                     Mensagens =
                     [

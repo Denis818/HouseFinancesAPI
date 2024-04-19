@@ -1,4 +1,4 @@
-﻿using Application.Utilities;
+﻿using Domain.Utilities;
 using HouseFinancesAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -10,9 +10,9 @@ namespace HouseFinancesAPI.Attributes
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            if (!context.HttpContext.User.Identity.IsAuthenticated)
+            if(!context.HttpContext.User.Identity.IsAuthenticated)
             {
-                var response = new ResponseResultDTO<string>()
+                var response = new ResponseDTO<string>()
                 {
                     Mensagens = [new Notificacao("Acesso não autorizado.")]
                 };

@@ -1,6 +1,6 @@
 ﻿using Domain.Enumeradores;
 
-namespace Application.Utilities
+namespace Domain.Utilities
 {
     public class Notificacao(string mensagem, EnumTipoNotificacao tipo = EnumTipoNotificacao.Informacao)
     {
