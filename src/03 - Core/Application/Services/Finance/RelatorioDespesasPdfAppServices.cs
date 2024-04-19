@@ -159,10 +159,7 @@ namespace Application.Services.Finance
 
             foreach(var membro in listMembroForaJhonPeu)
             {
-                columnsAptoCaixaParaCada = new Dictionary<string, string>
-                {
-                    { membro.Nome, $"R$ {valorAptoMaisCaixaParaCadaMembro:F2}" }
-                };
+                columnsAptoCaixaParaCada.Add(membro.Nome, $"R$ {valorAptoMaisCaixaParaCadaMembro:F2}");
             }
 
             _pdfTable.CreateTable(
@@ -182,10 +179,8 @@ namespace Application.Services.Finance
 
             foreach(var membro in listMembroForaJhon)
             {
-                columnsLuzCondParaCada = new Dictionary<string, string>
-                {
-                    { membro.Nome, $"R$ {valorLuzMaisCondominioParaCadaMembro:F2}" }
-                };
+                columnsLuzCondParaCada.Add(membro.Nome, $"R$ {valorLuzMaisCondominioParaCadaMembro:F2}");
+                
             }
 
             _pdfTable.CreateTable(
@@ -213,10 +208,7 @@ namespace Application.Services.Finance
                     valorParaCada = valorParaDoPeu;
                 }
 
-                columnsTotalParaCada = new Dictionary<string, string>
-                {
-                    { membro.Nome, $"R$ {valorParaCada:F2}" }
-                };
+                columnsTotalParaCada.Add(membro.Nome, $"R$ {valorParaCada:F2}");                               
             }
             _pdfTable.CreateTable(doc, "Valor que cada um deve pagar", columnsTotalParaCada);
         }
