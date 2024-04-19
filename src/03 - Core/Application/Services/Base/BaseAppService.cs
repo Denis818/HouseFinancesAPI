@@ -23,7 +23,7 @@ namespace Application.Services.Base
             .HttpContext;
 
         public void Notificar(EnumTipoNotificacao tipo, string message) =>
-            _notificador.Notificar(tipo, message);
+            _notificador.Notify(tipo, message);
 
         protected bool Validator<TEntityDto>(TEntityDto entityDto)
         {

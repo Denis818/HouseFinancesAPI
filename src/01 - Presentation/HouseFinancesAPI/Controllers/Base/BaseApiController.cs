@@ -8,7 +8,7 @@ namespace HouseFinancesAPI.Controllers.Base
 {
     public abstract class BaseApiController(IServiceProvider service) : Controller
     {
-        protected readonly INotifier _notifier = service.GetRequiredService<INotifier>();
+        private readonly INotifier _notifier = service.GetRequiredService<INotifier>();
 
         protected readonly IConfiguration _configuration =
             service.GetRequiredService<IConfiguration>();
@@ -35,7 +35,7 @@ namespace HouseFinancesAPI.Controllers.Base
             if(_notifier.HasNotifications(EnumTipoNotificacao.ServerError, out var serverErrors))
             {
                 return StatusCode(
-                    500,
+                    StatusCodes.Status500InternalServerError,
                     new ResponseDTO<TResponse>(content) { Mensagens = serverErrors }
                 );
             }

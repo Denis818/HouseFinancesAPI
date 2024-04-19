@@ -18,7 +18,7 @@ namespace Application.Utilities
 
         public bool HasNotifications(EnumTipoNotificacao tipo, out Notificacao[] notifications)
         {
-            notifications = ListNotificacoes.Where(n => n.StatusCode == tipo).ToArray() ?? [];
+            notifications = ListNotificacoes.Where(n => n.StatusCode == tipo).ToArray();
             return notifications.Length > 0;
         }
 
