@@ -198,16 +198,24 @@ namespace Domain.Services
 
                 #region Valor que cada um deve pagar
                 PdfPTable tableTotalParaCada = CreatePdfTable("Valor que cada um deve pagar", 2);
-                foreach(var membro in listMembroForaJhonPeu)
+                foreach(var membro in listMembroForaJhon)
                 {
+                    // Define o valor padrão para a maioria dos membros
+                    var valorParaCada = valorParaMembrosForaPeu;
+
+                    // Se o ID do membro for 2, altera o valor para o valorParaDoPeu
+                    if(membro.Id == 2)
+                    {
+                        valorParaCada = valorParaDoPeu;
+                    }
+
                     var columnsTotalParaCada = new Dictionary<string, string>
                     {
-                        { membro.Nome, $"R$ {valorParaMembrosForaPeu:F2}" }
+                        { membro.Nome, $"R$ {valorParaCada:F2}" }
                     };
 
                     AddItemInTable(tableTotalParaCada, columnsTotalParaCada);
                 }
-                AdicionarLinha(tableTotalParaCada, "Peu", $"R$ {valorParaDoPeu:F2}");
                 #endregion
 
                 PdfPTable[] pdfPTables =
@@ -225,14 +233,6 @@ namespace Domain.Services
             }
 
             return memoryStream.ToArray();
-        }
-
-        public void AddItemInTable(PdfPTable table, Dictionary<string, string> columns)
-        {
-            foreach(var column in columns)
-            {
-                AdicionarLinha(table, column.Key, column.Value);
-            }
         }
 
         #region Metodos de Suporte para PDF
@@ -275,13 +275,13 @@ namespace Domain.Services
             return cell;
         }
 
-        private void AdicionarLinha(PdfPTable table, string coluna1, string coluna2)
+        private void AddItemInTable(PdfPTable table, Dictionary<string, string> columns)
         {
-            PdfPCell cell1 = CreateColumn(coluna1);
-            PdfPCell cell2 = CreateColumn(coluna2);
-
-            table.AddCell(cell1);
-            table.AddCell(cell2);
+            foreach(var column in columns)
+            {
+                table.AddCell(CreateColumn(column.Key));
+                table.AddCell(CreateColumn(column.Value));
+            }
         }
 
         private void AddRangeTables(Document doc, PdfPTable[] pdfPTables)

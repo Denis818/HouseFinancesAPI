@@ -4,6 +4,7 @@ using Domain.Dtos.Finance;
 using Domain.Enumeradores;
 using Domain.Models.Finance;
 using HouseFinancesAPI.Attributes;
+using HouseFinancesAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -12,8 +13,8 @@ namespace HouseFinancesAPI.Controllers.Finance
     [ApiController]
     // [AutorizationFinance]
     [Route("api/[controller]")]
-    public class DespesaController(IServiceProvider service, IDespesaAppServices _despesaServices) : Controller
-
+    public class DespesaController(IServiceProvider service, IDespesaAppServices _despesaServices)
+        : BaseApiController(service)
     {
         #region CRUD
         [HttpGet]
@@ -40,8 +41,9 @@ namespace HouseFinancesAPI.Controllers.Finance
 
         [HttpPost("inserir-lote")]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task<IEnumerable<Despesa>> PostRangeAsync(IAsyncEnumerable<DespesaDto> vendaDto) =>
-            await _despesaServices.InsertRangeAsync(vendaDto);
+        public async Task<IEnumerable<Despesa>> PostRangeAsync(
+            IAsyncEnumerable<DespesaDto> vendaDto
+        ) => await _despesaServices.InsertRangeAsync(vendaDto);
 
         [HttpGet("resumo-despesas-mensal")]
         public async Task<ResumoMensalDto> GetResumoDespesasMensalAsync() =>
@@ -56,20 +58,18 @@ namespace HouseFinancesAPI.Controllers.Finance
             await _despesaServices.GetTotaisComprasPorMesAsync();
 
         [HttpGet("gerar-pdf")]
-        public IActionResult fileContentResult()
+        public FileContentResult fileContentResult()
         {
-            // Gerar o PDF
             byte[] pdfBytes = _despesaServices.PdfValoresAluguelCondominioLuz();
 
-            // Configurar o cabeçalho Content-Disposition para download
             var contentDisposition = new ContentDisposition
             {
                 FileName = "arquivo.pdf",
-                Inline = false  // Define como false para forçar o download
+                Inline = false
             };
-            Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
 
-            // Retornar o PDF como um FileContentResult
+            Response.Headers.Append("Content-Disposition", contentDisposition.ToString());
+
             return File(pdfBytes, "application/pdf");
         }
     }

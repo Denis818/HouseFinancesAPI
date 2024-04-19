@@ -350,7 +350,8 @@ namespace Application.Services.Finance
                 if(membro.Id == idPeu)
                 {
                     return aluguelCondominioContaLuzParaPeu.RoundTo(2);
-                } else
+                }
+                else
                 {
                     return aluguelCondominioContaLuzPorMembroForaPeu.RoundTo(2);
                 }
