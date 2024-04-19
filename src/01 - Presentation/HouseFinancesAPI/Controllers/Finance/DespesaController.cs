@@ -58,7 +58,7 @@ namespace HouseFinancesAPI.Controllers.Finance
             await _despesaServices.GetTotaisComprasPorMesAsync();
 
         [HttpGet("gerar-pdf")]
-        public FileContentResult fileContentResult()
+        public FileContentResult DownloadCalculoAlugel()
         {
             byte[] pdfBytes = _despesaServices.PdfValoresAluguelCondominioLuz();
 
