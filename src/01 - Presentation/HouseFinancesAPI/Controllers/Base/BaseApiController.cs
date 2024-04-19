@@ -43,9 +43,6 @@ namespace HouseFinancesAPI.Controllers.Base
             _notifier.HasNotifications(EnumTipoNotificacao.Informacao, out var infoMessages);
             return Ok(new ResponseDTO<TResponse>(content) { Mensagens = infoMessages });
         }
-
-        private ResponseDTO<T> ResponseDTO<T>(T data, Notificacao[] notifications = null) =>
-            new(data, notifications);
     }
 
     public class ResponseDTO<T>
