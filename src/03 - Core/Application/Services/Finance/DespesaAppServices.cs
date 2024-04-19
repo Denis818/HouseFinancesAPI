@@ -3,7 +3,6 @@ using Application.Extensions.Help;
 using Application.Interfaces.Services.Finance;
 using Application.Services.Base;
 using Application.Utilities;
-using Domain.Dtos.Categoria;
 using Domain.Dtos.Finance;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
@@ -183,17 +182,6 @@ namespace Application.Services.Finance
         }
         #endregion
 
-
-        public byte[] PdfValoresAluguelCondominioLuz()
-        {
-            var despesas = _repository.Get().ToList();
-            var membros = _membroRepository.Get().ToList();
-            var categoriaIds = _categoriaRepository.GetCategoriaIds();
-            var (idJhon, idPeu) = _membroRepository.GetIdsJhonPeu();
-
-            return _despesasDomainService.PdfValoresAluguelCondominioLuz(despesas, membros, categoriaIds, idJhon, idPeu);
-        }
-
         #region Consultas
         public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync()
         {
@@ -232,6 +220,7 @@ namespace Application.Services.Finance
         public async Task<ResumoMensalDto> GetResumoDespesasMensalAsync()
         {
             var categoriaIds = _categoriaRepository.GetCategoriaIds();
+            var (idJhon, idPeu) = _membroRepository.GetIdsJhonPeu();
 
             var (inicioDoMes, fimDoMes) = await GetPeriodoParaCalculoAsync();
             string mesAtual = inicioDoMes.ToString("Y", new CultureInfo("pt-BR"));
@@ -239,7 +228,7 @@ namespace Application.Services.Finance
             List<Membro> listTodosMembros = await _membroRepository.Get().ToListAsync();
 
             List<Membro> listMembersForaJhon = await _membroRepository
-                .Get(m => m.Nome != "Jhon Lenon")
+                .Get(m => m.Id != idJhon)
                 .ToListAsync();
 
             List<Despesa> despesasAtuais = await _repository
@@ -256,10 +245,12 @@ namespace Application.Services.Finance
 
             //Aluguel + Condomínio + Conta de Luz
             var (aluguelCondominioContaLuzPorMembroForaPeu, aluguelCondominioContaLuzParaPeu) =
-                 CalcularTotalAluguelCondominioContaDeLuzPorMembro(
+                _despesasDomainService.CalcularTotalAluguelCondominioContaDeLuzPorMembro(
                     despesasAtuais,
                     categoriaIds,
-                    listTodosMembros
+                    listTodosMembros,
+                    idJhon,
+                    idPeu
                 );
 
             //Almoço divido com Jhon
@@ -283,6 +274,7 @@ namespace Application.Services.Finance
                 ),
 
                 DespesasPorMembros = DistribuirDespesasEntreMembros(
+                    listTodosMembros,
                     despesaGeraisMaisAlmocoDividioPorMembro,
                     aluguelCondominioContaLuzPorMembroForaPeu,
                     aluguelCondominioContaLuzParaPeu,
@@ -293,56 +285,27 @@ namespace Application.Services.Finance
 
         #endregion
 
-        #region Support Methods
-        private (double, double) CalcularTotalAluguelCondominioContaDeLuzPorMembro(
-            List<Despesa> despesas,
-            CategoriaIdsDto categoriaIds,
-            List<Membro> todosMembros
-        )
+        public byte[] DownloadPdfRelatorioDeDespesas()
         {
+            var despesas = _repository.Get().ToList();
+            var membros = _membroRepository.Get().ToList();
+            var categoriaIds = _categoriaRepository.GetCategoriaIds();
             var (idJhon, idPeu) = _membroRepository.GetIdsJhonPeu();
 
-            List<Membro> membrosForaJhon = todosMembros
-                .Where(membro => membro.Id != idJhon)
-                .ToList();
-
-            List<Membro> membrosForaPeuJhon = membrosForaJhon
-                .Where(membro => membro.Id != idPeu)
-                .ToList();
-
-            double valorAluguel = despesas
-                .Where(d => d.CategoriaId == categoriaIds.IdAluguel)
-                .Sum(aluguel => aluguel.Total);
-
-            double valorCondominio = despesas
-                .Where(d => d.CategoriaId == categoriaIds.IdCondominio)
-                .Sum(condominio => condominio.Total);
-
-            double valorContaDeLuz = despesas
-                .Where(d => d.CategoriaId == categoriaIds.IdContaDeLuz)
-                .Sum(despesa => despesa.Total);
-
-            double luzMaisCondominioPorMembro =
-                (valorCondominio + valorContaDeLuz - 100) / membrosForaJhon.Count; //100 reais referente ao estacionamento que alugamos.
-
-            double aluguelPorMembroForaPeu = (valorAluguel - 300) / membrosForaPeuJhon.Count; //300 reais é o valor do aluguel do peu.
-
-            double aluguelCondominioContaLuzPorMembroForaPeu =
-                aluguelPorMembroForaPeu + luzMaisCondominioPorMembro;
-
-            double aluguelCondominioContaLuzParaPeu = 300 + luzMaisCondominioPorMembro;
-
-            return (aluguelCondominioContaLuzPorMembroForaPeu, aluguelCondominioContaLuzParaPeu);
+            var t = new RelatorioDespesasPdfAppServices();
+            return t.DownloadPdfRelatorioDeDespesas(despesas, membros, categoriaIds, idJhon, idPeu);
         }
 
+        #region Support Methods
+
         private IEnumerable<DespesaPorMembroDto> DistribuirDespesasEntreMembros(
+            List<Membro> members,
             double despesaGeraisMaisAlmocoDividioPorMembro,
             double aluguelCondominioContaLuzPorMembroForaPeu,
             double aluguelCondominioContaLuzParaPeu,
             double totalAlmocoDividioComJhon
         )
         {
-            var members = _membroRepository.Get().ToList();
             var (idJhon, idPeu) = _membroRepository.GetIdsJhonPeu();
 
             double ValorCondominioAluguelContaDeLuz(Membro membro)

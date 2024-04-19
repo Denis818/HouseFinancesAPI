@@ -60,7 +60,7 @@ namespace HouseFinancesAPI.Controllers.Finance
         [HttpGet("gerar-pdf")]
         public FileContentResult DownloadCalculoAlugel()
         {
-            byte[] pdfBytes = _despesaServices.PdfValoresAluguelCondominioLuz();
+            byte[] pdfBytes = _despesaServices.DownloadPdfRelatorioDeDespesas();
 
             var contentDisposition = new ContentDisposition
             {

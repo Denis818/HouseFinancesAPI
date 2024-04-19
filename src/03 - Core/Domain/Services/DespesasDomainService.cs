@@ -2,8 +2,6 @@
 using Domain.Dtos.Finance;
 using Domain.Interfaces.Services.Finance;
 using Domain.Models.Finance;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 
 namespace Domain.Services
 {
@@ -65,233 +63,45 @@ namespace Domain.Services
             return (almocoAbatido, almocoParteDoJhon);
         }
 
-        public byte[] PdfValoresAluguelCondominioLuz(
+        public (double, double) CalcularTotalAluguelCondominioContaDeLuzPorMembro(
             List<Despesa> despesas,
-            List<Membro> membros,
             CategoriaIdsDto categoriaIds,
+            List<Membro> todosMembros,
             int idJhon,
             int idPeu
         )
         {
-            #region Valores calculados
-            var listAluguel = despesas.Where(despesa =>
-                despesa.CategoriaId == categoriaIds.IdAluguel
-            );
+            List<Membro> membrosForaJhon = todosMembros
+                .Where(membro => membro.Id != idJhon)
+                .ToList();
 
-            var listMembroForaJhon = membros.Where(membro => membro.Id != idJhon).ToList();
-            var listMembroForaJhonPeu = listMembroForaJhon
+            List<Membro> membrosForaPeuJhon = membrosForaJhon
                 .Where(membro => membro.Id != idPeu)
                 .ToList();
 
-            double? parcelaApartamento = listAluguel
-                .Where(aluguel =>
-                    aluguel.Item.Contains("ap ponto", StringComparison.CurrentCultureIgnoreCase)
-                )
-                ?.First()
-                ?.Preco;
+            double valorAluguel = despesas
+                .Where(d => d.CategoriaId == categoriaIds.IdAluguel)
+                .Sum(aluguel => aluguel.Total);
 
-            double? parcelaCaixa = listAluguel
-                .Where(aluguel =>
-                    aluguel.Item.Contains("caixa", StringComparison.CurrentCultureIgnoreCase)
-                )
-                ?.First()
-                ?.Preco;
+            double valorCondominio = despesas
+                .Where(d => d.CategoriaId == categoriaIds.IdCondominio)
+                .Sum(condominio => condominio.Total);
 
-            double? contaDeLuz = despesas
-                .Where(despesa => despesa.CategoriaId == categoriaIds.IdContaDeLuz)
-                ?.First()
-                ?.Preco;
+            double valorContaDeLuz = despesas
+                .Where(d => d.CategoriaId == categoriaIds.IdContaDeLuz)
+                .Sum(despesa => despesa.Total);
 
-            double? condominio = despesas
-                .Where(despesa => despesa.CategoriaId == categoriaIds.IdCondominio)
-                ?.First()
-                ?.Preco;
+            double luzMaisCondominioPorMembro =
+                (valorCondominio + valorContaDeLuz - 100) / membrosForaJhon.Count; //100 reais referente ao estacionamento que alugamos.
 
-            double? totalAptoMaisCaixa = parcelaApartamento + parcelaCaixa;
+            double aluguelPorMembroForaPeu = (valorAluguel - 300) / membrosForaPeuJhon.Count; //300 reais é o valor do aluguel do peu.
 
-            double? totalLuzMaisCondominio = contaDeLuz + condominio;
+            double aluguelCondominioContaLuzPorMembroForaPeu =
+                aluguelPorMembroForaPeu + luzMaisCondominioPorMembro;
 
-            double? totalAptoMaisCaixaAbate300Peu = totalAptoMaisCaixa - 300; //300 aluguel cobrado do peu
-            double? totalLuzMaisCondominioAbate100Estacionamento = totalLuzMaisCondominio - 100; //estacionamento alugado
+            double aluguelCondominioContaLuzParaPeu = 300 + luzMaisCondominioPorMembro;
 
-            double? valorAptoMaisCaixaParaCadaMembro =
-                totalAptoMaisCaixaAbate300Peu / listMembroForaJhonPeu.Count;
-
-            double? valorLuzMaisCondominioParaCadaMembro =
-                totalLuzMaisCondominioAbate100Estacionamento / listMembroForaJhon.Count;
-
-            double? valorParaMembrosForaPeu =
-                valorAptoMaisCaixaParaCadaMembro + valorLuzMaisCondominioParaCadaMembro;
-
-            double? valorParaDoPeu = 300 + valorLuzMaisCondominioParaCadaMembro;
-            #endregion
-
-            using MemoryStream memoryStream = new();
-            using(Document doc = new(PageSize.A4))
-            {
-                PdfWriter.GetInstance(doc, memoryStream);
-                doc.Open();
-
-                #region Valores Iniciais
-                PdfPTable tableValoresIniciais = CreatePdfTable("Valores Iniciais", 2);
-                var columnsValoresIniciais = new Dictionary<string, string>
-                {
-                    { "Parcela do Apartamento", $"R$ {parcelaApartamento:F2}" },
-                    { "Parcela da Caixa", $"R$ {parcelaCaixa:F2}" },
-                    { "Conta de Luz", $"R$ {contaDeLuz:F2}" },
-                    { "Condomínio", $"R$ {condominio:F2}" },
-                };
-                AddItemInTable(tableValoresIniciais, columnsValoresIniciais);
-
-                #endregion
-
-                #region Calculos
-                PdfPTable tableCalculos = CreatePdfTable("Cálculos", 2);
-                var columnsCalculos = new Dictionary<string, string>
-                {
-                    { "Parcela Apto mais Caixa", $"R$ {totalAptoMaisCaixa:F2}" },
-                    { "Conta de Luz mais Condomínio", $"R$ {totalLuzMaisCondominio:F2}" },
-                    {
-                        "Apto mais Caixa menos R$ 300 do Peu",
-                        $"R$ {totalAptoMaisCaixaAbate300Peu:F2}"
-                    },
-                    {
-                        "Conta de Luz e Condomínio menos R$ 100 do estacionamento",
-                        $"R$ {totalLuzMaisCondominioAbate100Estacionamento:F2}"
-                    },
-                };
-                AddItemInTable(tableCalculos, columnsCalculos);
-
-                #endregion
-
-                #region Parcela do Apto e Caixa para cada
-                PdfPTable tableAptoCaixaParaCada = CreatePdfTable(
-                    "Parcela do Apto e Caixa para cada",
-                    2
-                );
-                foreach(var membro in listMembroForaJhonPeu)
-                {
-                    var columnsAptoCaixaParaCada = new Dictionary<string, string>
-                    {
-                        { membro.Nome, $"R$ {valorAptoMaisCaixaParaCadaMembro:F2}" }
-                    };
-
-                    AddItemInTable(tableAptoCaixaParaCada, columnsAptoCaixaParaCada);
-                }
-                #endregion
-
-                #region Conta de Luz e Condomínio para cada
-                PdfPTable tableLuzCondominioParaCada = CreatePdfTable(
-                    "Conta de Luz e Condomínio para cada",
-                    2
-                );
-                foreach(var membro in listMembroForaJhon)
-                {
-                    var columnsLuzCondominioParaCada = new Dictionary<string, string>
-                    {
-                        { membro.Nome, $"R$ {valorLuzMaisCondominioParaCadaMembro:F2}" }
-                    };
-
-                    AddItemInTable(tableLuzCondominioParaCada, columnsLuzCondominioParaCada);
-                }
-                #endregion
-
-                #region Valor que cada um deve pagar
-                PdfPTable tableTotalParaCada = CreatePdfTable("Valor que cada um deve pagar", 2);
-                foreach(var membro in listMembroForaJhon)
-                {
-                    // Define o valor padrão para a maioria dos membros
-                    var valorParaCada = valorParaMembrosForaPeu;
-
-                    // Se o ID do membro for 2, altera o valor para o valorParaDoPeu
-                    if(membro.Id == 2)
-                    {
-                        valorParaCada = valorParaDoPeu;
-                    }
-
-                    var columnsTotalParaCada = new Dictionary<string, string>
-                    {
-                        { membro.Nome, $"R$ {valorParaCada:F2}" }
-                    };
-
-                    AddItemInTable(tableTotalParaCada, columnsTotalParaCada);
-                }
-                #endregion
-
-                PdfPTable[] pdfPTables =
-                {
-                    tableValoresIniciais,
-                    tableCalculos,
-                    tableAptoCaixaParaCada,
-                    tableLuzCondominioParaCada,
-                    tableTotalParaCada,
-                };
-
-                AddRangeTables(doc, pdfPTables);
-
-                doc.Close();
-            }
-
-            return memoryStream.ToArray();
+            return (aluguelCondominioContaLuzPorMembroForaPeu, aluguelCondominioContaLuzParaPeu);
         }
-
-        #region Metodos de Suporte para PDF
-        private PdfPTable CreatePdfTable(string title, int numColumns)
-        {
-            PdfPTable pdfTable = new(numColumns) { WidthPercentage = 110 };
-
-            PdfPCell titleTable = CreateTitle(title);
-
-            pdfTable.AddCell(titleTable);
-
-            return pdfTable;
-        }
-
-        private PdfPCell CreateTitle(string title)
-        {
-            Font boldFont = new(Font.FontFamily.HELVETICA, 11, Font.BOLD);
-
-            return new(new Phrase(title, boldFont))
-            {
-                Colspan = 2,
-                BorderWidth = 1.5f,
-                HorizontalAlignment = Element.ALIGN_CENTER,
-                BackgroundColor = new(247, 242, 255),
-                Padding = 7,
-            };
-        }
-
-        private PdfPCell CreateColumn(string content)
-        {
-            Font font = new(Font.FontFamily.HELVETICA, 10, Font.NORMAL);
-
-            PdfPCell cell =
-                new(new Phrase(content, font))
-                {
-                    BorderWidth = 1.5f,
-                    Padding = 7,
-                    BackgroundColor = new(247, 242, 255),
-                };
-            return cell;
-        }
-
-        private void AddItemInTable(PdfPTable table, Dictionary<string, string> columns)
-        {
-            foreach(var column in columns)
-            {
-                table.AddCell(CreateColumn(column.Key));
-                table.AddCell(CreateColumn(column.Value));
-            }
-        }
-
-        private void AddRangeTables(Document doc, PdfPTable[] pdfPTables)
-        {
-            foreach(var pdfPTable in pdfPTables)
-            {
-                doc.Add(pdfPTable);
-                doc.Add(new Paragraph(" "));
-            }
-        }
-        #endregion
     }
 }

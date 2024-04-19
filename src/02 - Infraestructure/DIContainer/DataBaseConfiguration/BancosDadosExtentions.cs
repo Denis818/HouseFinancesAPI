@@ -1,4 +1,5 @@
-﻿using Application.Utilities;
+﻿using Application.Helpers;
+using Application.Interfaces.Services.User;
 using Data.DataContext;
 using Domain.Dtos.User;
 using Domain.Enumeradores;
@@ -30,6 +31,7 @@ namespace DIContainer.DataBaseConfiguration
         public static void PrepareUserAdmin(IServiceProvider serviceProvider)
         {
             var usuarioRepository = serviceProvider.GetRequiredService<IUsuarioRepository>();
+            var authService = serviceProvider.GetRequiredService<IAuthAppService>();
 
             string email = "master@gmail.com";
             string senha = "Master@123456";
@@ -37,14 +39,14 @@ namespace DIContainer.DataBaseConfiguration
             if(usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
                 return;
 
-            var (Salt, PasswordHash) = new PasswordHasher().CriarHashSenha(senha);
+            var (Salt, PasswordHash) = new PasswordHasherHelper().CriarHashSenha(senha);
 
             var usuario = new Usuario
             {
                 Email = email,
                 Password = PasswordHash,
                 Salt = Salt,
-                //Permissoes = []
+                Permissoes = []
             };
 
             var permissoes = new EnumPermissoes[]
@@ -55,9 +57,7 @@ namespace DIContainer.DataBaseConfiguration
             };
 
             usuarioRepository.InsertAsync(usuario).Wait();
-            usuarioRepository
-                .AddPermissaoAsync(new AddUserPermissionDto(usuario.Id, permissoes))
-                .Wait();
+            authService.AddPermissaoAsync(new AddUserPermissionDto(usuario.Id, permissoes)).Wait();
         }
 
         public static async Task PrepareCategoryAndMember(IServiceProvider service)

@@ -17,6 +17,6 @@ namespace Application.Interfaces.Services.Finance
         Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync();
         Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorMesAsync();
 
-        byte[] PdfValoresAluguelCondominioLuz();
+        byte[] DownloadPdfRelatorioDeDespesas();
     }
 }

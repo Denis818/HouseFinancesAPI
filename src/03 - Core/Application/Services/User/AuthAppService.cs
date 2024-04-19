@@ -1,6 +1,6 @@
+using Application.Helpers;
 using Application.Interfaces.Services.User;
 using Application.Services.Base;
-using Application.Utilities;
 using Domain.Dtos.User;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
@@ -59,12 +59,31 @@ namespace Application.Services.User
             return possuiPermissao;
         }
 
-        public async Task AddPermissaoAsync(AddUserPermissionDto userPermissao) =>
-            await _repository.AddPermissaoAsync(userPermissao);
+        public async Task AddPermissaoAsync(AddUserPermissionDto userPermissao)
+        {
+            var usuario = await _repository.Get(user => user.Id == userPermissao.UsuarioId)
+               .Include(p => p.Permissoes)
+               .FirstOrDefaultAsync();
+
+            foreach(var permissao in userPermissao.Permissoes)
+            {
+                var possuiPermissao = usuario
+                    .Permissoes.Where(p => p.Descricao == permissao.ToString())
+                    .FirstOrDefault();
+
+                if(possuiPermissao is null)
+                {
+                    usuario.Permissoes.Add(new Permissao { Descricao = permissao.ToString() });
+                }
+            }
+
+            _repository.Update(usuario);
+            await _repository.SaveChangesAsync();
+        }
 
         #region Supports Methods
         private bool VerificarSenhaHash(string senha, string senhaHash, string salt) =>
-            new PasswordHasher().CompareHash(senha, salt) == senhaHash;
+            new PasswordHasherHelper().CompareHash(senha, salt) == senhaHash;
 
         private UserTokenDto GerarToken(Usuario usuario)
         {
