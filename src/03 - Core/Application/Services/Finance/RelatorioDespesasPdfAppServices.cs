@@ -89,7 +89,12 @@ namespace Application.Services.Finance
                     totalLuzMaisCondominioAbate100Estacionamento
                 );
 
-                TableParcelaCaixaApto(doc, listMembroForaJhonPeu, valorAptoMaisCaixaParaCadaMembro);
+                TableParcelaCaixaApto(
+                    doc,
+                    listMembroForaJhon,
+                    idPeu,
+                    valorAptoMaisCaixaParaCadaMembro
+                );
 
                 TableContaLuzAndCondominio(
                     doc,
@@ -100,6 +105,7 @@ namespace Application.Services.Finance
                 TableValoresParaCada(
                     doc,
                     listMembroForaJhon,
+                    idPeu,
                     valorParaMembrosForaPeu,
                     valorParaDoPeu
                 );
@@ -151,18 +157,23 @@ namespace Application.Services.Finance
 
         public void TableParcelaCaixaApto(
             Document doc,
-            List<Membro> listMembroForaJhonPeu,
+            List<Membro> listMembroForaJhon,
+            int idPeu,
             double? valorAptoMaisCaixaParaCadaMembro
         )
         {
             Dictionary<string, string> columnsAptoCaixaParaCada = [];
 
-            foreach(var membro in listMembroForaJhonPeu)
+            foreach(var membro in listMembroForaJhon)
             {
-                columnsAptoCaixaParaCada.Add(
-                    membro.Nome,
-                    $"R$ {valorAptoMaisCaixaParaCadaMembro:F2}"
-                );
+                var valorAluguel = valorAptoMaisCaixaParaCadaMembro;
+
+                if(membro.Id == idPeu)
+                {
+                    valorAluguel = 300;
+                }
+
+                columnsAptoCaixaParaCada.Add(membro.Nome, $"R$ {valorAluguel:F2}");
             }
 
             _pdfTable.CreateTable(
@@ -198,6 +209,7 @@ namespace Application.Services.Finance
         public void TableValoresParaCada(
             Document doc,
             List<Membro> listMembroForaJhon,
+            int idPeu,
             double? valorParaMembrosForaPeu,
             double? valorParaDoPeu
         )
@@ -208,7 +220,7 @@ namespace Application.Services.Finance
             {
                 var valorParaCada = valorParaMembrosForaPeu;
 
-                if(membro.Id == 2)
+                if(membro.Id == idPeu)
                 {
                     valorParaCada = valorParaDoPeu;
                 }

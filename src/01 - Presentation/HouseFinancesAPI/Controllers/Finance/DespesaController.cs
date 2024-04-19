@@ -64,7 +64,7 @@ namespace HouseFinancesAPI.Controllers.Finance
 
             var contentDisposition = new ContentDisposition
             {
-                FileName = "relatório de despesas.pdf",
+                FileName = "relatorio-de-despesas.pdf",
                 Inline = false
             };
 
