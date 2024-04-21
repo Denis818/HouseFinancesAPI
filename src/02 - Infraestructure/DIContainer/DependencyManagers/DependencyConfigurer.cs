@@ -1,4 +1,4 @@
-﻿using Application.Validators.Finance;
+﻿using Application.Validators.Despesas;
 using DIContainer.DataBaseConfiguration;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,7 +22,6 @@ namespace DIContainer.DependencyManagers
 
             services.AddDependecyUtilities();
             services.AddDependecyRepositories();
-            services.AddDependecyDomainServices();
             services.AddDependecyAppServices();
 
             services.AddAuthenticationJwt(config);

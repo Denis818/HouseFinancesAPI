@@ -1,4 +1,6 @@
-﻿using Domain.Models.Finance;
+﻿using Domain.Models.Categorias;
+using Domain.Models.Despesas;
+using Domain.Models.Membros;
 using Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
 

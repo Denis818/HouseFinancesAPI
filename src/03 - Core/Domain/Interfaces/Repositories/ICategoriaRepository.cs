@@ -1,6 +1,6 @@
-﻿using Domain.Dtos.Categoria;
+﻿using Domain.Dtos.Categorias;
 using Domain.Interfaces.Repositories.Base;
-using Domain.Models.Finance;
+using Domain.Models.Categorias;
 
 namespace Domain.Interfaces.Repositories
 {

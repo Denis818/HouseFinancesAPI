@@ -1,5 +1,5 @@
 ﻿using Domain.Interfaces.Repositories.Base;
-using Domain.Models.Finance;
+using Domain.Models.Membros;
 
 namespace Domain.Interfaces.Repositories
 {
