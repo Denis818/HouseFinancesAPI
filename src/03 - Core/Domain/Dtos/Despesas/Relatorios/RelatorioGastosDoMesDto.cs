@@ -1,4 +1,4 @@
-﻿namespace Domain.Dtos.Despesas
+﻿namespace Domain.Dtos.Despesas.Relatorios
 {
     public record RelatorioGastosDoMesDto(
         string MesAtual,

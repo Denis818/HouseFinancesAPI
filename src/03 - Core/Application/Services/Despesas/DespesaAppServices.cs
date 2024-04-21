@@ -3,7 +3,7 @@ using Application.Extensions.Help;
 using Application.Interfaces.Services.Despesas;
 using Application.Services.Base;
 using Application.Utilities;
-using Domain.Dtos.Despesas;
+using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;

@@ -1,5 +1,5 @@
 ﻿using Application.Utilities;
-using Domain.Dtos.Despesas;
+using Domain.Dtos.Despesas.Criacao;
 using Domain.Models.Despesas;
 
 namespace Application.Interfaces.Services.Despesas

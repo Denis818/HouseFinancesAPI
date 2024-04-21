@@ -1,5 +1,5 @@
 ﻿using Application.Helpers;
-using Domain.Dtos.Despesas;
+using Domain.Dtos.Despesas.Relatorios;
 using Domain.Models.Membros;
 using iTextSharp.text;
 using iTextSharp.text.pdf;

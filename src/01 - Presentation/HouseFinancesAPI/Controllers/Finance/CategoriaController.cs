@@ -6,7 +6,7 @@ using HouseFinancesAPI.Attributes;
 using HouseFinancesAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HouseFinancesAPI.Controllers.Categorias
+namespace HouseFinancesAPI.Controllers.Finance
 {
     [ApiController]
     [AutorizationFinance]
@@ -16,7 +16,6 @@ namespace HouseFinancesAPI.Controllers.Categorias
         ICategoriaAppServices _categoriaServices
     ) : BaseApiController(service)
     {
-        #region CRUD
         [HttpGet]
         public async Task<IEnumerable<Categoria>> GetAllAsync() =>
             await _categoriaServices.GetAllAsync();
@@ -34,6 +33,5 @@ namespace HouseFinancesAPI.Controllers.Categorias
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
         public async Task<bool> DeleteAsync(int id) => await _categoriaServices.DeleteAsync(id);
-        #endregion
     }
 }

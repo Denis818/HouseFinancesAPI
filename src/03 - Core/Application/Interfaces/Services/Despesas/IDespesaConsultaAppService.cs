@@ -1,4 +1,5 @@
-﻿using Domain.Dtos.Despesas;
+﻿using Domain.Dtos.Despesas.Consultas;
+using Domain.Dtos.Despesas.Relatorios;
 
 namespace Application.Interfaces.Services.Despesas
 {

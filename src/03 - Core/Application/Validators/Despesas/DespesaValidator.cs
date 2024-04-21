@@ -1,4 +1,4 @@
-﻿using Domain.Dtos.Despesas;
+﻿using Domain.Dtos.Despesas.Criacao;
 using FluentValidation;
 
 namespace Application.Validators.Despesas

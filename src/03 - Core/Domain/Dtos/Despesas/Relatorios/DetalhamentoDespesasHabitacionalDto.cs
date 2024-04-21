@@ -1,7 +1,7 @@
 ﻿using Domain.Models.Despesas;
 using Domain.Models.Membros;
 
-namespace Domain.Dtos.Despesas
+namespace Domain.Dtos.Despesas.Relatorios
 {
     public class DetalhamentoDespesasHabitacionalDto
     {

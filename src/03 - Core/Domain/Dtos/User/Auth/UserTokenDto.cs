@@ -1,7 +1,7 @@
 ﻿using Domain.Converters.DatesTimes;
 using System.Text.Json.Serialization;
 
-namespace Domain.Dtos.User
+namespace Domain.Dtos.User.Auth
 {
     public class UserTokenDto
     {

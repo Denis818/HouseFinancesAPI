@@ -1,4 +1,5 @@
 ﻿using Domain.Dtos.User;
+using Domain.Dtos.User.Auth;
 using Domain.Enumeradores;
 
 namespace Application.Interfaces.Services.User

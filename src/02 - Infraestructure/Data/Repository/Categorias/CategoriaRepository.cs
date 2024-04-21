@@ -1,6 +1,6 @@
 ﻿using Data.DataContext;
 using Data.Repository.Base;
-using Domain.Dtos.Categorias;
+using Domain.Dtos.Categorias.Consultas;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Categorias;
 using Microsoft.EntityFrameworkCore;

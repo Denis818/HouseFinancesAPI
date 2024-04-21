@@ -1,7 +1,9 @@
 ﻿using Application.Extensions.Help;
 using Application.Interfaces.Services.Despesas;
 using Application.Services.Base;
-using Domain.Dtos.Despesas;
+using Domain.Dtos.Despesas.Consultas;
+using Domain.Dtos.Despesas.Relatorios;
+using Domain.Dtos.Despesas.Resumos;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Domain.Models.Membros;
@@ -99,6 +101,11 @@ namespace Application.Services.Despesas
             };
         }
 
+
+        #endregion
+
+        #region Support Methods
+
         public async Task<DetalhamentoDespesasHabitacionalDto> CalcularDistribuicaoCustosHabitacionalAsync()
         {
             var categoriaIds = _categoriaRepository.GetCategoriaIds();
@@ -182,10 +189,7 @@ namespace Application.Services.Despesas
             return distribuicaoCustosHabitacional;
         }
 
-        #endregion
-
-        #region Support Methods
-        public async Task<(double, double)> CalculaTotalAlmocoDivididoComJhon(
+        private async Task<(double, double)> CalculaTotalAlmocoDivididoComJhon(
             IQueryable<Despesa> listDespesasMaisRecentes
         )
         {
@@ -203,7 +207,7 @@ namespace Application.Services.Despesas
             return (almocoAbatido, almocoParteDoJhon);
         }
 
-        public RelatorioGastosDoMesDto GetRelatorioDeGastosDoMes(
+        private RelatorioGastosDoMesDto GetRelatorioDeGastosDoMes(
             string mesAtual,
             IQueryable<Despesa> listDespesasMaisRecentes
         )
@@ -228,7 +232,7 @@ namespace Application.Services.Despesas
             );
         }
 
-        public double CalculaTotalDespesaForaAlmocoDespesaHabitacional(
+        private double CalculaTotalDespesaForaAlmocoDespesaHabitacional(
             IQueryable<Despesa> listDespesasMaisRecentes
         )
         {
@@ -284,7 +288,7 @@ namespace Application.Services.Despesas
             return valoresPorMembro;
         }
 
-        public IQueryable<Despesa> GetDespesasMaisRecentes(
+        private IQueryable<Despesa> GetDespesasMaisRecentes(
             Expression<Func<Despesa, bool>> filter = null
         )
         {

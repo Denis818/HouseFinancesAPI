@@ -1,7 +1,7 @@
 ﻿using Domain.Converters.DatesTimes;
 using System.Text.Json.Serialization;
 
-namespace Domain.Dtos.Despesas
+namespace Domain.Dtos.Despesas.Criacao
 {
     public class DespesaDto
     {

@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.Services.User;
 using Domain.Dtos.User;
+using Domain.Dtos.User.Auth;
 using Domain.Enumeradores;
 using HouseFinancesAPI.Attributes;
 using HouseFinancesAPI.Controllers.Base;

@@ -6,7 +6,7 @@ using HouseFinancesAPI.Attributes;
 using HouseFinancesAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HouseFinancesAPI.Controllers.Membros
+namespace HouseFinancesAPI.Controllers.Finance
 {
     [ApiController]
     [AutorizationFinance]

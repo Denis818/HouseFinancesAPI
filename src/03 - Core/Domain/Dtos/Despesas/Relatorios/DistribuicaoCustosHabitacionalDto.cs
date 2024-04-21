@@ -1,4 +1,4 @@
-﻿namespace Domain.Dtos.Despesas
+﻿namespace Domain.Dtos.Despesas.Relatorios
 {
     public class DistribuicaoCustosHabitacionalDto
     {

@@ -1,7 +1,7 @@
 ﻿using Application.Helpers;
 using Application.Interfaces.Services.User;
 using Data.DataContext;
-using Domain.Dtos.User;
+using Domain.Dtos.User.Auth;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Categorias;

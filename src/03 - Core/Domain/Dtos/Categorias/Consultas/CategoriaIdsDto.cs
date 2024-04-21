@@ -1,4 +1,4 @@
-﻿namespace Domain.Dtos.Categorias
+﻿namespace Domain.Dtos.Categorias.Consultas
 {
     public class CategoriaIdsDto
     {

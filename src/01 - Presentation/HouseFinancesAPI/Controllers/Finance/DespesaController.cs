@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.Services.Despesas;
 using Application.Utilities;
-using Domain.Dtos.Despesas;
+using Domain.Dtos.Despesas.Consultas;
+using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
 using Domain.Models.Despesas;
 using HouseFinancesAPI.Attributes;
@@ -8,7 +9,7 @@ using HouseFinancesAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
-namespace HouseFinancesAPI.Controllers.Despesas
+namespace HouseFinancesAPI.Controllers.Finance
 {
     [ApiController]
     // [AutorizationFinance]
@@ -29,12 +30,12 @@ namespace HouseFinancesAPI.Controllers.Despesas
             await _despesaServices.InsertAsync(vendaDto);
 
         [HttpPut]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.USU_000002)]
         public async Task<Despesa> PutAsync(int id, DespesaDto vendaDto) =>
             await _despesaServices.UpdateAsync(id, vendaDto);
 
         [HttpDelete]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.USU_000003)]
         public async Task DeleteAsync(int id) => await _despesaServices.DeleteAsync(id);
         #endregion
 
