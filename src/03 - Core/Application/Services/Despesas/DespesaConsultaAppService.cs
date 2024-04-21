@@ -43,7 +43,7 @@ namespace Application.Services.Despesas
             var despesasPorMes = _repository
                 .Get()
                 .GroupBy(d => new { d.DataCompra.Year, d.DataCompra.Month })
-                .OrderByDescending(g => g.Key.Month)
+                .OrderBy(g => g.Key.Month)
                 .ThenBy(g => g.Key.Month)
                 .Select(group => new DespesasPorMesDto(
                     new DateTime(group.Key.Year, group.Key.Month, 1).ToString("MMMM", new CultureInfo("pt-BR")),
