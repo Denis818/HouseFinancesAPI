@@ -56,38 +56,22 @@ namespace Application.Services.Despesas
 
         public async Task<ResumoMensalDto> GetResumoDespesasMensalAsync()
         {
-            var (idJhon, _) = _membroRepository.GetIdsJhonPeu();
-
             List<Membro> listTodosMembros = await _membroRepository.Get().ToListAsync();
-            List<Membro> listMembersForaJhon = listTodosMembros.Where(m => m.Id != idJhon).ToList();
-
-            IQueryable<Despesa> listDespesasMaisRecentes = GetDespesasMaisRecentes();
-
-            //Despesas gerais Limpesa, Higiêne etc... Fora Almoço, alugeul, condominio e conta de luz.
-            double totalDespesaGerais = CalculaTotalDespesaForaAlmocoDespesaHabitacional(
-                listDespesasMaisRecentes
-            );
 
             //Aluguel + Condomínio + Conta de Luz
             var distribuicaoCustosHabitacional =
                 await CalcularDistribuicaoCustosHabitacionalAsync();
 
-            //Almoço divido com Jhon
-            var (totalAlmocoDividioComJhon, totalAlmocoParteDoJhon) =
-                await CalculaTotalAlmocoDivididoComJhon(listDespesasMaisRecentes);
-
-            //Despesa gerais Limpesa, Higiêne etc... somado com Almoço divido com Jhon
-            double despesaGeraisMaisAlmocoDividioPorMembro =
-                (totalDespesaGerais + totalAlmocoDividioComJhon) / listMembersForaJhon.Count;
+            var distribuicaoCustosCasa = await CalcularDistribuicaoCustosCasaAsync();
 
             return new ResumoMensalDto
             {
-                RelatorioGastosDoMes = GetRelatorioDeGastosDoMes(listDespesasMaisRecentes),
+                RelatorioGastosDoMes = GetRelatorioDeGastosDoMes(),
 
                 DespesasPorMembros = DistribuirDespesasEntreMembros(
                     listTodosMembros,
-                    despesaGeraisMaisAlmocoDividioPorMembro,
-                    totalAlmocoParteDoJhon,
+                    distribuicaoCustosCasa.DespesaGeraisMaisAlmocoDividioPorMembro,
+                    distribuicaoCustosCasa.TotalAlmocoParteDoJhon,
                     distribuicaoCustosHabitacional.DistribuicaoCustos.ValorParaMembrosForaPeu,
                     distribuicaoCustosHabitacional.DistribuicaoCustos.ValorParaDoPeu
                 )
@@ -181,6 +165,43 @@ namespace Application.Services.Despesas
             return distribuicaoCustosHabitacional;
         }
 
+        public async Task<DistribuicaoCustosCasaDto> CalcularDistribuicaoCustosCasaAsync()
+        {
+            var (idJhon, _) = _membroRepository.GetIdsJhonPeu();
+
+            IQueryable<Despesa> listDespesasMaisRecentes = GetDespesasMaisRecentes();
+
+            List<Membro> todosMembros = await _membroRepository.Get().ToListAsync();
+
+            List<Membro> listMembersForaJhon = todosMembros.Where(m => m.Id != idJhon).ToList();
+
+            // Despesas gerais Limpesa, Higiêne etc... (Fora Almoço, e despesa Habitacional aluguel, luz etc..) :
+            double totalDespesaGerais = CalculaTotalDespesaForaAlmocoDespesaHabitacional(
+                listDespesasMaisRecentes
+            );
+
+            //  Almoço divido com Jhon
+            var (totalAlmocoDividioComJhon, totalAlmocoParteDoJhon) =
+                await CalculaTotalAlmocoDivididoComJhon(listDespesasMaisRecentes);
+
+            //Despesa gerais Limpesa, Higiêne etc... somado com Almoço divido com Jhon
+            double despesaGeraisMaisAlmoco = totalDespesaGerais + totalAlmocoDividioComJhon;
+
+            double despesaGeraisMaisAlmocoDividioPorMembro =
+                despesaGeraisMaisAlmoco / listMembersForaJhon.Count;
+
+            return new DistribuicaoCustosCasaDto()
+            {
+                IdJhon = idJhon,
+                Membros = todosMembros,
+                TotalDespesaGerais = totalDespesaGerais,
+                TotalAlmocoDividioComJhon = totalAlmocoDividioComJhon,
+                TotalAlmocoParteDoJhon = totalAlmocoParteDoJhon,
+                DespesaGeraisMaisAlmoco = despesaGeraisMaisAlmoco,
+                DespesaGeraisMaisAlmocoDividioPorMembro = despesaGeraisMaisAlmocoDividioPorMembro
+            };
+        }
+
         private async Task<(double, double)> CalculaTotalAlmocoDivididoComJhon(
             IQueryable<Despesa> listDespesasMaisRecentes
         )
@@ -199,10 +220,9 @@ namespace Application.Services.Despesas
             return (almocoAbatido, almocoParteDoJhon);
         }
 
-        private RelatorioGastosDoMesDto GetRelatorioDeGastosDoMes(
-            IQueryable<Despesa> listDespesasMaisRecentes
-        )
+        private RelatorioGastosDoMesDto GetRelatorioDeGastosDoMes()
         {
+            IQueryable<Despesa> listDespesasMaisRecentes = GetDespesasMaisRecentes();
             string mesAtual = listDespesasMaisRecentes
                 .FirstOrDefault()
                 .DataCompra.ToString("Y", new CultureInfo("pt-BR"));
@@ -317,10 +337,5 @@ namespace Application.Services.Despesas
         #endregion
     }
 
-
-
-    public class Name
-    {
-
-    }
+    public class Name { }
 }

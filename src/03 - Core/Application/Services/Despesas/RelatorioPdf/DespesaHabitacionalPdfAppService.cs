@@ -4,7 +4,7 @@ using Domain.Models.Membros;
 using iText.Kernel.Pdf;
 using iText.Layout;
 
-namespace Application.Services.Despesas
+namespace Application.Services.Despesas.RelatorioPdf
 {
     public class DespesaHabitacionalPdfAppService
     {

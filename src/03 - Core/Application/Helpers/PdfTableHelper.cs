@@ -8,31 +8,15 @@ using iText.Layout.Properties;
 
 namespace Application.Helpers
 {
-    public class PdfTableHelper
+    public class PdfTableHelper(PdfTableStyle pdfTableStyle = null)
     {
-        private readonly PdfFont FontTitle = PdfFontFactory.CreateFont(
-            StandardFonts.HELVETICA_BOLD
-        );
-        private readonly PdfFont FontColumns = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
-        private readonly PdfFont FontTitleDocument = PdfFontFactory.CreateFont(
-            StandardFonts.HELVETICA_BOLD
-        );
-
-        private readonly sbyte FontSizeTitle = 16;
-        private readonly sbyte FontSizeHeaderTable = 12;
-        private readonly sbyte FontSizeColumns = 11;
-
-        private readonly Color BackgroundColor = new DeviceRgb(249, 249, 249);
-
-        private readonly float BorderWidth = 1.5f;
-        private readonly sbyte WidthPercentage = 80;
-        private readonly sbyte NumColumns = 2;
+        public PdfTableStyle PdfTableStyle { get; } = pdfTableStyle ?? new PdfTableStyle();
 
         public void CreateTitleDocument(Document doc, string title)
         {
             Paragraph titleDocument = new Paragraph(title)
-                .SetFont(FontTitleDocument)
-                .SetFontSize(FontSizeTitle)
+                .SetFont(PdfTableStyle.FontTitleDocument)
+                .SetFontSize(PdfTableStyle.FontSizeTitle)
                 .SetTextAlignment(TextAlignment.CENTER)
                 .SetMarginBottom(20);
 
@@ -41,8 +25,8 @@ namespace Application.Helpers
 
         public void CreateTable(Document doc, string title, Dictionary<string, string> values)
         {
-            Table table = new Table(UnitValue.CreatePercentArray(NumColumns))
-                .SetWidth(UnitValue.CreatePercentValue(WidthPercentage))
+            Table table = new Table(UnitValue.CreatePercentArray(PdfTableStyle.NumColumns))
+                .SetWidth(UnitValue.CreatePercentValue(PdfTableStyle.WidthPercentage))
                 .SetHorizontalAlignment(HorizontalAlignment.CENTER);
 
             Cell titleCell = CreateTitle(title);
@@ -56,11 +40,15 @@ namespace Application.Helpers
 
         private Cell CreateTitle(string title)
         {
-            Cell cell = new Cell(1, NumColumns)
-                .Add(new Paragraph(title).SetFont(FontTitle).SetFontSize(FontSizeHeaderTable))
-                .SetBackgroundColor(BackgroundColor)
+            Cell cell = new Cell(1, PdfTableStyle.NumColumns)
+                .Add(
+                    new Paragraph(title)
+                        .SetFont(PdfTableStyle.FontTitle)
+                        .SetFontSize(PdfTableStyle.FontSizeHeaderTable)
+                )
+                .SetBackgroundColor(PdfTableStyle.BackgroundColor)
                 .SetTextAlignment(TextAlignment.CENTER)
-                .SetBorder(new SolidBorder(BorderWidth));
+                .SetBorder(new SolidBorder(PdfTableStyle.BorderWidth));
 
             return cell;
         }
@@ -70,23 +58,71 @@ namespace Application.Helpers
             foreach(var value in columns)
             {
                 var keyColumn = new Cell()
-                    .Add(new Paragraph(value.Key).SetFont(FontColumns).SetFontSize(FontSizeColumns))
-                    .SetBackgroundColor(BackgroundColor)
+                    .Add(
+                        new Paragraph(value.Key)
+                            .SetFont(PdfTableStyle.FontColumns)
+                            .SetFontSize(PdfTableStyle.FontSizeColumns)
+                    )
+                    .SetBackgroundColor(PdfTableStyle.BackgroundColor)
                     .SetPadding(3)
-                    .SetBorder(new SolidBorder(BorderWidth));
+                    .SetBorder(new SolidBorder(PdfTableStyle.BorderWidth));
 
                 table.AddCell(keyColumn);
 
                 var valueColumn = new Cell()
                     .Add(
-                        new Paragraph(value.Value).SetFont(FontColumns).SetFontSize(FontSizeColumns)
+                        new Paragraph(value.Value)
+                            .SetFont(PdfTableStyle.FontColumns)
+                            .SetFontSize(PdfTableStyle.FontSizeColumns)
                     )
-                    .SetBackgroundColor(BackgroundColor)
+                    .SetBackgroundColor(PdfTableStyle.BackgroundColor)
                     .SetPadding(3)
-                    .SetBorder(new SolidBorder(BorderWidth));
+                    .SetBorder(new SolidBorder(PdfTableStyle.BorderWidth));
 
                 table.AddCell(valueColumn);
             }
+        }
+    }
+
+    public class PdfTableStyle
+    {
+        public PdfFont FontTitle { get; set; }
+        public PdfFont FontColumns { get; set; }
+        public PdfFont FontTitleDocument { get; set; }
+
+        public sbyte FontSizeTitle { get; set; }
+        public sbyte FontSizeHeaderTable { get; set; }
+        public sbyte FontSizeColumns { get; set; }
+
+        public Color BackgroundColor { get; set; }
+        public float BorderWidth { get; set; }
+        public sbyte WidthPercentage { get; set; }
+        public sbyte NumColumns { get; set; }
+
+        public PdfTableStyle(
+            PdfFont fontTitle = null,
+            PdfFont fontColumns = null,
+            PdfFont fontTitleDocument = null,
+            sbyte? fontSizeTitle = null,
+            sbyte? fontSizeHeaderTable = null,
+            sbyte? fontSizeColumns = null,
+            Color backgroundColor = null,
+            float? borderWidth = null,
+            sbyte? widthPercentage = null,
+            sbyte? numColumns = null
+        )
+        {
+            FontTitle = fontTitle ?? PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+            FontColumns = fontColumns ?? PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+            FontTitleDocument =
+                fontTitleDocument ?? PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+            FontSizeTitle = fontSizeTitle ?? 16;
+            FontSizeHeaderTable = fontSizeHeaderTable ?? 12;
+            FontSizeColumns = fontSizeColumns ?? 11;
+            BackgroundColor = backgroundColor ?? new DeviceRgb(249, 249, 249);
+            BorderWidth = borderWidth ?? 1.5f;
+            WidthPercentage = widthPercentage ?? 80;
+            NumColumns = numColumns ?? 2;
         }
     }
 }

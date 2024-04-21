@@ -2,6 +2,7 @@
 using Application.Extensions.Help;
 using Application.Interfaces.Services.Despesas;
 using Application.Services.Base;
+using Application.Services.Despesas.RelatorioPdf;
 using Application.Utilities;
 using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
@@ -181,12 +182,19 @@ namespace Application.Services.Despesas
 
         public async Task<byte[]> DownloadPdfRelatorioDeDespesaHabitacional()
         {
-            var custosHabitacional =
+            var custosHabitacionalDto =
                 await _despesaConsultaApp.CalcularDistribuicaoCustosHabitacionalAsync();
 
             return new DespesaHabitacionalPdfAppService().GerarRelatorioDespesaHabitacionalPdf(
-                custosHabitacional
+                custosHabitacionalDto
             );
+        }
+
+        public async Task<byte[]> DownloadPdfRelatorioDeDespesaCasa()
+        {
+            var custosCasaDto = await _despesaConsultaApp.CalcularDistribuicaoCustosCasaAsync();
+
+            return new DespesaCasaPdfAppService().GerarRelatorioDespesaCasaPdf(custosCasaDto);
         }
     }
 }

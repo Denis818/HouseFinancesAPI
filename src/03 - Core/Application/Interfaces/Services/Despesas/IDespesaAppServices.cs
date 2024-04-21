@@ -13,5 +13,6 @@ namespace Application.Interfaces.Services.Despesas
         Task<Despesa> UpdateAsync(int id, DespesaDto despesaDto);
         Task<IEnumerable<Despesa>> InsertRangeAsync(IAsyncEnumerable<DespesaDto> listDespesasDto);
         Task<byte[]> DownloadPdfRelatorioDeDespesaHabitacional();
+        Task<byte[]> DownloadPdfRelatorioDeDespesaCasa();
     }
 }
