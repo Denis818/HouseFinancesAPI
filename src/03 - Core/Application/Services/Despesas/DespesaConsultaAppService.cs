@@ -42,17 +42,17 @@ namespace Application.Services.Despesas
         {
             var despesasPorMes = _repository
                 .Get()
-                .GroupBy(d => new { d.DataCompra.Month, d.DataCompra.Year })
+                .GroupBy(d => new { d.DataCompra.Year, d.DataCompra.Month })
+                .OrderByDescending(g => g.Key.Month)
+                .ThenBy(g => g.Key.Month)
                 .Select(group => new DespesasPorMesDto(
-                    new DateTime(group.Key.Year, group.Key.Month, 1).ToString(
-                        "MMMM",
-                        new CultureInfo("pt-BR")
-                    ),
+                    new DateTime(group.Key.Year, group.Key.Month, 1).ToString("MMMM", new CultureInfo("pt-BR")),
                     group.Sum(d => d.Total).RoundTo(2)
                 ));
 
             return await despesasPorMes.ToListAsync();
         }
+
 
         public async Task<ResumoMensalDto> GetResumoDespesasMensalAsync()
         {
