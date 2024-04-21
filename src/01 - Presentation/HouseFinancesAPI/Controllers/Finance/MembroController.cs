@@ -30,6 +30,6 @@ namespace HouseFinancesAPI.Controllers.Finance
 
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
-        public async Task Delete(int id) => await _membroServices.DeleteAsync(id);
+        public async Task<bool> Delete(int id) => await _membroServices.DeleteAsync(id);
     }
 }

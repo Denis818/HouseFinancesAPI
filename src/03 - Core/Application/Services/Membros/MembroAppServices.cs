@@ -26,7 +26,10 @@ namespace Application.Services.Membros
                 return null;
 
             if(await _repository.ExisteAsync(membroDto.Nome) != null)
+            {
                 Notificar(EnumTipoNotificacao.ClientError, $"O membro {membroDto.Nome} já existe.");
+                return null;
+            }
 
             var membro = _mapper.Map<Membro>(membroDto);
 

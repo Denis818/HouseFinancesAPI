@@ -39,7 +39,6 @@ namespace HouseFinancesAPI.Controllers.Finance
         public async Task DeleteAsync(int id) => await _despesaServices.DeleteAsync(id);
         #endregion
 
-
         [HttpPost("inserir-lote")]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<IEnumerable<Despesa>> PostRangeAsync(

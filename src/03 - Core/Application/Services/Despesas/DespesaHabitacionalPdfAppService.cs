@@ -1,8 +1,8 @@
 ﻿using Application.Helpers;
 using Domain.Dtos.Despesas.Relatorios;
 using Domain.Models.Membros;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
+using iText.Kernel.Pdf;
+using iText.Layout;
 
 namespace Application.Services.Despesas
 {
@@ -14,55 +14,51 @@ namespace Application.Services.Despesas
             DetalhamentoDespesasHabitacionalDto custosHabitacional
         )
         {
-            using MemoryStream memoryStream = new();
-            using(Document doc = new(PageSize.A4))
-            {
-                PdfWriter.GetInstance(doc, memoryStream);
-                doc.Open();
+            using var memoryStream = new MemoryStream();
+            using var writer = new PdfWriter(memoryStream);
+            using var mergedDocument = new PdfDocument(writer);
+            using var doc = new Document(mergedDocument);
 
-                _pdfTable.CreateTitleDocument(doc, "Relatório detalhado dos valores divididos");
+            _pdfTable.CreateTitleDocument(doc, "Relatório detalhado dos valores divididos");
 
-                TableValoresIniciais(
-                    doc,
-                    custosHabitacional.ParcelaApartamento,
-                    custosHabitacional.ParcelaCaixa,
-                    custosHabitacional.ContaDeLuz,
-                    custosHabitacional.Condominio
-                );
+            TableValoresIniciais(
+                doc,
+                custosHabitacional.ParcelaApartamento,
+                custosHabitacional.ParcelaCaixa,
+                custosHabitacional.ContaDeLuz,
+                custosHabitacional.Condominio
+            );
 
-                TableCalculos(
-                    doc,
-                    custosHabitacional.DistribuicaoCustos.TotalAptoMaisCaixa,
-                    custosHabitacional.DistribuicaoCustos.TotalLuzMaisCondominio,
-                    custosHabitacional.DistribuicaoCustos.TotalAptoMaisCaixaAbate300Peu,
-                    custosHabitacional
-                        .DistribuicaoCustos
-                        .TotalLuzMaisCondominioAbate100Estacionamento
-                );
+            TableCalculos(
+                doc,
+                custosHabitacional.DistribuicaoCustos.TotalAptoMaisCaixa,
+                custosHabitacional.DistribuicaoCustos.TotalLuzMaisCondominio,
+                custosHabitacional.DistribuicaoCustos.TotalAptoMaisCaixaAbate300Peu,
+                custosHabitacional.DistribuicaoCustos.TotalLuzMaisCondominioAbate100Estacionamento
+            );
 
-                TableParcelaCaixaApto(
-                    doc,
-                    custosHabitacional.ListMembroForaJhon,
-                    custosHabitacional.IdPeu,
-                    custosHabitacional.DistribuicaoCustos.ValorAptoMaisCaixaParaCadaMembro
-                );
+            TableParcelaCaixaApto(
+                doc,
+                custosHabitacional.ListMembroForaJhon,
+                custosHabitacional.IdPeu,
+                custosHabitacional.DistribuicaoCustos.ValorAptoMaisCaixaParaCadaMembro
+            );
 
-                TableContaLuzAndCondominio(
-                    doc,
-                    custosHabitacional.ListMembroForaJhon,
-                    custosHabitacional.DistribuicaoCustos.ValorLuzMaisCondominioParaCadaMembro
-                );
+            TableContaLuzAndCondominio(
+                doc,
+                custosHabitacional.ListMembroForaJhon,
+                custosHabitacional.DistribuicaoCustos.ValorLuzMaisCondominioParaCadaMembro
+            );
 
-                TableValoresParaCada(
-                    doc,
-                    custosHabitacional.ListMembroForaJhon,
-                    custosHabitacional.IdPeu,
-                    custosHabitacional.DistribuicaoCustos.ValorParaMembrosForaPeu,
-                    custosHabitacional.DistribuicaoCustos.ValorParaDoPeu
-                );
+            TableValoresParaCada(
+                doc,
+                custosHabitacional.ListMembroForaJhon,
+                custosHabitacional.IdPeu,
+                custosHabitacional.DistribuicaoCustos.ValorParaMembrosForaPeu,
+                custosHabitacional.DistribuicaoCustos.ValorParaDoPeu
+            );
 
-                doc.Close();
-            }
+            doc.Close();
 
             return memoryStream.ToArray();
         }

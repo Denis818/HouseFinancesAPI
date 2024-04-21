@@ -63,10 +63,6 @@ namespace Application.Services.Despesas
 
             IQueryable<Despesa> listDespesasMaisRecentes = GetDespesasMaisRecentes();
 
-            string mesAtual = listDespesasMaisRecentes
-                .FirstOrDefault()
-                .DataCompra.ToString("Y", new CultureInfo("pt-BR"));
-
             //Despesas gerais Limpesa, Higiêne etc... Fora Almoço, alugeul, condominio e conta de luz.
             double totalDespesaGerais = CalculaTotalDespesaForaAlmocoDespesaHabitacional(
                 listDespesasMaisRecentes
@@ -86,10 +82,7 @@ namespace Application.Services.Despesas
 
             return new ResumoMensalDto
             {
-                RelatorioGastosDoMes = GetRelatorioDeGastosDoMes(
-                    mesAtual,
-                    listDespesasMaisRecentes
-                ),
+                RelatorioGastosDoMes = GetRelatorioDeGastosDoMes(listDespesasMaisRecentes),
 
                 DespesasPorMembros = DistribuirDespesasEntreMembros(
                     listTodosMembros,
@@ -100,7 +93,6 @@ namespace Application.Services.Despesas
                 )
             };
         }
-
 
         #endregion
 
@@ -208,10 +200,13 @@ namespace Application.Services.Despesas
         }
 
         private RelatorioGastosDoMesDto GetRelatorioDeGastosDoMes(
-            string mesAtual,
             IQueryable<Despesa> listDespesasMaisRecentes
         )
         {
+            string mesAtual = listDespesasMaisRecentes
+                .FirstOrDefault()
+                .DataCompra.ToString("Y", new CultureInfo("pt-BR"));
+
             var categIds = _categoriaRepository.GetCategoriaIds();
 
             double aluguelMaisCondominio = listDespesasMaisRecentes
@@ -320,5 +315,12 @@ namespace Application.Services.Despesas
             return (inicioDoMes, fimDoMes);
         }
         #endregion
+    }
+
+
+
+    public class Name
+    {
+
     }
 }
