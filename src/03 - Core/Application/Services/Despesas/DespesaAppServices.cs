@@ -54,6 +54,7 @@ namespace Application.Services.Despesas
             var despesa = _mapper.Map<Despesa>(despesaDto);
 
             despesa.Total = (despesa.Preco * despesa.Quantidade).RoundTo(2);
+            despesa.DataCompra = DateTimeZoneProvider.GetBrasiliaTimeZone(DateTime.UtcNow);
 
             await _repository.InsertAsync(despesa);
 
