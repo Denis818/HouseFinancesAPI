@@ -10,7 +10,6 @@ builder.SetupApplication();
 
 var app = builder.Build();
 
-app.UseLocalization();
 app.ConfigureSwaggerUI();
 
 app.UseCorsPolicy();
