@@ -9,6 +9,7 @@ using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace Application.Services.Despesas
 {
@@ -90,6 +91,9 @@ namespace Application.Services.Despesas
 
                 var despesa = _mapper.Map<Despesa>(despesaDto);
                 despesa.Total = (despesa.Preco * despesa.Quantidade).RoundTo(2);
+
+                CultureInfo.CurrentCulture = new CultureInfo("pt-BR");
+                despesa.DataCompra = DateTime.Now;
                 despesasParaInserir.Add(despesa);
             }
 
@@ -146,6 +150,8 @@ namespace Application.Services.Despesas
             _mapper.Map(despesaDto, despesa);
 
             despesa.Total = despesa.Preco * despesa.Quantidade;
+            CultureInfo.CurrentCulture = new CultureInfo("pt-BR");
+            despesa.DataCompra = DateTime.Now;
 
             _repository.Update(despesa);
 
