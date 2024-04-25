@@ -46,13 +46,15 @@ namespace Application.Services.Despesas
                 .OrderBy(g => g.Key.Month)
                 .ThenBy(g => g.Key.Month)
                 .Select(group => new DespesasPorMesDto(
-                    new DateTime(group.Key.Year, group.Key.Month, 1).ToString("MMMM", new CultureInfo("pt-BR")),
+                    new DateTime(group.Key.Year, group.Key.Month, 1).ToString(
+                        "MMMM",
+                        new CultureInfo("pt-BR")
+                    ),
                     group.Sum(d => d.Total).RoundTo(2)
                 ));
 
             return await despesasPorMes.ToListAsync();
         }
-
 
         public async Task<ResumoMensalDto> GetResumoDespesasMensalAsync()
         {
@@ -100,40 +102,46 @@ namespace Application.Services.Despesas
                 .Where(m => m.Id != idPeu)
                 .ToList();
 
-            Despesa parcelaApartamento = listAluguel
-                .Where(a => a.Item.Contains("ap ponto", StringComparison.CurrentCultureIgnoreCase))
-                .FirstOrDefault();
+            double parcelaApartamento =
+                listAluguel
+                    .Where(a =>
+                        a.Item.Contains("ap ponto", StringComparison.CurrentCultureIgnoreCase)
+                    )
+                    .FirstOrDefault()
+                    ?.Preco ?? 0;
 
-            Despesa parcelaCaixa = listAluguel
-                .Where(a => a.Item.Contains("caixa", StringComparison.CurrentCultureIgnoreCase))
-                .FirstOrDefault();
+            double parcelaCaixa =
+                listAluguel
+                    .Where(a => a.Item.Contains("caixa", StringComparison.CurrentCultureIgnoreCase))
+                    .FirstOrDefault()
+                    ?.Preco ?? 0;
 
-            Despesa contaDeLuz = await GetDespesasMaisRecentes(despesa =>
-                    despesa.CategoriaId == categoriaIds.IdContaDeLuz
-                )
-                .FirstOrDefaultAsync();
+            double contaDeLuz =
+                GetDespesasMaisRecentes(despesa => despesa.CategoriaId == categoriaIds.IdContaDeLuz)
+                    .FirstOrDefault()
+                    ?.Preco ?? 0;
 
-            Despesa condominio = await GetDespesasMaisRecentes(despesa =>
-                    despesa.CategoriaId == categoriaIds.IdCondominio
-                )
-                .FirstOrDefaultAsync();
+            double condominio =
+                GetDespesasMaisRecentes(despesa => despesa.CategoriaId == categoriaIds.IdCondominio)
+                    .FirstOrDefault()
+                    ?.Preco ?? 0;
 
-            double? totalAptoMaisCaixa = parcelaApartamento?.Preco + parcelaCaixa?.Preco;
-            double? totalLuzMaisCondominio = contaDeLuz?.Preco + condominio?.Preco;
+            double totalAptoMaisCaixa = parcelaApartamento + parcelaCaixa;
+            double totalLuzMaisCondominio = contaDeLuz + condominio;
 
-            double? totalAptoMaisCaixaAbate300Peu = totalAptoMaisCaixa - 300; //300 aluguel cobrado do peu
-            double? totalLuzMaisCondominioAbate100Estacionamento = totalLuzMaisCondominio - 100; //estacionamento alugado
+            double totalAptoMaisCaixaAbate300Peu = totalAptoMaisCaixa - 300; //300 aluguel cobrado do peu
+            double totalLuzMaisCondominioAbate100Estacionamento = totalLuzMaisCondominio - 100; //estacionamento alugado
 
-            double? valorAptoMaisCaixaParaCadaMembro =
+            double valorAptoMaisCaixaParaCadaMembro =
                 totalAptoMaisCaixaAbate300Peu / listMembroForaJhonPeu.Count;
 
-            double? valorLuzMaisCondominioParaCadaMembro =
+            double valorLuzMaisCondominioParaCadaMembro =
                 totalLuzMaisCondominioAbate100Estacionamento / listMembroForaJhon.Count;
 
-            double? valorParaMembrosForaPeu =
+            double valorParaMembrosForaPeu =
                 valorAptoMaisCaixaParaCadaMembro + valorLuzMaisCondominioParaCadaMembro;
 
-            double? valorParaDoPeu = 300 + valorLuzMaisCondominioParaCadaMembro;
+            double valorParaDoPeu = 300 + valorLuzMaisCondominioParaCadaMembro;
 
             var distribuicaoCustosHabitacional = new DetalhamentoDespesasHabitacionalDto()
             {
@@ -142,23 +150,22 @@ namespace Application.Services.Despesas
                 ListMembroForaJhon = listMembroForaJhon,
                 ListMembroForaJhonPeu = listMembroForaJhonPeu,
 
-                Condominio = condominio?.Preco ?? 0,
-                ContaDeLuz = contaDeLuz?.Preco ?? 0,
-                ParcelaCaixa = parcelaCaixa?.Preco ?? 0,
-                ParcelaApartamento = parcelaApartamento?.Preco ?? 0,
+                Condominio = condominio,
+                ContaDeLuz = contaDeLuz,
+                ParcelaCaixa = parcelaCaixa,
+                ParcelaApartamento = parcelaApartamento,
 
                 DistribuicaoCustos = new()
                 {
-                    ValorParaDoPeu = valorParaDoPeu ?? 0,
-                    TotalAptoMaisCaixa = totalAptoMaisCaixa ?? 0,
-                    TotalLuzMaisCondominio = totalLuzMaisCondominio ?? 0,
-                    ValorParaMembrosForaPeu = valorParaMembrosForaPeu ?? 0,
-                    TotalAptoMaisCaixaAbate300Peu = totalAptoMaisCaixaAbate300Peu ?? 0,
-                    ValorAptoMaisCaixaParaCadaMembro = valorAptoMaisCaixaParaCadaMembro ?? 0,
-                    ValorLuzMaisCondominioParaCadaMembro =
-                        valorLuzMaisCondominioParaCadaMembro ?? 0,
+                    ValorParaDoPeu = valorParaDoPeu,
+                    TotalAptoMaisCaixa = totalAptoMaisCaixa,
+                    TotalLuzMaisCondominio = totalLuzMaisCondominio,
+                    ValorParaMembrosForaPeu = valorParaMembrosForaPeu,
+                    TotalAptoMaisCaixaAbate300Peu = totalAptoMaisCaixaAbate300Peu,
+                    ValorAptoMaisCaixaParaCadaMembro = valorAptoMaisCaixaParaCadaMembro,
+                    ValorLuzMaisCondominioParaCadaMembro = valorLuzMaisCondominioParaCadaMembro,
                     TotalLuzMaisCondominioAbate100Estacionamento =
-                        totalLuzMaisCondominioAbate100Estacionamento ?? 0,
+                        totalLuzMaisCondominioAbate100Estacionamento,
                 }
             };
 
