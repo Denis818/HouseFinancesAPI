@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.Utilities;
+using Application.Resources.Messages;
 using Domain.Enumeradores;
 using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -82,7 +83,7 @@ namespace HouseFinancesAPI.Controllers.Base
                 var nomeCampo = model.Key.StartsWith("$.") ? model.Key.Substring(2) : model.Key;
                 listaErros.Add(
                     new Notificacao(
-                        $"Campo {nomeCampo} não está num formato válido.",
+                        string.Format(Message.CampoFormatoInvalido, nomeCampo),
                         EnumTipoNotificacao.ClientError
                     )
                 );

@@ -1,4 +1,6 @@
-﻿using Serilog;
+﻿using DIContainer.DependencyManagers;
+using HouseFinancesAPI.Extensios.Swagger;
+using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using System.Text.Json;
 
@@ -39,6 +41,11 @@ namespace HouseFinancesAPI.Extensios.Application
                 {
                     opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 });
+
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddApiDependencyServices(builder.Configuration);
+            builder.Services.AddSwaggerAuthorizationJWT();
+
         }
     }
 }

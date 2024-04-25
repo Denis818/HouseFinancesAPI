@@ -75,11 +75,11 @@ namespace Application.Services.Despesas.RelatorioPdf
         )
         {
             Dictionary<string, string> columnsTotalParaCada = [];
-            foreach (var membro in membros)
+            foreach(var membro in membros)
             {
                 double valorParaCada = despesaGeraisMaisAlmocoDividioPorMembro;
 
-                if (membro.Id == idJhon)
+                if(membro.Id == idJhon)
                 {
                     valorParaCada = totalAlmocoParteDoJhon;
                 }

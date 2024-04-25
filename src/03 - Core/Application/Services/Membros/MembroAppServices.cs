@@ -1,5 +1,5 @@
-﻿using Application.Constants;
-using Application.Interfaces.Services.Membros;
+﻿using Application.Interfaces.Services.Membros;
+using Application.Resources.Messages;
 using Application.Services.Base;
 using Domain.Dtos.Membros;
 using Domain.Enumeradores;
@@ -27,7 +27,10 @@ namespace Application.Services.Membros
 
             if(await _repository.ExisteAsync(membroDto.Nome) != null)
             {
-                Notificar(EnumTipoNotificacao.ClientError, $"O membro {membroDto.Nome} já existe.");
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(Message.RegistroExistente, "O membro", membroDto.Nome)
+                );
                 return null;
             }
 
@@ -37,7 +40,10 @@ namespace Application.Services.Membros
 
             if(!await _repository.SaveChangesAsync())
             {
-                Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.InsertError);
+                Notificar(
+                    EnumTipoNotificacao.ServerError,
+                    string.Format(Message.ErroAoSalvarNoBanco, "Inserir")
+                );
                 return null;
             }
 
@@ -55,16 +61,16 @@ namespace Application.Services.Membros
 
             if(membro is null)
             {
-                Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(Message.IdNaoEncontrado, "O membro", id)
+                );
                 return null;
             }
 
             if(_repository.ValidaMembroParaAcao(membro.Id))
             {
-                Notificar(
-                    EnumTipoNotificacao.ClientError,
-                    "Esse membro faz parta da regra de negócio. Não pode ser alterado."
-                );
+                Notificar(EnumTipoNotificacao.ClientError, Message.AvisoMembroImutavel);
                 return null;
             }
 
@@ -74,7 +80,7 @@ namespace Application.Services.Membros
                 {
                     Notificar(
                         EnumTipoNotificacao.ClientError,
-                        $"Categoria {membroDto.Nome} já existe."
+                        string.Format(Message.RegistroExistente, "O membro", membroDto.Nome)
                     );
                     return null;
                 }
@@ -86,7 +92,10 @@ namespace Application.Services.Membros
 
             if(!await _repository.SaveChangesAsync())
             {
-                Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.UpdateError);
+                Notificar(
+                    EnumTipoNotificacao.ServerError,
+                    string.Format(Message.ErroAoSalvarNoBanco, "Atualizar")
+                );
                 return null;
             }
 
@@ -99,16 +108,16 @@ namespace Application.Services.Membros
 
             if(membro == null)
             {
-                Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(Message.IdNaoEncontrado, "O membro", id)
+                );
                 return false;
             }
 
             if(_repository.ValidaMembroParaAcao(membro.Id))
             {
-                Notificar(
-                    EnumTipoNotificacao.ClientError,
-                    "Esse membro faz parta da regra de negócio. Não pode ser alterado."
-                );
+                Notificar(EnumTipoNotificacao.ClientError, Message.AvisoMembroImutavel);
                 return false;
             }
 
@@ -116,11 +125,14 @@ namespace Application.Services.Membros
 
             if(!await _repository.SaveChangesAsync())
             {
-                Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.DeleteError);
+                Notificar(
+                    EnumTipoNotificacao.ServerError,
+                    string.Format(Message.ErroAoSalvarNoBanco, "Deletar")
+                );
                 return false;
             }
 
-            Notificar(EnumTipoNotificacao.Informacao, "Registro Deletado");
+            Notificar(EnumTipoNotificacao.Informacao, Message.RegistroDeletado);
             return true;
         }
     }

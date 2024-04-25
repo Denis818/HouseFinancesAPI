@@ -26,6 +26,7 @@ namespace DIContainer.DependencyManagers
 
             services.AddAuthenticationJwt(config);
             services.AddAssemblyConfigurations();
+            services.AddLocalization(options => options.ResourcesPath = "03 - Core/Application/Resources/Messages");
         }
 
         public static void AddAuthenticationJwt(
@@ -64,6 +65,17 @@ namespace DIContainer.DependencyManagers
         public static void UseCorsPolicy(this IApplicationBuilder app)
         {
             app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+        }
+
+        public static void UseLocalization(this IApplicationBuilder app)
+        {
+            var supportedCultures = new[] { "pt-BR" };
+            var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
+                                                                      .AddSupportedCultures(supportedCultures)
+                                                                      .AddSupportedUICultures(supportedCultures);
+
+            app.UseRequestLocalization(localizationOptions);
+
         }
     }
 }

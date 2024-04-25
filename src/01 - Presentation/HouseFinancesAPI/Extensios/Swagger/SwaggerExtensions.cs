@@ -59,7 +59,7 @@ namespace HouseFinancesAPI.Extensios.Swagger
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "House Finances API");
 
-                c.RoutePrefix = "Doc";
+                c.RoutePrefix = "doc";
                 c.DocumentTitle = "House Finances API";
                 c.HeadContent = File.ReadAllText(
                     Path.Combine(app.Environment.WebRootPath, "html/swagger-head.html"));

@@ -1,5 +1,5 @@
-﻿using Application.Constants;
-using Application.Interfaces.Services.Categorias;
+﻿using Application.Interfaces.Services.Categorias;
+using Application.Resources.Messages;
 using Application.Services.Base;
 using Domain.Dtos.Categorias;
 using Domain.Enumeradores;
@@ -30,7 +30,7 @@ namespace Application.Services.Categorias
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
-                    $"Categoria {categoriaDto.Descricao} já existe."
+                    string.Format(Message.RegistroExistente, "A categoria", categoriaDto.Descricao)
                 );
                 return null;
             }
@@ -40,7 +40,10 @@ namespace Application.Services.Categorias
 
             if(!await _repository.SaveChangesAsync())
             {
-                Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.InsertError);
+                Notificar(
+                    EnumTipoNotificacao.ServerError,
+                    string.Format(Message.ErroAoSalvarNoBanco, "Inserir")
+                );
                 return null;
             }
 
@@ -58,7 +61,10 @@ namespace Application.Services.Categorias
 
             if(categoria is null)
             {
-                Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(Message.IdNaoEncontrado, "Categoria", id)
+                );
                 return null;
             }
 
@@ -67,10 +73,7 @@ namespace Application.Services.Categorias
 
             if(_repository.ValidaCategoriaParaAcao(categoria.Id))
             {
-                Notificar(
-                    EnumTipoNotificacao.ClientError,
-                    "Essa categoria faz parta da regra de negócio. Não pode ser alterada."
-                );
+                Notificar(EnumTipoNotificacao.ClientError, Message.AvisoCategoriaImutavel);
                 return null;
             }
 
@@ -83,7 +86,11 @@ namespace Application.Services.Categorias
                 {
                     Notificar(
                         EnumTipoNotificacao.ClientError,
-                        $"Categoria {categoriaDto.Descricao} já existe."
+                        string.Format(
+                            Message.RegistroExistente,
+                            "A categoria",
+                            categoriaDto.Descricao
+                        )
                     );
                     return null;
                 }
@@ -95,7 +102,10 @@ namespace Application.Services.Categorias
 
             if(!await _repository.SaveChangesAsync())
             {
-                Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.UpdateError);
+                Notificar(
+                    EnumTipoNotificacao.ServerError,
+                    string.Format(Message.ErroAoSalvarNoBanco, "Atualizar")
+                );
                 return null;
             }
 
@@ -108,16 +118,16 @@ namespace Application.Services.Categorias
 
             if(categoria == null)
             {
-                Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(Message.IdNaoEncontrado, "Categoria", id)
+                );
                 return false;
             }
 
             if(_repository.ValidaCategoriaParaAcao(categoria.Id))
             {
-                Notificar(
-                    EnumTipoNotificacao.ClientError,
-                    "Essa categoria faz parta da regra de negócio. Não pode ser alterada"
-                );
+                Notificar(EnumTipoNotificacao.ClientError, Message.AvisoCategoriaImutavel);
                 return false;
             }
 
@@ -125,11 +135,14 @@ namespace Application.Services.Categorias
 
             if(!await _repository.SaveChangesAsync())
             {
-                Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.DeleteError);
+                Notificar(
+                    EnumTipoNotificacao.ServerError,
+                    string.Format(Message.ErroAoSalvarNoBanco, "Deletar")
+                );
                 return false;
             }
 
-            Notificar(EnumTipoNotificacao.Informacao, "Registro Deletado");
+            Notificar(EnumTipoNotificacao.Informacao, Message.RegistroDeletado);
             return true;
         }
         #endregion

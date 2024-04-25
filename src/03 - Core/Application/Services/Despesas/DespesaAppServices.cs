@@ -1,6 +1,6 @@
-﻿using Application.Constants;
-using Application.Extensions.Help;
+﻿using Application.Extensions.Help;
 using Application.Interfaces.Services.Despesas;
+using Application.Resources.Messages;
 using Application.Services.Base;
 using Application.Services.Despesas.RelatorioPdf;
 using Application.Utilities;
@@ -46,7 +46,7 @@ namespace Application.Services.Despesas
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
-                    $"Categoria com id:{despesaDto.CategoriaId} não existe."
+                    string.Format(Message.IdNaoEncontrado, "A categoria", despesaDto.CategoriaId)
                 );
                 return null;
             }
@@ -60,7 +60,10 @@ namespace Application.Services.Despesas
 
             if(!await _repository.SaveChangesAsync())
             {
-                Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.InsertError);
+                Notificar(
+                    EnumTipoNotificacao.ServerError,
+                    string.Format(Message.ErroAoSalvarNoBanco, "Inserir")
+                );
                 return null;
             }
 
@@ -85,7 +88,11 @@ namespace Application.Services.Despesas
                 {
                     Notificar(
                         EnumTipoNotificacao.ClientError,
-                        $"Categoria com id:{despesaDto.CategoriaId} não existe."
+                        string.Format(
+                            Message.IdNaoEncontrado,
+                            "A categoria",
+                            despesaDto.CategoriaId
+                        )
                     );
                     continue;
                 }
@@ -109,7 +116,10 @@ namespace Application.Services.Despesas
             await _repository.InsertRangeAsync(despesasParaInserir);
             if(!await _repository.SaveChangesAsync())
             {
-                Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.InsertError);
+                Notificar(
+                    EnumTipoNotificacao.ServerError,
+                    string.Format(Message.ErroAoSalvarNoBanco, "Inserir")
+                );
                 return null;
             }
 
@@ -143,7 +153,10 @@ namespace Application.Services.Despesas
 
             if(despesa == null)
             {
-                Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(Message.IdNaoEncontrado, "A despesa", id)
+                );
                 return null;
             }
 
@@ -152,12 +165,14 @@ namespace Application.Services.Despesas
             despesa.Total = despesa.Preco * despesa.Quantidade;
             despesa.DataCompra = DateTimeZoneProvider.GetBrasiliaTimeZone(DateTime.UtcNow);
 
-
             _repository.Update(despesa);
 
             if(!await _repository.SaveChangesAsync())
             {
-                Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.UpdateError);
+                Notificar(
+                    EnumTipoNotificacao.ServerError,
+                    string.Format(Message.ErroAoSalvarNoBanco, "Atualizar")
+                );
                 return null;
             }
 
@@ -170,7 +185,10 @@ namespace Application.Services.Despesas
 
             if(despesa == null)
             {
-                Notificar(EnumTipoNotificacao.ClientError, ErrorMessages.NotFoundById + id);
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(Message.IdNaoEncontrado, "A despesa", id)
+                );
                 return;
             }
 
@@ -178,11 +196,14 @@ namespace Application.Services.Despesas
 
             if(!await _repository.SaveChangesAsync())
             {
-                Notificar(EnumTipoNotificacao.ServerError, ErrorMessages.DeleteError);
+                Notificar(
+                    EnumTipoNotificacao.ServerError,
+                    string.Format(Message.ErroAoSalvarNoBanco, "Deletar")
+                );
                 return;
             }
 
-            Notificar(EnumTipoNotificacao.Informacao, "Registro Deletado");
+            Notificar(EnumTipoNotificacao.Informacao, Message.RegistroDeletado);
         }
         #endregion
 

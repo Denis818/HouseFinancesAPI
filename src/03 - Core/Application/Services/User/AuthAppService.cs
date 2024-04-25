@@ -1,5 +1,6 @@
 using Application.Helpers;
 using Application.Interfaces.Services.User;
+using Application.Resources.Messages;
 using Application.Services.Base;
 using Domain.Dtos.User;
 using Domain.Dtos.User.Auth;
@@ -23,7 +24,7 @@ namespace Application.Services.User
         {
             if(userDto == null)
             {
-                Notificar(EnumTipoNotificacao.ClientError, "Modelo não é valido.");
+                Notificar(EnumTipoNotificacao.ClientError, Message.ModeloInvalido);
                 return null;
             }
 
@@ -34,7 +35,7 @@ namespace Application.Services.User
 
             if(usuario == null)
             {
-                Notificar(EnumTipoNotificacao.ClientError, "Email não encontrado.");
+                Notificar(EnumTipoNotificacao.ClientError, Message.EmailNaoEncontrado);
                 return null;
             }
 
@@ -42,7 +43,7 @@ namespace Application.Services.User
 
             if(!senhaValida)
             {
-                Notificar(EnumTipoNotificacao.ClientError, "Senha inválida.");
+                Notificar(EnumTipoNotificacao.ClientError, Message.SenhaInvalida);
                 return null;
             }
 
@@ -62,9 +63,10 @@ namespace Application.Services.User
 
         public async Task AddPermissaoAsync(AddUserPermissionDto userPermissao)
         {
-            var usuario = await _repository.Get(user => user.Id == userPermissao.UsuarioId)
-               .Include(p => p.Permissoes)
-               .FirstOrDefaultAsync();
+            var usuario = await _repository
+                .Get(user => user.Id == userPermissao.UsuarioId)
+                .Include(p => p.Permissoes)
+                .FirstOrDefaultAsync();
 
             foreach(var permissao in userPermissao.Permissoes)
             {

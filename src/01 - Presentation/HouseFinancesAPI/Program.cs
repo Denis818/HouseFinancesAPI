@@ -5,14 +5,12 @@ using HouseFinancesAPI.Extensios.Swagger;
 using HouseFinancesAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.SetupApplication();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddApiDependencyServices(builder.Configuration);
-builder.Services.AddSwaggerAuthorizationJWT();
+builder.SetupApplication();
 
 var app = builder.Build();
 
+app.UseLocalization();
 app.ConfigureSwaggerUI();
 
 app.UseCorsPolicy();
@@ -33,7 +31,7 @@ app.MapGet(
     "/{*path}",
     async context =>
     {
-        context.Response.Redirect("/Doc");
+        context.Response.Redirect("/doc");
         await Task.CompletedTask;
     }
 );
