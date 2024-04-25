@@ -34,14 +34,6 @@ namespace Application.Validators.Despesas
                 .WithMessage(
                     "O {PropertyName} deve ter entre {MinLength} a {MaxLength} caracteres."
                 );
-
-            RuleFor(x => x.DataCompra)
-                .NotEmpty()
-                .WithMessage("A {PropertyName} é obrigatório.")
-                .Must(data => data <= DateTime.Today)
-                .WithMessage("A {PropertyName} não pode ser no futuro.")
-                .Must(data => data.Year >= DateTime.Now.Year)
-                .WithMessage("A {PropertyName} não pode ser de um ano anterior ao ano atual.");
         }
     }
 }
