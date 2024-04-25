@@ -83,7 +83,7 @@ namespace Application.Services.Despesas
                 if(await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
                 {
                     Notificar(
-                        EnumTipoNotificacao.Informacao,
+                        EnumTipoNotificacao.ClientError,
                         $"Categoria com id:{despesaDto.CategoriaId} não existe."
                     );
                     continue;
