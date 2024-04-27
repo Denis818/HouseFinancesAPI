@@ -132,7 +132,6 @@ namespace Application.Services.Membros
                 return false;
             }
 
-            Notificar(EnumTipoNotificacao.Informacao, Message.RegistroDeletado);
             return true;
         }
     }

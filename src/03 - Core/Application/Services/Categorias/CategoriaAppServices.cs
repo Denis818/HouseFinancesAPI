@@ -142,7 +142,6 @@ namespace Application.Services.Categorias
                 return false;
             }
 
-            Notificar(EnumTipoNotificacao.Informacao, Message.RegistroDeletado);
             return true;
         }
         #endregion

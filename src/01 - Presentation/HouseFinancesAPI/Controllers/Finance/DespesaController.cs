@@ -36,7 +36,7 @@ namespace HouseFinancesAPI.Controllers.Finance
 
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
-        public async Task DeleteAsync(int id) => await _despesaServices.DeleteAsync(id);
+        public async Task<bool> DeleteAsync(int id) => await _despesaServices.DeleteAsync(id);
         #endregion
 
         [HttpPost("inserir-lote")]

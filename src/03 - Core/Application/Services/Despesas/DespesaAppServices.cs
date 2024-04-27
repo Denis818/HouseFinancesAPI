@@ -179,7 +179,7 @@ namespace Application.Services.Despesas
             return await GetByIdAsync(despesa.Id);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var despesa = await _repository.GetByIdAsync(id);
 
@@ -189,7 +189,7 @@ namespace Application.Services.Despesas
                     EnumTipoNotificacao.ClientError,
                     string.Format(Message.IdNaoEncontrado, "A despesa", id)
                 );
-                return;
+                return false;
             }
 
             _repository.Delete(despesa);
@@ -200,10 +200,10 @@ namespace Application.Services.Despesas
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Deletar")
                 );
-                return;
+                return false;
             }
 
-            Notificar(EnumTipoNotificacao.Informacao, Message.RegistroDeletado);
+            return true;
         }
         #endregion
 
