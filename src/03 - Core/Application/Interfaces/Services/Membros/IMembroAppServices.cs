@@ -11,7 +11,7 @@ namespace Application.Interfaces.Services.Membros
         Task<Membro> InsertAsync(MembroDto memberDto);
         Task<Membro> UpdateAsync(int id, MembroDto memberDto);
         Task<string> EnviarValoresDividosPeloWhatsAppAsync(
-            int idMembro,
+            string nome,
             string titleMessage,
             bool isHabitacional,
             string pix

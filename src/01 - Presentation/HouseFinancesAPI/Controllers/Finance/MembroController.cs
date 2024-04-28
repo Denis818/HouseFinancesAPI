@@ -36,14 +36,14 @@ namespace HouseFinancesAPI.Controllers.Finance
 
         [HttpGet("enviar-mensagem")]
         public async Task<string> EnviarValoresDividosPeloWhatsAppAsync(
-            int idMembro,
+            string nome,
             string pix,
             bool isHabitacional,
             string titleMessage
         )
         {
             return await _membroServices.EnviarValoresDividosPeloWhatsAppAsync(
-                idMembro,
+                nome,
                 titleMessage,
                 isHabitacional,
                 pix

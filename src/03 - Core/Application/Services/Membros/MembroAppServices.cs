@@ -143,19 +143,19 @@ namespace Application.Services.Membros
         #endregion
 
         public async Task<string> EnviarValoresDividosPeloWhatsAppAsync(
-            int idMembro,
+            string nome,
             string titleMessage,
             bool isHabitacional,
             string pix
         )
         {
-            var membro = await GetByIdAsync(idMembro);
+            var membro = await _repository.Get(membro => membro.Nome == nome).FirstOrDefaultAsync();
 
             if(membro is null)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
-                    string.Format(Message.IdNaoEncontrado, "Membro", idMembro)
+                    string.Format(Message.AcaoNaoInvalida, "Membro não encontrado")
                 );
 
                 return null;
