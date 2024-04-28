@@ -84,7 +84,7 @@ namespace Application.Services.Despesas.RelatorioPdf
                     valorParaCada = totalAlmocoParteDoJhon;
                 }
 
-                columnsTotalParaCada.Add(membro.Nome, $"{valorParaCada}");
+                columnsTotalParaCada.Add(membro.Nome, $"{valorParaCada:F2}");
             }
 
             _pdfTable.CreateTable(
