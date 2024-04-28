@@ -6,6 +6,6 @@ namespace Domain.Dtos.Despesas.Consultas
     public class ResumoMensalDto
     {
         public RelatorioGastosDoMesDto RelatorioGastosDoMes { get; set; }
-        public IEnumerable<DespesaPorMembroDto> DespesasPorMembros { get; set; }
+        public IEnumerable<DespesaPorMembroDto> DespesasPorMembro { get; set; }
     }
 }

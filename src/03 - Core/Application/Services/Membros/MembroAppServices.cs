@@ -7,13 +7,15 @@ using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Membros;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Text.RegularExpressions;
 
 namespace Application.Services.Membros
 {
-    public class MembroAppServices(IServiceProvider service, IDespesaConsultaAppService _despesaConsultaApp)
-        : BaseAppService<Membro, IMembroRepository>(service),
-            IMembroAppServices
+    public class MembroAppServices(
+        IServiceProvider service,
+        IDespesaConsultaAppService _despesaConsultaApp
+    ) : BaseAppService<Membro, IMembroRepository>(service), IMembroAppServices
     {
         #region CRUD
         public async Task<IEnumerable<Membro>> GetAllAsync() =>
@@ -140,18 +142,38 @@ namespace Application.Services.Membros
 
         #endregion
 
-        public async Task<string> EnviarValoresDividosPeloWhatsAppAsync(int idMembro, string titleMessage)
+        public async Task<string> EnviarValoresDividosPeloWhatsAppAsync(
+            int idMembro,
+            string titleMessage,
+            bool isHabitacional,
+            string pix
+        )
         {
             var membro = await GetByIdAsync(idMembro);
 
             if(membro is null)
             {
-                Notificar(EnumTipoNotificacao.ClientError, string.Format(Message.IdNaoEncontrado, "Membro", idMembro));
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(Message.IdNaoEncontrado, "Membro", idMembro)
+                );
 
                 return null;
             }
 
-            string message = "";
+            if(isHabitacional && membro.Nome.Contains("Jhon"))
+            {
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(Message.AcaoNaoInvalida, "o Jhon não paga aluguel")
+                );
+
+                return null;
+            }
+
+            string message = isHabitacional
+                ? await MensagemValoresHabitacionalDividosAsync(pix, membro.Nome, titleMessage)
+                : await MensagemValoresCasaDividosAsync(pix, membro.Nome, titleMessage);
 
             string encodedMessage = Uri.EscapeDataString(message);
 
@@ -161,16 +183,59 @@ namespace Application.Services.Membros
             return whatsappUrl;
         }
 
-
         #region Metodos de Suporte
 
-        public async Task<string> GerarMensagemComValoresDividos(string titleMessage)
+        public async Task<string> MensagemValoresCasaDividosAsync(
+            string pix,
+            string membroNome,
+            string titleMessage
+        )
         {
             var resumoMensal = await _despesaConsultaApp.GetResumoDespesasMensalAsync();
 
-            return "";
+            double valorPorMembro =
+                resumoMensal
+                    .DespesasPorMembro.Where(membro => membro.Nome == membroNome)
+                    .FirstOrDefault()
+                    ?.ValorDespesaCasa ?? 0;
+
+            string title = titleMessage.IsNullOrEmpty()
+                ? $"Olá {membroNome}, tudo bem? Essas são as despesas desse mês:\r\n\r\n"
+                : titleMessage + "\r\n\r\n";
+
+            string messageBody =
+                $"As despesas de casa vieram com um valor total de: *R${resumoMensal.RelatorioGastosDoMes.TotalGastosCasa:F2}*.\r\n\r\n"
+                + $"Dividido para cada vai ficar: *R$ {valorPorMembro:F2}*."
+                + $"\r\n\r\nMeu pix: *{pix}*.";
+
+            return title + messageBody;
         }
 
+        public async Task<string> MensagemValoresHabitacionalDividosAsync(
+            string pix,
+            string membroNome,
+            string titleMessage
+        )
+        {
+            var resumoMensal = await _despesaConsultaApp.GetResumoDespesasMensalAsync();
+
+            double valorPorMembro =
+                resumoMensal
+                    .DespesasPorMembro.Where(membro => membro.Nome == membroNome)
+                    .FirstOrDefault()
+                    ?.ValorDespesaHabitacional ?? 0;
+
+            string title = titleMessage.IsNullOrEmpty()
+                ? $"Olá {membroNome}, tudo bem? Essas são as despesas desse mês:\r\n\r\n"
+                : titleMessage + "\r\n\r\n";
+
+            string messageBody =
+                $"As despesas habitacional (Aluguel, comdomínio, conta de luz) vieram com um valor total de: *R${resumoMensal.RelatorioGastosDoMes.TotalGastosHabitacional:F2}*.\r\n\r\n"
+                + $"Dividido para cada vai ficar: *R$ {valorPorMembro:F2}*."
+                + $"\r\n\r\nMeu pix: *{pix}*.";
+
+            return title + messageBody;
+        }
         #endregion
     }
 }

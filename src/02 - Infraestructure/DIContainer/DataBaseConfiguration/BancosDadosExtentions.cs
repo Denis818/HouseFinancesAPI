@@ -92,6 +92,9 @@ namespace DIContainer.DataBaseConfiguration
 
             await categoriaRepository.InsertRangeAsync(listCategoria);
             await memberRepository.InsertRangeAsync(listMember);
+
+            await categoriaRepository.SaveChangesAsync();
+            await memberRepository.SaveChangesAsync();
         }
     }
 }

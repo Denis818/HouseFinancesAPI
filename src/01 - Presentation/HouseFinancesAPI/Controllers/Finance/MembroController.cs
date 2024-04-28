@@ -35,9 +35,19 @@ namespace HouseFinancesAPI.Controllers.Finance
         #endregion
 
         [HttpGet("enviar-mensagem")]
-        public async Task<string> EnviarValoresDividosPeloWhatsAppAsync(int idMembro, string titleMessage)
+        public async Task<string> EnviarValoresDividosPeloWhatsAppAsync(
+            int idMembro,
+            string pix,
+            bool isHabitacional,
+            string titleMessage
+        )
         {
-            return "_membroServices.EnviarValoresDividosPeloWhatsAppAsync(idMembro, titleMessage);";
+            return await _membroServices.EnviarValoresDividosPeloWhatsAppAsync(
+                idMembro,
+                titleMessage,
+                isHabitacional,
+                pix
+            );
         }
     }
 }

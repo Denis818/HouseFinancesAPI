@@ -70,7 +70,7 @@ namespace Application.Services.Despesas
             {
                 RelatorioGastosDoMes = GetRelatorioDeGastosDoMes(),
 
-                DespesasPorMembros = DistribuirDespesasEntreMembros(
+                DespesasPorMembro = DistribuirDespesasEntreMembros(
                     listTodosMembros,
                     distribuicaoCustosCasa.DespesaGeraisMaisAlmocoDividioPorMembro,
                     distribuicaoCustosCasa.TotalAlmocoParteDoJhon,
@@ -298,12 +298,12 @@ namespace Application.Services.Despesas
             {
                 Nome = member.Nome,
 
-                ValorDespesasCasa =
+                ValorDespesaCasa =
                     member.Id == idJhon
                         ? totalAlmocoDividioComJhon.RoundTo(2)
                         : despesaGeraisMaisAlmocoDividioPorMembro.RoundTo(2),
 
-                ValorCondominioAluguelContaDeLuz =
+                ValorDespesaHabitacional =
                     member.Id == idJhon ? 0 : ValorCondominioAluguelContaDeLuz(member)
             });
 

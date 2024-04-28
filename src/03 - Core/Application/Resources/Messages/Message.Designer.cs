@@ -61,6 +61,15 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ação inválida {0}..
+        /// </summary>
+        public static string AcaoNaoInvalida {
+            get {
+                return ResourceManager.GetString("AcaoNaoInvalida", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Essa categoria faz parta da regra de negócio. Não pode ser alterada..
         /// </summary>
         public static string AvisoCategoriaImutavel {
@@ -120,15 +129,6 @@ namespace Application.Resources.Messages {
         public static string ModeloInvalido {
             get {
                 return ResourceManager.GetString("ModeloInvalido", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Registro deletado com sucesso..
-        /// </summary>
-        public static string RegistroDeletado {
-            get {
-                return ResourceManager.GetString("RegistroDeletado", resourceCulture);
             }
         }
         
