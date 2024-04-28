@@ -13,6 +13,13 @@ namespace Data.Mappings.Membros
 
             builder.Property(m => m.Nome).HasColumnType("varchar(30)").IsRequired();
 
+            builder
+                .Property(u => u.Telefone)
+                .HasColumnName("Telefone")
+                .HasColumnType("varchar(20)")
+                .HasMaxLength(20)
+                .IsRequired();
+
             builder.HasIndex(m => m.Nome).HasDatabaseName("IX_Membros_Nome");
         }
     }

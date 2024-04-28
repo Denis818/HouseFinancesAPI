@@ -39,12 +39,7 @@ namespace HouseFinancesAPI.Controllers.Finance
         public async Task<bool> DeleteAsync(int id) => await _despesaServices.DeleteAsync(id);
         #endregion
 
-        [HttpPost("inserir-lote")]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task<IEnumerable<Despesa>> PostRangeAsync(
-            IAsyncEnumerable<DespesaDto> vendaDto
-        ) => await _despesaServices.InsertRangeAsync(vendaDto);
-
+        #region Consultas
         [HttpGet("resumo-despesas-mensal")]
         public async Task<ResumoMensalDto> GetResumoDespesasMensalAsync() =>
             await _despesaConsultaApp.GetResumoDespesasMensalAsync();
@@ -72,6 +67,15 @@ namespace HouseFinancesAPI.Controllers.Finance
 
             return File(pdfBytes, "application/pdf");
         }
+
+        #endregion
+
+        [HttpPost("inserir-lote")]
+        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        public async Task<IEnumerable<Despesa>> PostRangeAsync(
+            IAsyncEnumerable<DespesaDto> vendaDto
+        ) => await _despesaServices.InsertRangeAsync(vendaDto);
+
 
         [HttpGet("pdf-despesas-casa")]
         public async Task<FileContentResult> DownloadCalculoCasa()

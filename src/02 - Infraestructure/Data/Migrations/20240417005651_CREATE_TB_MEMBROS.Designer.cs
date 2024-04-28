@@ -41,6 +41,13 @@ namespace Data.Migrations
                     b.HasIndex("Nome")
                         .HasDatabaseName("IX_Membros_Nome");
 
+                    b.Property<string>("Telefone")
+                      .IsRequired()
+                      .HasMaxLength(20)
+                      .HasColumnType("varchar(20)")
+                      .HasColumnName("Telefone");
+
+
                     b.ToTable("Membros", (string)null);
                 });
 #pragma warning restore 612, 618

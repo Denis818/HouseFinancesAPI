@@ -14,6 +14,7 @@ namespace HouseFinancesAPI.Controllers.Finance
     public class MembroController(IServiceProvider service, IMembroAppServices _membroServices)
         : BaseApiController(service)
     {
+        #region CRUD
         [HttpGet]
         public async Task<IEnumerable<Membro>> GetAllDespesaAsync() =>
             await _membroServices.GetAllAsync();
@@ -31,5 +32,12 @@ namespace HouseFinancesAPI.Controllers.Finance
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
         public async Task<bool> Delete(int id) => await _membroServices.DeleteAsync(id);
+        #endregion
+
+        [HttpGet("enviar-mensagem")]
+        public async Task<string> EnviarValoresDividosPeloWhatsAppAsync(int idMembro, string titleMessage)
+        {
+            return "_membroServices.EnviarValoresDividosPeloWhatsAppAsync(idMembro, titleMessage);";
+        }
     }
 }

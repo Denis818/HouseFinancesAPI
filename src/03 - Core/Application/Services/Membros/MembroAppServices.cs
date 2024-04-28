@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Services.Membros;
+﻿using Application.Interfaces.Services.Despesas;
+using Application.Interfaces.Services.Membros;
 using Application.Resources.Messages;
 using Application.Services.Base;
 using Domain.Dtos.Membros;
@@ -6,13 +7,15 @@ using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Membros;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace Application.Services.Membros
 {
-    public class MembroAppServices(IServiceProvider service)
+    public class MembroAppServices(IServiceProvider service, IDespesaConsultaAppService _despesaConsultaApp)
         : BaseAppService<Membro, IMembroRepository>(service),
             IMembroAppServices
     {
+        #region CRUD
         public async Task<IEnumerable<Membro>> GetAllAsync() =>
             await _repository.Get().OrderBy(c => c.Nome).ToListAsync();
 
@@ -134,5 +137,40 @@ namespace Application.Services.Membros
 
             return true;
         }
+
+        #endregion
+
+        public async Task<string> EnviarValoresDividosPeloWhatsAppAsync(int idMembro, string titleMessage)
+        {
+            var membro = await GetByIdAsync(idMembro);
+
+            if(membro is null)
+            {
+                Notificar(EnumTipoNotificacao.ClientError, string.Format(Message.IdNaoEncontrado, "Membro", idMembro));
+
+                return null;
+            }
+
+            string message = "";
+
+            string encodedMessage = Uri.EscapeDataString(message);
+
+            membro.Telefone = Regex.Replace(membro.Telefone, "[^0-9]", "");
+            string whatsappUrl = $"https://wa.me/{membro.Telefone}?text={encodedMessage}";
+
+            return whatsappUrl;
+        }
+
+
+        #region Metodos de Suporte
+
+        public async Task<string> GerarMensagemComValoresDividos(string titleMessage)
+        {
+            var resumoMensal = await _despesaConsultaApp.GetResumoDespesasMensalAsync();
+
+            return "";
+        }
+
+        #endregion
     }
 }

@@ -19,20 +19,22 @@ namespace DIContainer.DataBaseConfiguration
             using var serviceScope = serviceProvider.CreateScope();
             var services = serviceScope.ServiceProvider;
 
-            var vendasDbContext = services.GetRequiredService<FinanceDbContext>();
-            if(!vendasDbContext.Database.CanConnect())
-            {
-                vendasDbContext.Database.Migrate();
-                PrepareCategoryAndMember(services).Wait();
-            }
+            var dbContext = services.GetRequiredService<FinanceDbContext>();
+
+            dbContext.Database.Migrate();
 
             PrepareUserAdmin(services);
+
+            if(!dbContext.Database.CanConnect())
+            {
+                PrepareCategoryAndMember(services).Wait();
+            }
         }
 
-        public static void PrepareUserAdmin(IServiceProvider serviceProvider)
+        public static void PrepareUserAdmin(IServiceProvider services)
         {
-            var usuarioRepository = serviceProvider.GetRequiredService<IUsuarioRepository>();
-            var authService = serviceProvider.GetRequiredService<IAuthAppService>();
+            var usuarioRepository = services.GetRequiredService<IUsuarioRepository>();
+            var authService = services.GetRequiredService<IAuthAppService>();
 
             string email = "master@gmail.com";
             string senha = "Master@123456";
@@ -81,11 +83,11 @@ namespace DIContainer.DataBaseConfiguration
 
             var listMember = new List<Membro>
             {
-                new() { Nome = "Bruno" },
-                new() { Nome = "Denis" },
-                new() { Nome = "Valdirene" },
-                new() { Nome = "Peu" },
-                new() { Nome = "Jhon Lenon" }
+                new() { Nome = "Bruno", Telefone = "(38) 9 9805-5965" },
+                new() { Nome = "Denis", Telefone = "(38) 9 97282407" },
+                new() { Nome = "Valdirene", Telefone = "(31) 9 9797-7731" },
+                new() { Nome = "Peu", Telefone = "(38) 9 9995-4309" },
+                new() { Nome = "Jhon Lenon", Telefone = "(31) 9 9566-4815" }
             };
 
             await categoriaRepository.InsertRangeAsync(listCategoria);
