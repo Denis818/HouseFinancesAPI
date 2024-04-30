@@ -82,7 +82,7 @@ namespace Application.Services.Despesas
 
             double totalDespesas = await listDespesas.SumAsync(despesa => despesa.Total);
 
-            double valorSubtraido = faturaCartao - totalDespesas;
+            double valorSubtraido = totalDespesas - faturaCartao;
 
             return (totalDespesas, valorSubtraido);
         }
