@@ -3,9 +3,9 @@ using Domain.Models.Membros;
 
 namespace Domain.Dtos.Despesas.Relatorios
 {
-    public class DetalhamentoDespesasHabitacionalDto
+    public class DetalhamentoDespesasMoradiaDto
     {
-        public DistribuicaoCustosHabitacionalDto DistribuicaoCustos { get; set; }
+        public DistribuicaoCustosMoradiaDto DistribuicaoCustos { get; set; }
         public IEnumerable<Despesa> ListAluguel { get; set; }
         public List<Membro> ListMembroForaJhon { get; set; }
         public List<Membro> ListMembroForaJhonPeu { get; set; }

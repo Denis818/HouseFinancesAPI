@@ -57,8 +57,7 @@ namespace Application.Services.Despesas
             List<Membro> listTodosMembros = await _membroRepository.Get().ToListAsync();
 
             //Aluguel + Condomínio + Conta de Luz
-            var distribuicaoCustosHabitacional =
-                await CalcularDistribuicaoCustosHabitacionalAsync();
+            var distribuicaoCustosMoradia = await CalcularDistribuicaoCustosMoradiaAsync();
 
             var distribuicaoCustosCasa = await CalcularDistribuicaoCustosCasaAsync();
 
@@ -70,13 +69,15 @@ namespace Application.Services.Despesas
                     listTodosMembros,
                     distribuicaoCustosCasa.DespesaGeraisMaisAlmocoDividioPorMembro,
                     distribuicaoCustosCasa.TotalAlmocoParteDoJhon,
-                    distribuicaoCustosHabitacional.DistribuicaoCustos.ValorParaMembrosForaPeu,
-                    distribuicaoCustosHabitacional.DistribuicaoCustos.ValorParaDoPeu
+                    distribuicaoCustosMoradia.DistribuicaoCustos.ValorParaMembrosForaPeu,
+                    distribuicaoCustosMoradia.DistribuicaoCustos.ValorParaDoPeu
                 )
             };
         }
 
-        public async Task<(double, double)> ConferirFaturaDoCartaoComDespesasAsync(double faturaCartao)
+        public async Task<(double, double)> ConferirFaturaDoCartaoComDespesasAsync(
+            double faturaCartao
+        )
         {
             var listDespesas = GetDespesasMaisRecentes();
 
@@ -91,7 +92,7 @@ namespace Application.Services.Despesas
 
         #region Support Methods
 
-        public async Task<DetalhamentoDespesasHabitacionalDto> CalcularDistribuicaoCustosHabitacionalAsync()
+        public async Task<DetalhamentoDespesasMoradiaDto> CalcularDistribuicaoCustosMoradiaAsync()
         {
             var categoriaIds = _categoriaRepository.GetCategoriaIds();
             var (idJhon, idPeu) = _membroRepository.GetIdsJhonPeu();
@@ -150,7 +151,7 @@ namespace Application.Services.Despesas
 
             double valorParaDoPeu = 300 + valorLuzMaisCondominioParaCadaMembro;
 
-            var distribuicaoCustosHabitacional = new DetalhamentoDespesasHabitacionalDto()
+            var distribuicaoCustosMoradia = new DetalhamentoDespesasMoradiaDto()
             {
                 IdPeu = idPeu,
                 ListAluguel = listAluguel,
@@ -176,7 +177,7 @@ namespace Application.Services.Despesas
                 }
             };
 
-            return distribuicaoCustosHabitacional;
+            return distribuicaoCustosMoradia;
         }
 
         public async Task<DistribuicaoCustosCasaDto> CalcularDistribuicaoCustosCasaAsync()
@@ -189,8 +190,8 @@ namespace Application.Services.Despesas
 
             List<Membro> listMembersForaJhon = todosMembros.Where(m => m.Id != idJhon).ToList();
 
-            // Despesas gerais Limpesa, Higiêne etc... (Fora Almoço, e despesa Habitacional aluguel, luz etc..) :
-            double totalDespesaGerais = CalculaTotalDespesaForaAlmocoDespesaHabitacional(
+            // Despesas gerais Limpesa, Higiêne etc... (Fora Almoço, e despesa Moradia aluguel, luz etc..) :
+            double totalDespesaGerais = CalculaTotalDespesaForaAlmocoDespesaMoradia(
                 listDespesasMaisRecentes
             );
 
@@ -253,15 +254,16 @@ namespace Application.Services.Despesas
 
             double totalGastosGerais = totalGeral - aluguelMaisCondominio;
 
-            return new RelatorioGastosDoMesDto(
-                mesAtual,
-                aluguelMaisCondominio,
-                totalGastosGerais,
-                totalGeral
-            );
+            return new RelatorioGastosDoMesDto
+            {
+                MesAtual = mesAtual,
+                TotalGeral = totalGeral,
+                TotalGastosCasa = totalGastosGerais,
+                TotalGastosMoradia = totalGastosGerais,
+            };
         }
 
-        private double CalculaTotalDespesaForaAlmocoDespesaHabitacional(
+        private double CalculaTotalDespesaForaAlmocoDespesaMoradia(
             IQueryable<Despesa> listDespesasMaisRecentes
         )
         {
@@ -310,7 +312,7 @@ namespace Application.Services.Despesas
                         ? totalAlmocoDividioComJhon.RoundTo(2)
                         : despesaGeraisMaisAlmocoDividioPorMembro.RoundTo(2),
 
-                ValorDespesaHabitacional =
+                ValorDespesaMoradia =
                     member.Id == idJhon ? 0 : ValorCondominioAluguelContaDeLuz(member)
             });
 
@@ -322,10 +324,10 @@ namespace Application.Services.Despesas
         )
         {
             var dataMaisRecente = _repository
-                 .Get()
-                 .OrderByDescending(d => d.DataCompra)
-                 .Select(d => d.DataCompra)
-                 .FirstOrDefault();
+                .Get()
+                .OrderByDescending(d => d.DataCompra)
+                .Select(d => d.DataCompra)
+                .FirstOrDefault();
 
             var inicioDoMes = new DateTime(dataMaisRecente.Year, dataMaisRecente.Month, 1);
             var fimDoMes = inicioDoMes.AddMonths(1).AddDays(-1);

@@ -55,14 +55,14 @@ namespace HouseFinancesAPI.Controllers.Finance
         public async Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorMesAsync() =>
             await _despesaConsultaApp.GetTotaisComprasPorMesAsync();
 
-        [HttpGet("pdf-despesas-habitacional")]
-        public async Task<FileContentResult> DownloadCalculoHabitacional()
+        [HttpGet("pdf-despesas-Moradia")]
+        public async Task<FileContentResult> DownloadCalculoMoradia()
         {
-            byte[] pdfBytes = await _despesaServices.DownloadPdfRelatorioDeDespesaHabitacional();
+            byte[] pdfBytes = await _despesaServices.DownloadPdfRelatorioDeDespesaMoradia();
 
             var contentDisposition = new ContentDisposition
             {
-                FileName = "relatorio-despesas-habitacional.pdf",
+                FileName = "relatorio-despesas-Moradia.pdf",
                 Inline = false
             };
 

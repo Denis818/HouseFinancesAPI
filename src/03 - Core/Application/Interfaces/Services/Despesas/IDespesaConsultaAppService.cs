@@ -8,7 +8,7 @@ namespace Application.Interfaces.Services.Despesas
         Task<ResumoMensalDto> GetResumoDespesasMensalAsync();
         Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorMesAsync();
         Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync();
-        Task<DetalhamentoDespesasHabitacionalDto> CalcularDistribuicaoCustosHabitacionalAsync();
+        Task<DetalhamentoDespesasMoradiaDto> CalcularDistribuicaoCustosMoradiaAsync();
         Task<DistribuicaoCustosCasaDto> CalcularDistribuicaoCustosCasaAsync();
 
         Task<(double, double)> ConferirFaturaDoCartaoComDespesasAsync(double faturaCartao);

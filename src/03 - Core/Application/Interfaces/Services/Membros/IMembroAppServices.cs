@@ -13,7 +13,7 @@ namespace Application.Interfaces.Services.Membros
         Task<string> EnviarValoresDividosPeloWhatsAppAsync(
             string nome,
             string titleMessage,
-            bool isHabitacional,
+            bool isMoradia,
             string pix
         );
     }

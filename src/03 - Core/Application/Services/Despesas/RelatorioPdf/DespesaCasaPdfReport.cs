@@ -6,7 +6,7 @@ using iText.Layout;
 
 namespace Application.Services.Despesas.RelatorioPdf
 {
-    public class DespesaCasaPdfAppService
+    public class DespesaCasaPdfReport
     {
         private readonly PdfTableHelper _pdfTable = new();
 
@@ -61,7 +61,7 @@ namespace Application.Services.Despesas.RelatorioPdf
 
             _pdfTable.CreateTable(
                 doc,
-                "Despesas da casa (Fora despesa Habitacional como aluguel, luz etc...)",
+                "Despesas da casa (Fora despesa Moradia como aluguel, luz etc...)",
                 columnsValoresCalculados
             );
         }

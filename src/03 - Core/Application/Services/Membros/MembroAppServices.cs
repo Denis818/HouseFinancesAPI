@@ -145,7 +145,7 @@ namespace Application.Services.Membros
         public async Task<string> EnviarValoresDividosPeloWhatsAppAsync(
             string nome,
             string titleMessage,
-            bool isHabitacional,
+            bool isMoradia,
             string pix
         )
         {
@@ -161,7 +161,7 @@ namespace Application.Services.Membros
                 return null;
             }
 
-            if(isHabitacional && membro.Nome.Contains("Jhon"))
+            if(isMoradia && membro.Nome.Contains("Jhon"))
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -171,8 +171,8 @@ namespace Application.Services.Membros
                 return null;
             }
 
-            string message = isHabitacional
-                ? await MensagemValoresHabitacionalDividosAsync(pix, membro.Nome, titleMessage)
+            string message = isMoradia
+                ? await MensagemValoresMoradiaDividosAsync(pix, membro.Nome, titleMessage)
                 : await MensagemValoresCasaDividosAsync(pix, membro.Nome, titleMessage);
 
             string encodedMessage = Uri.EscapeDataString(message);
@@ -211,7 +211,7 @@ namespace Application.Services.Membros
             return title + messageBody;
         }
 
-        public async Task<string> MensagemValoresHabitacionalDividosAsync(
+        public async Task<string> MensagemValoresMoradiaDividosAsync(
             string pix,
             string membroNome,
             string titleMessage
@@ -223,14 +223,14 @@ namespace Application.Services.Membros
                 resumoMensal
                     .DespesasPorMembro.Where(membro => membro.Nome == membroNome)
                     .FirstOrDefault()
-                    ?.ValorDespesaHabitacional ?? 0;
+                    ?.ValorDespesaMoradia ?? 0;
 
             string title = titleMessage.IsNullOrEmpty()
                 ? $"Olá {membroNome}, tudo bem? Essas são as despesas desse mês:\r\n\r\n"
                 : titleMessage + "\r\n\r\n";
 
             string messageBody =
-                $"As despesas habitacional (Aluguel, comdomínio, conta de luz) vieram com um valor total de: *R${resumoMensal.RelatorioGastosDoMes.TotalGastosHabitacional:F2}*.\r\n\r\n"
+                $"As despesas Moradia (Aluguel, comdomínio, conta de luz) vieram com um valor total de: *R${resumoMensal.RelatorioGastosDoMes.TotalGastosMoradia:F2}*.\r\n\r\n"
                 + $"Dividido para cada vai ficar: *R$ {valorPorMembro:F2}*."
                 + $"\r\n\r\nMeu pix: *{pix}*.";
 

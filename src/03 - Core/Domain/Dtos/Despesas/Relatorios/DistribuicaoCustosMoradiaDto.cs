@@ -1,6 +1,6 @@
 ﻿namespace Domain.Dtos.Despesas.Relatorios
 {
-    public class DistribuicaoCustosHabitacionalDto
+    public class DistribuicaoCustosMoradiaDto
     {
         public double TotalAptoMaisCaixa { get; set; }
         public double TotalLuzMaisCondominio { get; set; }

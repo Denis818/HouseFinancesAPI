@@ -4,6 +4,6 @@
     {
         public string Nome { get; set; }
         public double ValorDespesaCasa { get; set; }
-        public double ValorDespesaHabitacional { get; set; }
+        public double ValorDespesaMoradia { get; set; }
     }
 }

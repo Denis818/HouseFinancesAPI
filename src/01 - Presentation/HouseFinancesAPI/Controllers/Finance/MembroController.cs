@@ -38,14 +38,14 @@ namespace HouseFinancesAPI.Controllers.Finance
         public async Task<object> EnviarValoresDividosPeloWhatsAppAsync(
             string nome,
             string pix,
-            bool isHabitacional,
+            bool isMoradia,
             string titleMessage
         )
         {
             var messagemWhastApp = await _membroServices.EnviarValoresDividosPeloWhatsAppAsync(
                 nome,
                 titleMessage,
-                isHabitacional,
+                isMoradia,
                 pix
             );
 

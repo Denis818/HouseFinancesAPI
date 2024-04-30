@@ -207,21 +207,22 @@ namespace Application.Services.Despesas
         }
         #endregion
 
-        public async Task<byte[]> DownloadPdfRelatorioDeDespesaHabitacional()
-        {
-            var custosHabitacionalDto =
-                await _despesaConsultaApp.CalcularDistribuicaoCustosHabitacionalAsync();
-
-            return new DespesaHabitacionalPdfAppService().GerarRelatorioDespesaHabitacionalPdf(
-                custosHabitacionalDto
-            );
-        }
-
         public async Task<byte[]> DownloadPdfRelatorioDeDespesaCasa()
         {
             var custosCasaDto = await _despesaConsultaApp.CalcularDistribuicaoCustosCasaAsync();
 
-            return new DespesaCasaPdfAppService().GerarRelatorioDespesaCasaPdf(custosCasaDto);
+            return new DespesaCasaPdfReport().GerarRelatorioDespesaCasaPdf(custosCasaDto);
         }
+
+        public async Task<byte[]> DownloadPdfRelatorioDeDespesaMoradia()
+        {
+            var custosMoradiaDto =
+                await _despesaConsultaApp.CalcularDistribuicaoCustosMoradiaAsync();
+
+            return new DespesaMoradiaPdfReport().GerarRelatorioDespesaMoradiaPdf(
+                custosMoradiaDto
+            );
+        }
+
     }
 }

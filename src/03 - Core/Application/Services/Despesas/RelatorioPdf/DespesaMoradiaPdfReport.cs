@@ -6,12 +6,12 @@ using iText.Layout;
 
 namespace Application.Services.Despesas.RelatorioPdf
 {
-    public class DespesaHabitacionalPdfAppService
+    public class DespesaMoradiaPdfReport
     {
         private readonly PdfTableHelper _pdfTable = new();
 
-        public byte[] GerarRelatorioDespesaHabitacionalPdf(
-            DetalhamentoDespesasHabitacionalDto custosHabitacional
+        public byte[] GerarRelatorioDespesaMoradiaPdf(
+            DetalhamentoDespesasMoradiaDto custosMoradia
         )
         {
             using var memoryStream = new MemoryStream();
@@ -23,39 +23,39 @@ namespace Application.Services.Despesas.RelatorioPdf
 
             TableValoresIniciais(
                 doc,
-                custosHabitacional.ParcelaApartamento,
-                custosHabitacional.ParcelaCaixa,
-                custosHabitacional.ContaDeLuz,
-                custosHabitacional.Condominio
+                custosMoradia.ParcelaApartamento,
+                custosMoradia.ParcelaCaixa,
+                custosMoradia.ContaDeLuz,
+                custosMoradia.Condominio
             );
 
             TableCalculos(
                 doc,
-                custosHabitacional.DistribuicaoCustos.TotalAptoMaisCaixa,
-                custosHabitacional.DistribuicaoCustos.TotalLuzMaisCondominio,
-                custosHabitacional.DistribuicaoCustos.TotalAptoMaisCaixaAbate300Peu,
-                custosHabitacional.DistribuicaoCustos.TotalLuzMaisCondominioAbate100Estacionamento
+                custosMoradia.DistribuicaoCustos.TotalAptoMaisCaixa,
+                custosMoradia.DistribuicaoCustos.TotalLuzMaisCondominio,
+                custosMoradia.DistribuicaoCustos.TotalAptoMaisCaixaAbate300Peu,
+                custosMoradia.DistribuicaoCustos.TotalLuzMaisCondominioAbate100Estacionamento
             );
 
             TableParcelaCaixaApto(
                 doc,
-                custosHabitacional.ListMembroForaJhon,
-                custosHabitacional.IdPeu,
-                custosHabitacional.DistribuicaoCustos.ValorAptoMaisCaixaParaCadaMembro
+                custosMoradia.ListMembroForaJhon,
+                custosMoradia.IdPeu,
+                custosMoradia.DistribuicaoCustos.ValorAptoMaisCaixaParaCadaMembro
             );
 
             TableContaLuzAndCondominio(
                 doc,
-                custosHabitacional.ListMembroForaJhon,
-                custosHabitacional.DistribuicaoCustos.ValorLuzMaisCondominioParaCadaMembro
+                custosMoradia.ListMembroForaJhon,
+                custosMoradia.DistribuicaoCustos.ValorLuzMaisCondominioParaCadaMembro
             );
 
             TableValoresParaCada(
                 doc,
-                custosHabitacional.ListMembroForaJhon,
-                custosHabitacional.IdPeu,
-                custosHabitacional.DistribuicaoCustos.ValorParaMembrosForaPeu,
-                custosHabitacional.DistribuicaoCustos.ValorParaDoPeu
+                custosMoradia.ListMembroForaJhon,
+                custosMoradia.IdPeu,
+                custosMoradia.DistribuicaoCustos.ValorParaMembrosForaPeu,
+                custosMoradia.DistribuicaoCustos.ValorParaDoPeu
             );
 
             doc.Close();
