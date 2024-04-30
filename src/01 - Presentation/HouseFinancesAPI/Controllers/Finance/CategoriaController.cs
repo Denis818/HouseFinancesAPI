@@ -16,6 +16,7 @@ namespace HouseFinancesAPI.Controllers.Finance
         ICategoriaAppServices _categoriaServices
     ) : BaseApiController(service)
     {
+        #region CRUD
         [HttpGet]
         public async Task<IEnumerable<Categoria>> GetAllAsync() =>
             await _categoriaServices.GetAllAsync();
@@ -33,5 +34,6 @@ namespace HouseFinancesAPI.Controllers.Finance
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
         public async Task<bool> DeleteAsync(int id) => await _categoriaServices.DeleteAsync(id);
+        #endregion
     }
 }
