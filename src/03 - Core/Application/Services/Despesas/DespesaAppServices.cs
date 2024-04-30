@@ -30,7 +30,11 @@ namespace Application.Services.Despesas
 
         public async Task<PagedResult<Despesa>> GetAllAsync(int paginaAtual, int itensPorPagina)
         {
-            var query = _repository.Get().Include(c => c.Categoria).OrderBy(d => d.Id);
+            var query = _repository
+                .Get()
+                .Include(c => c.Categoria)
+                .OrderBy(d => d.DataCompra.Second);
+
             return await Pagination.PaginateResultAsync(query, paginaAtual, itensPorPagina);
         }
 
@@ -219,10 +223,7 @@ namespace Application.Services.Despesas
             var custosMoradiaDto =
                 await _despesaConsultaApp.CalcularDistribuicaoCustosMoradiaAsync();
 
-            return new DespesaMoradiaPdfReport().GerarRelatorioDespesaMoradiaPdf(
-                custosMoradiaDto
-            );
+            return new DespesaMoradiaPdfReport().GerarRelatorioDespesaMoradiaPdf(custosMoradiaDto);
         }
-
     }
 }

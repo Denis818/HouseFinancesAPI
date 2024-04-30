@@ -1,9 +1,11 @@
 ﻿using Application.Extensions.Help;
 using Application.Interfaces.Services.Despesas;
+using Application.Resources.Messages;
 using Application.Services.Base;
 using Domain.Dtos.Despesas.Consultas;
 using Domain.Dtos.Despesas.Relatorios;
 using Domain.Dtos.Despesas.Resumos;
+using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Domain.Models.Membros;
@@ -22,16 +24,16 @@ namespace Application.Services.Despesas
         #region Consultas
         public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync()
         {
-            var listDespesas = GetDespesasMaisRecentes();
+            var listDespesas = await GetDespesasMaisRecentes().ToListAsync();
+            if(!HasDespesas(listDespesas))
+                return default;
 
             var listAgrupada = listDespesas.GroupBy(despesa => despesa.Categoria.Descricao);
 
-            return await listAgrupada
-                .Select(list => new DespesasTotalPorCategoria(
-                    list.Key,
-                    list.Sum(despesa => despesa.Total)
-                ))
-                .ToListAsync();
+            return listAgrupada.Select(list => new DespesasTotalPorCategoria(
+                list.Key,
+                list.Sum(despesa => despesa.Total)
+            ));
         }
 
         public async Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorMesAsync()
@@ -79,9 +81,11 @@ namespace Application.Services.Despesas
             double faturaCartao
         )
         {
-            var listDespesas = GetDespesasMaisRecentes();
+            var listDespesas = await GetDespesasMaisRecentes().ToListAsync();
+            if(!HasDespesas(listDespesas))
+                return default;
 
-            double totalDespesas = await listDespesas.SumAsync(despesa => despesa.Total);
+            double totalDespesas = listDespesas.Sum(despesa => despesa.Total);
 
             double valorSubtraido = totalDespesas - faturaCartao;
 
@@ -101,6 +105,9 @@ namespace Application.Services.Despesas
                     despesa.CategoriaId == categoriaIds.IdAluguel
                 )
                 .ToListAsync();
+
+            if(!HasDespesas(listAluguel))
+                return default;
 
             List<Membro> listMembroForaJhon = await _membroRepository
                 .Get(m => m.Id != idJhon)
@@ -237,7 +244,10 @@ namespace Application.Services.Despesas
 
         private RelatorioGastosDoMesDto GetRelatorioDeGastosDoMes()
         {
-            IQueryable<Despesa> listDespesasMaisRecentes = GetDespesasMaisRecentes();
+            List<Despesa> listDespesasMaisRecentes = GetDespesasMaisRecentes().ToList();
+            if(!HasDespesas(listDespesasMaisRecentes))
+                return default;
+
             string mesAtual = listDespesasMaisRecentes
                 .FirstOrDefault()
                 .DataCompra.ToString("Y", new CultureInfo("pt-BR"));
@@ -313,7 +323,7 @@ namespace Application.Services.Despesas
                         : despesaGeraisMaisAlmocoDividioPorMembro.RoundTo(2),
 
                 ValorDespesaMoradia =
-                    member.Id == idJhon ? 0 : ValorCondominioAluguelContaDeLuz(member)
+                    member.Id == idJhon ? 0 : ValorCondominioAluguelContaDeLuz(member).RoundTo(2)
             });
 
             return valoresPorMembro;
@@ -333,8 +343,10 @@ namespace Application.Services.Despesas
             var fimDoMes = inicioDoMes.AddMonths(1).AddDays(-1);
 
             IQueryable<Despesa> query = _repository
-                .Get(d => d.DataCompra >= inicioDoMes && d.DataCompra <= fimDoMes)
+                .Get(d => d.DataCompra.Date >= inicioDoMes && d.DataCompra.Date <= fimDoMes)
                 .Include(c => c.Categoria);
+
+            var t = _repository.Get().Select(d => d.DataCompra).ToList();
 
             if(filter != null)
             {
@@ -342,6 +354,17 @@ namespace Application.Services.Despesas
             }
 
             return query;
+        }
+
+        public bool HasDespesas(List<Despesa> despesas)
+        {
+            if(despesas.Count < 0)
+            {
+                Notificar(EnumTipoNotificacao.Informacao, Message.DespesasNaoEncontradas);
+                return false;
+            }
+
+            return true;
         }
         #endregion
     }

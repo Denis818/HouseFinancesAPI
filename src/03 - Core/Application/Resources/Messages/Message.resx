@@ -129,6 +129,9 @@
   <data name="CampoFormatoInvalido" xml:space="preserve">
     <value>Campo {0} não está em um formato válido.</value>
   </data>
+  <data name="DespesasNaoEncontradas" xml:space="preserve">
+    <value>Ainda não a despesas nesse mês.</value>
+  </data>
   <data name="EmailNaoEncontrado" xml:space="preserve">
     <value>Email não encontrado.</value>
   </data>

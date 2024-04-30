@@ -97,6 +97,15 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ainda não a despesas nesse mês..
+        /// </summary>
+        public static string DespesasNaoEncontradas {
+            get {
+                return ResourceManager.GetString("DespesasNaoEncontradas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email não encontrado..
         /// </summary>
         public static string EmailNaoEncontrado {
