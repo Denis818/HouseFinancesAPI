@@ -14,8 +14,11 @@ namespace HouseFinancesAPI.Controllers.Finance
     [ApiController]
     // [AutorizationFinance]
     [Route("api/[controller]")]
-    public class DespesaController(IServiceProvider service, IDespesaAppServices _despesaServices, IDespesaConsultaAppService _despesaConsultaApp)
-        : BaseApiController(service)
+    public class DespesaController(
+        IServiceProvider service,
+        IDespesaAppServices _despesaServices,
+        IDespesaConsultaAppService _despesaConsultaApp
+    ) : BaseApiController(service)
     {
         #region CRUD
         [HttpGet]
@@ -76,6 +79,14 @@ namespace HouseFinancesAPI.Controllers.Finance
             IAsyncEnumerable<DespesaDto> vendaDto
         ) => await _despesaServices.InsertRangeAsync(vendaDto);
 
+        [HttpGet("calcular-fatura")]
+        public async Task<object> ConferirFaturaDoCartao(double faturaCartao)
+        {
+            (double totalDespesas, double valorSubtraido) =
+                await _despesaConsultaApp.ConferirFaturaDoCartaoComDespesasAsync(faturaCartao);
+
+            return new { TotalDespesa = totalDespesas, ValorSubtraido = valorSubtraido };
+        }
 
         [HttpGet("pdf-despesas-casa")]
         public async Task<FileContentResult> DownloadCalculoCasa()

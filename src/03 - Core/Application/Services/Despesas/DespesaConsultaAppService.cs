@@ -22,11 +22,7 @@ namespace Application.Services.Despesas
         #region Consultas
         public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync()
         {
-            var (inicioDoMes, fimDoMes) = await GetPeriodoParaCalculoAsync();
-
-            var listDespesas = _repository
-                .Get(d => d.DataCompra >= inicioDoMes && d.DataCompra <= fimDoMes)
-                .Include(c => c.Categoria);
+            var listDespesas = GetDespesasMaisRecentes();
 
             var listAgrupada = listDespesas.GroupBy(despesa => despesa.Categoria.Descricao);
 
@@ -78,6 +74,17 @@ namespace Application.Services.Despesas
                     distribuicaoCustosHabitacional.DistribuicaoCustos.ValorParaDoPeu
                 )
             };
+        }
+
+        public async Task<(double, double)> ConferirFaturaDoCartaoComDespesasAsync(double faturaCartao)
+        {
+            var listDespesas = GetDespesasMaisRecentes();
+
+            double totalDespesas = await listDespesas.SumAsync(despesa => despesa.Total);
+
+            double valorSubtraido = faturaCartao - totalDespesas;
+
+            return (totalDespesas, valorSubtraido);
         }
 
         #endregion
@@ -314,7 +321,14 @@ namespace Application.Services.Despesas
             Expression<Func<Despesa, bool>> filter = null
         )
         {
-            var (inicioDoMes, fimDoMes) = GetPeriodoParaCalculoAsync().Result;
+            var dataMaisRecente = _repository
+                 .Get()
+                 .OrderByDescending(d => d.DataCompra)
+                 .Select(d => d.DataCompra)
+                 .FirstOrDefault();
+
+            var inicioDoMes = new DateTime(dataMaisRecente.Year, dataMaisRecente.Month, 1);
+            var fimDoMes = inicioDoMes.AddMonths(1).AddDays(-1);
 
             IQueryable<Despesa> query = _repository
                 .Get(d => d.DataCompra >= inicioDoMes && d.DataCompra <= fimDoMes)
@@ -327,22 +341,6 @@ namespace Application.Services.Despesas
 
             return query;
         }
-
-        private async Task<(DateTime, DateTime)> GetPeriodoParaCalculoAsync()
-        {
-            var dataMaisRecente = await _repository
-                .Get()
-                .OrderByDescending(d => d.DataCompra)
-                .Select(d => d.DataCompra)
-                .FirstOrDefaultAsync();
-
-            var inicioDoMes = new DateTime(dataMaisRecente.Year, dataMaisRecente.Month, 1);
-            var fimDoMes = inicioDoMes.AddMonths(1).AddDays(-1);
-
-            return (inicioDoMes, fimDoMes);
-        }
         #endregion
     }
-
-    public class Name { }
 }
