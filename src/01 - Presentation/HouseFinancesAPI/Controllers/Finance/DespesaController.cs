@@ -40,6 +40,12 @@ namespace HouseFinancesAPI.Controllers.Finance
         [HttpDelete]
         [PermissoesFinance(EnumPermissoes.USU_000003)]
         public async Task<bool> DeleteAsync(int id) => await _despesaServices.DeleteAsync(id);
+
+        [HttpPost("inserir-lote")]
+        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        public async Task<IEnumerable<Despesa>> PostRangeAsync(
+            IAsyncEnumerable<DespesaDto> vendaDto
+        ) => await _despesaServices.InsertRangeAsync(vendaDto);
         #endregion
 
         #region Consultas
@@ -54,40 +60,9 @@ namespace HouseFinancesAPI.Controllers.Finance
         [HttpGet("total-por-mes")]
         public async Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorMesAsync() =>
             await _despesaConsultaApp.GetTotaisComprasPorMesAsync();
-
-        [HttpGet("pdf-despesas-Moradia")]
-        public async Task<FileContentResult> DownloadCalculoMoradia()
-        {
-            byte[] pdfBytes = await _despesaServices.DownloadPdfRelatorioDeDespesaMoradia();
-
-            var contentDisposition = new ContentDisposition
-            {
-                FileName = "relatorio-despesas-Moradia.pdf",
-                Inline = false
-            };
-
-            Response.Headers.Append("Content-Disposition", contentDisposition.ToString());
-
-            return File(pdfBytes, "application/pdf");
-        }
-
         #endregion
 
-        [HttpPost("inserir-lote")]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
-        public async Task<IEnumerable<Despesa>> PostRangeAsync(
-            IAsyncEnumerable<DespesaDto> vendaDto
-        ) => await _despesaServices.InsertRangeAsync(vendaDto);
-
-        [HttpGet("calcular-fatura")]
-        public async Task<object> ConferirFaturaDoCartao(double faturaCartao)
-        {
-            (double totalDespesas, double valorSubtraido) =
-                await _despesaConsultaApp.ConferirFaturaDoCartaoComDespesasAsync(faturaCartao);
-
-            return new { TotalDespesa = totalDespesas, ValorSubtraido = valorSubtraido };
-        }
-
+        #region Downloads
         [HttpGet("pdf-despesas-casa")]
         public async Task<FileContentResult> DownloadCalculoCasa()
         {
@@ -102,6 +77,32 @@ namespace HouseFinancesAPI.Controllers.Finance
             Response.Headers.Append("Content-Disposition", contentDisposition.ToString());
 
             return File(pdfBytes, "application/pdf");
+        }
+
+        [HttpGet("pdf-despesas-moradia")]
+        public async Task<FileContentResult> DownloadCalculoMoradia()
+        {
+            byte[] pdfBytes = await _despesaServices.DownloadPdfRelatorioDeDespesaMoradia();
+
+            var contentDisposition = new ContentDisposition
+            {
+                FileName = "relatorio-despesas-Moradia.pdf",
+                Inline = false
+            };
+
+            Response.Headers.Append("Content-Disposition", contentDisposition.ToString());
+
+            return File(pdfBytes, "application/pdf");
+        }
+        #endregion
+
+        [HttpGet("calcular-fatura")]
+        public async Task<object> ConferirFaturaDoCartao(double faturaCartao)
+        {
+            (double totalDespesas, double valorSubtraido) =
+                await _despesaConsultaApp.ConferirFaturaDoCartaoComDespesasAsync(faturaCartao);
+
+            return new { TotalDespesa = totalDespesas, ValorSubtraido = valorSubtraido };
         }
     }
 }
