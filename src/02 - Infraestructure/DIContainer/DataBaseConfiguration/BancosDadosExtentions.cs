@@ -25,10 +25,7 @@ namespace DIContainer.DataBaseConfiguration
 
             PrepareUserAdmin(services);
 
-            if(!dbContext.Database.CanConnect())
-            {
-                PrepareCategoryAndMember(services).Wait();
-            }
+            PrepareCategoryAndMember(services).Wait();
         }
 
         public static void PrepareUserAdmin(IServiceProvider services)
@@ -67,6 +64,8 @@ namespace DIContainer.DataBaseConfiguration
         {
             var categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
             var memberRepository = service.GetRequiredService<IMembroRepository>();
+
+            if(categoriaRepository.Get().ToList().Count > 0) return;
 
             var listCategoria = new List<Categoria>
             {

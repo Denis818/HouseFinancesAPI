@@ -26,7 +26,7 @@ namespace Application.Services.Despesas
         {
             var listDespesas = await GetDespesasMaisRecentes().ToListAsync();
             if(!HasDespesas(listDespesas))
-                return default;
+                return [];
 
             var listAgrupada = listDespesas.GroupBy(despesa => despesa.Categoria.Descricao);
 
@@ -83,7 +83,7 @@ namespace Application.Services.Despesas
         {
             var listDespesas = await GetDespesasMaisRecentes().ToListAsync();
             if(!HasDespesas(listDespesas))
-                return default;
+                return (0, 0);
 
             double totalDespesas = listDespesas.Sum(despesa => despesa.Total);
 
@@ -107,7 +107,7 @@ namespace Application.Services.Despesas
                 .ToListAsync();
 
             if(!HasDespesas(listAluguel))
-                return default;
+                return new DetalhamentoDespesasMoradiaDto();
 
             List<Membro> listMembroForaJhon = await _membroRepository
                 .Get(m => m.Id != idJhon)
@@ -246,7 +246,7 @@ namespace Application.Services.Despesas
         {
             List<Despesa> listDespesasMaisRecentes = GetDespesasMaisRecentes().ToList();
             if(!HasDespesas(listDespesasMaisRecentes))
-                return default;
+                return new RelatorioGastosDoMesDto();
 
             string mesAtual = listDespesasMaisRecentes
                 .FirstOrDefault()
@@ -323,7 +323,7 @@ namespace Application.Services.Despesas
                         : despesaGeraisMaisAlmocoDividioPorMembro.RoundTo(2),
 
                 ValorDespesaMoradia =
-                    member.Id == idJhon ? 0 : ValorCondominioAluguelContaDeLuz(member).RoundTo(2)
+                    member.Id == idJhon ? -1 : ValorCondominioAluguelContaDeLuz(member).RoundTo(2)
             });
 
             return valoresPorMembro;
@@ -358,7 +358,7 @@ namespace Application.Services.Despesas
 
         public bool HasDespesas(List<Despesa> despesas)
         {
-            if(despesas.Count < 0)
+            if(despesas.Count <= 0)
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.DespesasNaoEncontradas);
                 return false;
