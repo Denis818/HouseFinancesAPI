@@ -16,10 +16,14 @@ namespace Application.Validators.Membros
                 );
 
             RuleFor(x => x.Telefone)
-               .NotEmpty()
-               .WithMessage("O telefone é obrigatório.")
-               .Matches(@"^\(\d{2}\) \d{5}-\d{4}$")
-               .WithMessage("O telefone deve ser um número válido no formato (XX) XXXXX-XXXX.");
+                .NotEmpty()
+                .Length(11, 16)
+                .WithMessage(
+                    "O {PropertyName} deve ter entre {MinLength} a {MaxLength} caracteres."
+                )
+                .WithMessage("O telefone é obrigatório.")
+                .Matches(@"^[\d\s()+-]*$")
+                .WithMessage("Por favor, insira um número de telefone válido.");
         }
     }
 }

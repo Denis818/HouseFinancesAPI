@@ -25,10 +25,11 @@ namespace Application.Services.Membros
 
         public async Task<Membro> InsertAsync(MembroDto membroDto)
         {
-            membroDto.Nome = membroDto.Nome.Trim();
-
             if(Validator(membroDto))
                 return null;
+
+            membroDto.Nome = membroDto.Nome.Trim();
+            membroDto.Telefone = FormatFone(membroDto.Telefone);
 
             if(await _repository.ExisteAsync(membroDto.Nome) != null)
             {
@@ -235,6 +236,24 @@ namespace Application.Services.Membros
                 + $"\r\n\r\nMeu pix: *{pix}*.";
 
             return title + messageBody;
+        }
+
+        public static string FormatFone(string telefone)
+        {
+            string numeros = Regex.Replace(telefone, "[^0-9]", "");
+
+            if(numeros.Length == 10)
+            {
+                return $"({numeros.Substring(0, 2)}) {numeros.Substring(2, 4)}-{numeros.Substring(6)}";
+            }
+            else if(numeros.Length == 11)
+            {
+                return $"({numeros.Substring(0, 2)}) {numeros.Substring(2, 5)}-{numeros.Substring(7)}";
+            }
+            else
+            {
+                return telefone;
+            }
         }
         #endregion
     }
