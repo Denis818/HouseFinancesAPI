@@ -82,8 +82,6 @@ namespace Application.Services.Despesas
         )
         {
             var listDespesas = await GetDespesasMaisRecentes().ToListAsync();
-            if(!HasDespesas(listDespesas))
-                return (0, 0);
 
             double totalDespesas = listDespesas.Sum(despesa => despesa.Total);
 

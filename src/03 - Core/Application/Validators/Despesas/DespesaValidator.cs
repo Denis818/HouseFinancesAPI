@@ -16,7 +16,7 @@ namespace Application.Validators.Despesas
                 );
 
             RuleFor(x => (double)x.Preco)
-                .InclusiveBetween(0.01, 9999)
+                .InclusiveBetween(0.01, 9999.99)
                 .WithMessage(
                     "O {PropertyName} não pode ser menor que 0.01, e maior que 9999."
                 );

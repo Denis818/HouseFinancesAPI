@@ -33,7 +33,7 @@ namespace Application.Services.Despesas
             var query = _repository
                 .Get()
                 .Include(c => c.Categoria)
-                .OrderByDescending(d => d.DataCompra.Second);
+                .OrderByDescending(d => d.DataCompra);
 
             return await Pagination.PaginateResultAsync(query, paginaAtual, itensPorPagina);
         }
