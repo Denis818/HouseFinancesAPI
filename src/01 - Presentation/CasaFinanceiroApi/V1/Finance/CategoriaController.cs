@@ -1,16 +1,18 @@
 ﻿using Application.Interfaces.Services.Categorias;
+using Asp.Versioning;
+using CasaFinanceiroApi.Attributes.Auth;
+using CasaFinanceiroApi.Base;
 using Domain.Dtos.Categorias;
 using Domain.Enumeradores;
 using Domain.Models.Categorias;
-using HouseFinancesAPI.Attributes;
-using HouseFinancesAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HouseFinancesAPI.Controllers.Finance
+namespace CasaFinanceiroApi.V1.Finance
 {
     [ApiController]
+    [ApiVersion("1")]
     [AutorizationFinance]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class CategoriaController(
         IServiceProvider service,
         ICategoriaAppServices _categoriaServices
@@ -22,17 +24,17 @@ namespace HouseFinancesAPI.Controllers.Finance
             await _categoriaServices.GetAllAsync();
 
         [HttpPost]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinanceAttribute(EnumPermissoes.USU_000001)]
         public async Task<Categoria> PostAsync(CategoriaDto categoriaDto) =>
             await _categoriaServices.InsertAsync(categoriaDto);
 
         [HttpPut]
-        [PermissoesFinance(EnumPermissoes.USU_000002)]
+        [PermissoesFinanceAttribute(EnumPermissoes.USU_000002)]
         public async Task<Categoria> PutAsync(int id, CategoriaDto categoriaDto) =>
             await _categoriaServices.UpdateAsync(id, categoriaDto);
 
         [HttpDelete]
-        [PermissoesFinance(EnumPermissoes.USU_000003)]
+        [PermissoesFinanceAttribute(EnumPermissoes.USU_000003)]
         public async Task<bool> DeleteAsync(int id) => await _categoriaServices.DeleteAsync(id);
         #endregion
     }

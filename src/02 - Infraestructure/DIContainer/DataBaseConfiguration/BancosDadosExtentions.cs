@@ -14,7 +14,10 @@ namespace DIContainer.DataBaseConfiguration
 {
     public static class SeedUser
     {
-        public static void ConfigurarBancoDados(this IServiceProvider serviceProvider)
+        public static void ConfigurarBancoDados(
+            this IServiceProvider serviceProvider,
+            string environmentName
+        )
         {
             using var serviceScope = serviceProvider.CreateScope();
             var services = serviceScope.ServiceProvider;
@@ -23,18 +26,23 @@ namespace DIContainer.DataBaseConfiguration
 
             dbContext.Database.Migrate();
 
-            PrepareUserAdmin(services);
+            PrepareUserAdmin(services, environmentName);
 
             PrepareCategoryAndMember(services).Wait();
         }
 
-        public static void PrepareUserAdmin(IServiceProvider services)
+        public static void PrepareUserAdmin(IServiceProvider services, string environmentName)
         {
             var usuarioRepository = services.GetRequiredService<IUsuarioRepository>();
             var authService = services.GetRequiredService<IAuthAppService>();
 
             string email = "master@gmail.com";
-            string senha = "Master@123456";
+            string senha = "admin@123";
+
+            if(environmentName == "Production")
+            {
+                senha = "Master@123456";
+            }
 
             if(usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
                 return;
@@ -65,7 +73,8 @@ namespace DIContainer.DataBaseConfiguration
             var categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
             var memberRepository = service.GetRequiredService<IMembroRepository>();
 
-            if(categoriaRepository.Get().ToList().Count > 0) return;
+            if(categoriaRepository.Get().ToList().Count > 0)
+                return;
 
             var listCategoria = new List<Categoria>
             {

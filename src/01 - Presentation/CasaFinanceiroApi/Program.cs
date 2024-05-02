@@ -1,8 +1,8 @@
+using CasaFinanceiroApi.Extensios.Application;
+using CasaFinanceiroApi.Extensios.Swagger;
+using CasaFinanceiroApi.Middleware;
 using DIContainer.DataBaseConfiguration;
 using DIContainer.DependencyManagers;
-using HouseFinancesAPI.Extensios.Application;
-using HouseFinancesAPI.Extensios.Swagger;
-using HouseFinancesAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +18,8 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-app.Services.ConfigurarBancoDados();
+app.Services.ConfigurarBancoDados(builder.Environment.EnvironmentName);
+
 app.UseMiddleware<MiddlewareException>();
 
 app.UseAuthentication();

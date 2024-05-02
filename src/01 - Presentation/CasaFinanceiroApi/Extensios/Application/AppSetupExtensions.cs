@@ -1,10 +1,11 @@
-﻿using DIContainer.DependencyManagers;
-using HouseFinancesAPI.Extensios.Swagger;
+﻿using CasaFinanceiroApi.ControllerHelpers;
+using CasaFinanceiroApi.Extensios.Swagger;
+using DIContainer.DependencyManagers;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using System.Text.Json;
 
-namespace HouseFinancesAPI.Extensios.Application
+namespace CasaFinanceiroApi.Extensios.Application
 {
     public static class AppSetupExtensions
     {
@@ -32,11 +33,12 @@ namespace HouseFinancesAPI.Extensios.Application
                 reloadOnChange: true
             );
 
-#if (PRD)
-            builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
-#endif
+
             builder
-                .Services.AddControllers()
+                .Services.AddControllers(options =>
+                {
+                    options.Conventions.Add(new ApiVersioningFilter());
+                })
                 .AddJsonOptions(opt =>
                 {
                     opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
@@ -44,8 +46,10 @@ namespace HouseFinancesAPI.Extensios.Application
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddApiDependencyServices(builder.Configuration);
-            builder.Services.AddSwaggerAuthorizationJWT();
-
+            builder.Services.AddSwaggerConfiguration();
+#if(PRD)
+            builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+#endif
         }
     }
 }

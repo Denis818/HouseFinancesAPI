@@ -1,19 +1,21 @@
 ﻿using Application.Interfaces.Services.Despesas;
 using Application.Utilities;
+using Asp.Versioning;
+using CasaFinanceiroApi.Attributes.Auth;
+using CasaFinanceiroApi.Base;
 using Domain.Dtos.Despesas.Consultas;
 using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
 using Domain.Models.Despesas;
-using HouseFinancesAPI.Attributes;
-using HouseFinancesAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
-namespace HouseFinancesAPI.Controllers.Finance
+namespace CasaFinanceiroApi.V1.Finance
 {
     [ApiController]
-    // [AutorizationFinance]
-    [Route("api/[controller]")]
+    [ApiVersion("1")]
+    [AutorizationFinance]
+    [Route("api/v1/[controller]")]
     public class DespesaController(
         IServiceProvider service,
         IDespesaAppServices _despesaServices,
@@ -28,21 +30,21 @@ namespace HouseFinancesAPI.Controllers.Finance
         ) => await _despesaServices.GetAllAsync(paginaAtual, itensPorPagina);
 
         [HttpPost]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinanceAttribute(EnumPermissoes.USU_000001)]
         public async Task<Despesa> PostAsync(DespesaDto vendaDto) =>
             await _despesaServices.InsertAsync(vendaDto);
 
         [HttpPut]
-        [PermissoesFinance(EnumPermissoes.USU_000002)]
+        [PermissoesFinanceAttribute(EnumPermissoes.USU_000002)]
         public async Task<Despesa> PutAsync(int id, DespesaDto vendaDto) =>
             await _despesaServices.UpdateAsync(id, vendaDto);
 
         [HttpDelete]
-        [PermissoesFinance(EnumPermissoes.USU_000003)]
+        [PermissoesFinanceAttribute(EnumPermissoes.USU_000003)]
         public async Task<bool> DeleteAsync(int id) => await _despesaServices.DeleteAsync(id);
 
         [HttpPost("inserir-lote")]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinanceAttribute(EnumPermissoes.USU_000001)]
         public async Task<IEnumerable<Despesa>> PostRangeAsync(
             IAsyncEnumerable<DespesaDto> vendaDto
         ) => await _despesaServices.InsertRangeAsync(vendaDto);

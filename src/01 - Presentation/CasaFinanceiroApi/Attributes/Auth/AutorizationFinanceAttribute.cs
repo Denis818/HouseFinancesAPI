@@ -1,12 +1,12 @@
-﻿using Domain.Utilities;
-using HouseFinancesAPI.Controllers.Base;
+﻿using CasaFinanceiroApi.Base;
+using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace HouseFinancesAPI.Attributes
+namespace CasaFinanceiroApi.Attributes.Auth
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class AutorizationFinance : Attribute, IAuthorizationFilter
+    public class AutorizationFinanceAttribute : Attribute, IAuthorizationFilter
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
