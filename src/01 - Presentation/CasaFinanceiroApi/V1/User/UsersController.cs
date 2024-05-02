@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.Services.User;
+using Asp.Versioning;
 using CasaFinanceiroApi.Attributes.Auth;
 using CasaFinanceiroApi.Base;
 using Domain.Dtos.User;
@@ -10,7 +11,8 @@ using Microsoft.IdentityModel.Tokens;
 namespace CasaFinanceiroApi.V1.User
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1")]
+    [Route("api/v1/[controller]")]
     public class UsersController(IAuthAppService _authService, IServiceProvider service)
         : BaseApiController(service)
     {
