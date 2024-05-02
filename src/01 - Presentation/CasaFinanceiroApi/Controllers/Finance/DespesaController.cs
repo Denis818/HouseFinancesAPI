@@ -4,12 +4,12 @@ using Domain.Dtos.Despesas.Consultas;
 using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
 using Domain.Models.Despesas;
-using HouseFinancesAPI.Attributes;
-using HouseFinancesAPI.Controllers.Base;
+using CasaFinanceiroApi.Attributes;
+using CasaFinanceiroApi.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
-namespace HouseFinancesAPI.Controllers.Finance
+namespace CasaFinanceiroApi.Controllers.Finance
 {
     [ApiController]
     // [AutorizationFinance]

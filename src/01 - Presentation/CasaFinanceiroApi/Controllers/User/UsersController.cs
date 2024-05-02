@@ -2,12 +2,12 @@
 using Domain.Dtos.User;
 using Domain.Dtos.User.Auth;
 using Domain.Enumeradores;
-using HouseFinancesAPI.Attributes;
-using HouseFinancesAPI.Controllers.Base;
+using CasaFinanceiroApi.Attributes;
+using CasaFinanceiroApi.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
-namespace HouseFinancesAPI.Controllers.User
+namespace CasaFinanceiroApi.Controllers.User
 {
     [ApiController]
     [Route("api/[controller]")]

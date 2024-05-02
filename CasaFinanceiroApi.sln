@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "src\02 - Infraestru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DIContainer", "src\02 - Infraestructure\DIContainer\DIContainer.csproj", "{1DEC237D-1870-4D8D-B96F-383EFEC3E0B3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HouseFinancesAPI", "src\01 - Presentation\HouseFinancesAPI\HouseFinancesAPI.csproj", "{7FB5B56D-B3D2-4617-A109-FF0E5C86383D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CasaFinanceiroApi", "src\01 - Presentation\CasaFinanceiroApi\CasaFinanceiroApi.csproj", "{7FB5B56D-B3D2-4617-A109-FF0E5C86383D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 - Presentation", "01 - Presentation", "{3F18AB0A-E9AF-463C-B165-DB3C1B698EA3}"
 EndProject

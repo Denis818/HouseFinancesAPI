@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace HouseFinancesAPI.Extensios.Swagger
+namespace CasaFinanceiroApi.Extensios.Swagger
 {
     public class DateSchemaFilter : ISchemaFilter
     {

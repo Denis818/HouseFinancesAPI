@@ -1,8 +1,8 @@
 using DIContainer.DataBaseConfiguration;
 using DIContainer.DependencyManagers;
-using HouseFinancesAPI.Extensios.Application;
-using HouseFinancesAPI.Extensios.Swagger;
-using HouseFinancesAPI.Middleware;
+using CasaFinanceiroApi.Extensios.Application;
+using CasaFinanceiroApi.Extensios.Swagger;
+using CasaFinanceiroApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 

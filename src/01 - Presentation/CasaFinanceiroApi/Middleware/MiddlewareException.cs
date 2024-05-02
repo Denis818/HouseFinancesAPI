@@ -1,8 +1,8 @@
 ﻿using Domain.Enumeradores;
-using HouseFinancesAPI.Controllers.Base;
+using CasaFinanceiroApi.Controllers.Base;
 using System.Text.Json;
 
-namespace HouseFinancesAPI.Middleware
+namespace CasaFinanceiroApi.Middleware
 {
     public class MiddlewareException(RequestDelegate next, IWebHostEnvironment environmentHost)
     {

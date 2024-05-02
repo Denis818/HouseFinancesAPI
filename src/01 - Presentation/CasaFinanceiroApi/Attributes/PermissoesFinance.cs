@@ -1,10 +1,10 @@
 ﻿using Domain.Enumeradores;
 using Domain.Utilities;
-using HouseFinancesAPI.Controllers.Base;
+using CasaFinanceiroApi.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace HouseFinancesAPI.Attributes
+namespace CasaFinanceiroApi.Attributes
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class PermissoesFinance(params EnumPermissoes[] enumPermissoes)

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 
-namespace HouseFinancesAPI.Extensios.Swagger
+namespace CasaFinanceiroApi.Extensios.Swagger
 {
     public static class SwaggerExtensions
     {

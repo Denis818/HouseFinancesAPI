@@ -1,10 +1,10 @@
 ﻿using DIContainer.DependencyManagers;
-using HouseFinancesAPI.Extensios.Swagger;
+using CasaFinanceiroApi.Extensios.Swagger;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using System.Text.Json;
 
-namespace HouseFinancesAPI.Extensios.Application
+namespace CasaFinanceiroApi.Extensios.Application
 {
     public static class AppSetupExtensions
     {

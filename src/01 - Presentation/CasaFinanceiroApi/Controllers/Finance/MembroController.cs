@@ -2,11 +2,11 @@
 using Domain.Dtos.Membros;
 using Domain.Enumeradores;
 using Domain.Models.Membros;
-using HouseFinancesAPI.Attributes;
-using HouseFinancesAPI.Controllers.Base;
+using CasaFinanceiroApi.Attributes;
+using CasaFinanceiroApi.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HouseFinancesAPI.Controllers.Finance
+namespace CasaFinanceiroApi.Controllers.Finance
 {
     [ApiController]
     [AutorizationFinance]
