@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CasaFinanceiroApi.V1.Finance
 {
     [ApiController]
-    [ApiVersion("v1")]
+    [ApiVersion("1")]
     [AutorizationFinance]
     [Route("api/v1/[controller]")]
     public class MembroController(IServiceProvider service, IMembroAppServices _membroServices)
