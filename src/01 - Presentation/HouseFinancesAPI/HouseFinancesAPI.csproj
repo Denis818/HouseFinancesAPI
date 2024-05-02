@@ -8,6 +8,10 @@
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerfileContext>..\..\..</DockerfileContext>
 		<Configurations>Debug;Release;PRD</Configurations>
+		
+		<environmentVariables>
+			<environmentVariable name="ASPNETCORE_ENVIRONMENT" value="Development" />
+		</environmentVariables>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -27,19 +31,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\02 - Infraestructure\DIContainer\DIContainer.csproj" />
+		<ProjectReference Include="..\..\02 - Infraestructure\DIContainer\DIContainer.csproj" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
-	  <Content Update="wwwroot\css\swagger-style.css">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="wwwroot\html\swagger-head.html">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="wwwroot\img\favicon-api.ico">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
+		<Content Update="wwwroot\css\swagger-style.css">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\html\swagger-head.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="wwwroot\img\favicon-api.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 
