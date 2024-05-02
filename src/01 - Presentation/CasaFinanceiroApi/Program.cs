@@ -7,7 +7,6 @@ using DIContainer.DependencyManagers;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.SetupApplication();
-builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
@@ -19,7 +18,8 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-app.Services.ConfigurarBancoDados();
+app.Services.ConfigurarBancoDados(builder.Environment.EnvironmentName);
+
 app.UseMiddleware<MiddlewareException>();
 
 app.UseAuthentication();
