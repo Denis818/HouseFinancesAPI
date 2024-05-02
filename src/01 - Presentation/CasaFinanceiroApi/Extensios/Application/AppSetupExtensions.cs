@@ -1,5 +1,6 @@
-﻿using DIContainer.DependencyManagers;
-using CasaFinanceiroApi.Extensios.Swagger;
+﻿using CasaFinanceiroApi.Extensios.Swagger;
+using CasaFinanceiroApi.Filters;
+using DIContainer.DependencyManagers;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using System.Text.Json;
@@ -36,7 +37,11 @@ namespace CasaFinanceiroApi.Extensios.Application
             builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 #endif
             builder
-                .Services.AddControllers()
+                .Services.AddControllers(options =>
+                {
+                    // Adiciona sua convenção aqui
+                    options.Conventions.Add(new DefaultApiVersionConvention());
+                })
                 .AddJsonOptions(opt =>
                 {
                     opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
@@ -44,7 +49,7 @@ namespace CasaFinanceiroApi.Extensios.Application
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddApiDependencyServices(builder.Configuration);
-            builder.Services.AddSwaggerAuthorizationJWT();
+            builder.Services.AddSwaggerConfiguration();
 
         }
     }

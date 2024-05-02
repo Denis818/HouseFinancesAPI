@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace CasaFinanceiroApi.Controllers.Base
+namespace CasaFinanceiroApi.Base
 {
     public abstract class BaseApiController(IServiceProvider service) : Controller
     {

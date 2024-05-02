@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Asp.Versioning;
+using Asp.Versioning.Conventions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace CasaFinanceiroApi.Extensios.Swagger
 {
@@ -7,41 +10,24 @@ namespace CasaFinanceiroApi.Extensios.Swagger
     {
         const string TypeToken = "Bearer";
 
-        public static void AddSwaggerAuthorizationJWT(this IServiceCollection services)
+        public static void AddSwaggerConfiguration(this IServiceCollection services)
         {
+            services
+                .AddApiVersioning(options =>
+                {
+                    options.DefaultApiVersion = new ApiVersion(1);
+                    options.AssumeDefaultVersionWhenUnspecified = true;
+                    options.ReportApiVersions = true;
+                })
+                .AddMvc(options =>
+                {
+                    options.Conventions.Add(new VersionByNamespaceConvention());
+                });
 
-            services.AddSwaggerGen(swagger =>
+            services.AddSwaggerGen(options =>
             {
-                swagger.SchemaFilter<DateSchemaFilter>();
-
-                //swagger.SwaggerDoc("v1", new OpenApiInfo
-                //{ 
-                //    Title = "House Finances API", 
-                //    Version = "v1" 
-                //});
-
-                var securitySchema = new OpenApiSecurityScheme
-                {
-                    Description = $"Insira o token JWT desta maneira \"{TypeToken} <seu token>\" ",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.Http,
-                    Scheme = TypeToken,
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = TypeToken
-                    }
-                };
-
-                swagger.AddSecurityDefinition(TypeToken, securitySchema);
-
-                var securityRequirement = new OpenApiSecurityRequirement
-                {
-                    { securitySchema, new [] {TypeToken}}
-                };
-
-                swagger.AddSecurityRequirement(securityRequirement);
+                AddSwaggerVersioningApi(options);
+                AddSecuritySchema(options);
             });
 
             services.AddAuthentication(x =>
@@ -51,20 +37,68 @@ namespace CasaFinanceiroApi.Extensios.Swagger
             });
         }
 
+        public static void AddSwaggerVersioningApi(SwaggerGenOptions options)
+        {
+            options.AddApiVersion("v1", "Casa Financeiro v1");
+            options.AddApiVersion("v2", "Casa Financeiro v2");
+            options.AddApiVersion("v3", "Casa Financeiro v3");
+
+            options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+            options.CustomSchemaIds(x => x.FullName);
+
+            options.SchemaFilter<DateSchemaFilter>();
+        }
+
+        public static void AddSecuritySchema(SwaggerGenOptions options)
+        {
+            var securitySchema = new OpenApiSecurityScheme
+            {
+                Description = $"Insira o token JWT desta maneira \"{TypeToken} <seu token>\" ",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = TypeToken,
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = TypeToken
+                }
+            };
+
+            options.AddSecurityDefinition(TypeToken, securitySchema);
+
+            var securityRequirement = new OpenApiSecurityRequirement
+            {
+                { securitySchema, new[] { TypeToken } }
+            };
+
+            options.AddSecurityRequirement(securityRequirement);
+        }
+
         public static void ConfigureSwaggerUI(this WebApplication app)
         {
             app.UseStaticFiles();
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            app.UseSwaggerUI(options =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "House Finances API");
-
-                c.RoutePrefix = "doc";
-                c.DocumentTitle = "House Finances API";
-                c.HeadContent = File.ReadAllText(
-                    Path.Combine(app.Environment.WebRootPath, "html/swagger-head.html"));
+                options.SwaggerEndpoint($"/swagger/v1/swagger.json", "v1");
+                options.SwaggerEndpoint($"/swagger/v2/swagger.json", "v2");
+                options.SwaggerEndpoint($"/swagger/v3/swagger.json", "v3");
+                options.RoutePrefix = "doc";
+                options.DocumentTitle = "Casa Financeiro API";
+                options.HeadContent = File.ReadAllText(
+                    Path.Combine(app.Environment.WebRootPath, "html/swagger-head.html")
+                );
             });
         }
 
+        public static void AddApiVersion(
+            this SwaggerGenOptions options,
+            string version,
+            string title
+        )
+        {
+            options.SwaggerDoc(version, new OpenApiInfo() { Title = title, Version = version });
+        }
     }
 }

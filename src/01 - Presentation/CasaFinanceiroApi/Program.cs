@@ -1,12 +1,13 @@
-using DIContainer.DataBaseConfiguration;
-using DIContainer.DependencyManagers;
 using CasaFinanceiroApi.Extensios.Application;
 using CasaFinanceiroApi.Extensios.Swagger;
 using CasaFinanceiroApi.Middleware;
+using DIContainer.DataBaseConfiguration;
+using DIContainer.DependencyManagers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.SetupApplication();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 

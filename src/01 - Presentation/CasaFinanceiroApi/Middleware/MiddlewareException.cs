@@ -1,5 +1,5 @@
-﻿using Domain.Enumeradores;
-using CasaFinanceiroApi.Controllers.Base;
+﻿using CasaFinanceiroApi.Base;
+using Domain.Enumeradores;
 using System.Text.Json;
 
 namespace CasaFinanceiroApi.Middleware

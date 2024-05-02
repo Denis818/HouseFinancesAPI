@@ -1,13 +1,13 @@
 ﻿using Application.Interfaces.Services.User;
+using CasaFinanceiroApi.Attributes.Auth;
+using CasaFinanceiroApi.Base;
 using Domain.Dtos.User;
 using Domain.Dtos.User.Auth;
 using Domain.Enumeradores;
-using CasaFinanceiroApi.Attributes;
-using CasaFinanceiroApi.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
-namespace CasaFinanceiroApi.Controllers.User
+namespace CasaFinanceiroApi.V1.User
 {
     [ApiController]
     [Route("api/[controller]")]

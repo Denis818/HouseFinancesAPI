@@ -1,16 +1,18 @@
 ﻿using Application.Interfaces.Services.Categorias;
+using Asp.Versioning;
+using CasaFinanceiroApi.Attributes.Auth;
+using CasaFinanceiroApi.Base;
 using Domain.Dtos.Categorias;
 using Domain.Enumeradores;
 using Domain.Models.Categorias;
-using CasaFinanceiroApi.Attributes;
-using CasaFinanceiroApi.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CasaFinanceiroApi.Controllers.Finance
+namespace CasaFinanceiroApi.V1.Finance
 {
     [ApiController]
+    [ApiVersion("v1")]
     [AutorizationFinance]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class CategoriaController(
         IServiceProvider service,
         ICategoriaAppServices _categoriaServices
@@ -22,18 +24,42 @@ namespace CasaFinanceiroApi.Controllers.Finance
             await _categoriaServices.GetAllAsync();
 
         [HttpPost]
-        [PermissoesFinance(EnumPermissoes.USU_000001)]
+        [PermissoesFinanceAttribute(EnumPermissoes.USU_000001)]
         public async Task<Categoria> PostAsync(CategoriaDto categoriaDto) =>
             await _categoriaServices.InsertAsync(categoriaDto);
 
         [HttpPut]
-        [PermissoesFinance(EnumPermissoes.USU_000002)]
+        [PermissoesFinanceAttribute(EnumPermissoes.USU_000002)]
         public async Task<Categoria> PutAsync(int id, CategoriaDto categoriaDto) =>
             await _categoriaServices.UpdateAsync(id, categoriaDto);
 
         [HttpDelete]
-        [PermissoesFinance(EnumPermissoes.USU_000003)]
+        [PermissoesFinanceAttribute(EnumPermissoes.USU_000003)]
         public async Task<bool> DeleteAsync(int id) => await _categoriaServices.DeleteAsync(id);
         #endregion
+    }
+}
+
+namespace CasaFinanceiroApi.V2.Finance
+{
+    [ApiVersion("v2")]
+    [Route("[controller]")]
+    [Route("api/v2/[controller]")]
+    public class V2Controller : ControllerBase
+    {
+        [HttpGet()]
+        public IActionResult Get() => Ok();
+    }
+}
+
+namespace CasaFinanceiroApi.V3.Finance
+{
+    [ApiVersion("v3")]
+    [Route("[controller]")]
+    [Route("api/v3/[controller]")]
+    public class V3Controller : ControllerBase
+    {
+        [HttpGet()]
+        public IActionResult Get() => Ok();
     }
 }

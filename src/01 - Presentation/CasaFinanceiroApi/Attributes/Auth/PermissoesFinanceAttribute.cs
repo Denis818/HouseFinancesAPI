@@ -1,13 +1,13 @@
-﻿using Domain.Enumeradores;
+﻿using CasaFinanceiroApi.Base;
+using Domain.Enumeradores;
 using Domain.Utilities;
-using CasaFinanceiroApi.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace CasaFinanceiroApi.Attributes
+namespace CasaFinanceiroApi.Attributes.Auth
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-    public class PermissoesFinance(params EnumPermissoes[] enumPermissoes)
+    public class PermissoesFinanceAttribute(params EnumPermissoes[] enumPermissoes)
         : Attribute,
             IAuthorizationFilter
     {
