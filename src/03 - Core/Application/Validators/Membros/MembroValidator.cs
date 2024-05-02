@@ -17,7 +17,7 @@ namespace Application.Validators.Membros
 
             RuleFor(x => x.Telefone)
                 .NotEmpty()
-                .Length(11, 16)
+                .Length(11, 17)
                 .WithMessage(
                     "O {PropertyName} deve ter entre {MinLength} a {MaxLength} caracteres."
                 )
