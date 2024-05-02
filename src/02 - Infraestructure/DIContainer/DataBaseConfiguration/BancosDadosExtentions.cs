@@ -76,7 +76,7 @@ namespace DIContainer.DataBaseConfiguration
             var usuarioRepository = services.GetRequiredService<IUsuarioRepository>();
             var authService = services.GetRequiredService<IAuthAppService>();
 
-            string email = "user@gmail.com";
+            string email = "dev";
             string senha = "abc@123";
 
 
