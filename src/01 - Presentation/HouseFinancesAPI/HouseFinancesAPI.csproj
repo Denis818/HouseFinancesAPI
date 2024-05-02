@@ -8,10 +8,6 @@
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerfileContext>..\..\..</DockerfileContext>
 		<Configurations>Debug;Release;PRD</Configurations>
-		
-		<environmentVariables>
-			<environmentVariable name="ASPNETCORE_ENVIRONMENT" value="Development" />
-		</environmentVariables>
 	</PropertyGroup>
 
 	<ItemGroup>
