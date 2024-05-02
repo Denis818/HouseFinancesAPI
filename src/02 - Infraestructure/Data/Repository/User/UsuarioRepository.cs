@@ -9,10 +9,5 @@ namespace Data.Repository.User
         : RepositoryBase<Usuario, FinanceDbContext>(service),
             IUsuarioRepository
     {
-        public override async Task InsertAsync(Usuario usuario)
-        {
-            await base.InsertAsync(usuario);
-            await SaveChangesAsync();
-        }
     }
 }

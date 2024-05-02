@@ -26,12 +26,13 @@ namespace DIContainer.DataBaseConfiguration
 
             dbContext.Database.Migrate();
 
-            PrepareUserAdmin(services, environmentName);
+            PrepareUserMaster(services, environmentName);
+            PrepareUser(services);
 
             PrepareCategoryAndMember(services).Wait();
         }
 
-        public static void PrepareUserAdmin(IServiceProvider services, string environmentName)
+        public static void PrepareUserMaster(IServiceProvider services, string environmentName)
         {
             var usuarioRepository = services.GetRequiredService<IUsuarioRepository>();
             var authService = services.GetRequiredService<IAuthAppService>();
@@ -65,7 +66,35 @@ namespace DIContainer.DataBaseConfiguration
             };
 
             usuarioRepository.InsertAsync(usuario).Wait();
+            usuarioRepository.SaveChangesAsync().Wait();
+
             authService.AddPermissaoAsync(new AddUserPermissionDto(usuario.Id, permissoes)).Wait();
+        }
+
+        public static void PrepareUser(IServiceProvider services)
+        {
+            var usuarioRepository = services.GetRequiredService<IUsuarioRepository>();
+            var authService = services.GetRequiredService<IAuthAppService>();
+
+            string email = "user@gmail.com";
+            string senha = "abc@123";
+
+
+            if(usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
+                return;
+
+            var (Salt, PasswordHash) = new PasswordHasherHelper().CriarHashSenha(senha);
+
+            var usuario = new Usuario
+            {
+                Email = email,
+                Password = PasswordHash,
+                Salt = Salt,
+                Permissoes = []
+            };
+
+            usuarioRepository.InsertAsync(usuario).Wait();
+            usuarioRepository.SaveChangesAsync().Wait();
         }
 
         public static async Task PrepareCategoryAndMember(IServiceProvider service)
