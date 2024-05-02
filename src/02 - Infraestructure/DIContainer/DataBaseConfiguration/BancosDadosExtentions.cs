@@ -82,11 +82,11 @@ namespace DIContainer.DataBaseConfiguration
 
             var listMember = new List<Membro>
             {
-                new() { Nome = "Bruno", Telefone = "(38) 9 9805-5965" },
-                new() { Nome = "Denis", Telefone = "(38) 9 97282407" },
-                new() { Nome = "Valdirene", Telefone = "(31) 9 9797-7731" },
-                new() { Nome = "Peu", Telefone = "(38) 9 9995-4309" },
-                new() { Nome = "Jhon Lenon", Telefone = "(31) 9 9566-4815" }
+                new() { Nome = "Bruno", Telefone = "(38) 99805-5965" },
+                new() { Nome = "Denis", Telefone = "(38) 997282407" },
+                new() { Nome = "Valdirene", Telefone = "(31) 99797-7731" },
+                new() { Nome = "Peu", Telefone = "(38) 99995-4309" },
+                new() { Nome = "Jhon Lenon", Telefone = "(31) 99566-4815" }
             };
 
             await categoriaRepository.InsertRangeAsync(listCategoria);
