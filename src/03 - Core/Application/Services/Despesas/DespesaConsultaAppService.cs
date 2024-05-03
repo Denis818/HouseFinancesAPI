@@ -25,8 +25,15 @@ namespace Application.Services.Despesas
         public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync()
         {
             var listDespesas = await GetDespesasMaisRecentes().ToListAsync();
-            if(!HasDespesas(listDespesas))
+
+            if(listDespesas.Count <= 0)
+            {
+                Notificar(
+                    EnumTipoNotificacao.Informacao,
+                    string.Format(Message.DespesasNaoEncontradas, "")
+                );
                 return [];
+            }
 
             var listAgrupada = listDespesas.GroupBy(despesa => despesa.Categoria.Descricao);
 
@@ -99,13 +106,29 @@ namespace Application.Services.Despesas
             var categoriaIds = _categoriaRepository.GetCategoriaIds();
             var (idJhon, idPeu) = _membroRepository.GetIdsJhonPeu();
 
-            var listAluguel = await GetDespesasMaisRecentes(despesa =>
-                    despesa.CategoriaId == categoriaIds.IdAluguel
+            var listAluguel = await GetDespesasMaisRecentes(d =>
+                    d.CategoriaId == categoriaIds.IdAluguel
                 )
                 .ToListAsync();
 
-            if(!HasDespesas(listAluguel))
+            var contaDeLuz = await GetDespesasMaisRecentes(despesa =>
+                    despesa.CategoriaId == categoriaIds.IdContaDeLuz
+                )
+                .FirstOrDefaultAsync();
+
+            var condominio = await GetDespesasMaisRecentes(despesa =>
+                    despesa.CategoriaId == categoriaIds.IdCondominio
+                )
+                .FirstOrDefaultAsync();
+
+            if(listAluguel.Count <= 0 && condominio is null && contaDeLuz is null)
+            {
+                Notificar(
+                    EnumTipoNotificacao.Informacao,
+                    string.Format(Message.DespesasNaoEncontradas, "de Moradia")
+                );
                 return new DetalhamentoDespesasMoradiaDto();
+            }
 
             List<Membro> listMembroForaJhon = await _membroRepository
                 .Get(m => m.Id != idJhon)
@@ -114,6 +137,10 @@ namespace Application.Services.Despesas
             List<Membro> listMembroForaJhonPeu = listMembroForaJhon
                 .Where(m => m.Id != idPeu)
                 .ToList();
+
+            double contaDeLuzValue = contaDeLuz?.Preco ?? 0;
+
+            double condominioValue = condominio?.Preco ?? 0;
 
             double parcelaApartamento =
                 listAluguel
@@ -129,18 +156,10 @@ namespace Application.Services.Despesas
                     .FirstOrDefault()
                     ?.Preco ?? 0;
 
-            double contaDeLuz =
-                GetDespesasMaisRecentes(despesa => despesa.CategoriaId == categoriaIds.IdContaDeLuz)
-                    .FirstOrDefault()
-                    ?.Preco ?? 0;
 
-            double condominio =
-                GetDespesasMaisRecentes(despesa => despesa.CategoriaId == categoriaIds.IdCondominio)
-                    .FirstOrDefault()
-                    ?.Preco ?? 0;
 
             double totalAptoMaisCaixa = parcelaApartamento + parcelaCaixa;
-            double totalLuzMaisCondominio = contaDeLuz + condominio;
+            double totalLuzMaisCondominio = contaDeLuzValue + condominioValue;
 
             double totalAptoMaisCaixaAbate300Peu = totalAptoMaisCaixa - 300; //300 aluguel cobrado do peu
             double totalLuzMaisCondominioAbate100Estacionamento = totalLuzMaisCondominio - 100; //estacionamento alugado
@@ -163,8 +182,8 @@ namespace Application.Services.Despesas
                 ListMembroForaJhon = listMembroForaJhon,
                 ListMembroForaJhonPeu = listMembroForaJhonPeu,
 
-                Condominio = condominio,
-                ContaDeLuz = contaDeLuz,
+                Condominio = condominioValue,
+                ContaDeLuz = contaDeLuzValue,
                 ParcelaCaixa = parcelaCaixa,
                 ParcelaApartamento = parcelaApartamento,
 
@@ -243,8 +262,15 @@ namespace Application.Services.Despesas
         private RelatorioGastosDoMesDto GetRelatorioDeGastosDoMes()
         {
             List<Despesa> listDespesasMaisRecentes = GetDespesasMaisRecentes().ToList();
-            if(!HasDespesas(listDespesasMaisRecentes))
+
+            if(listDespesasMaisRecentes.Count <= 0)
+            {
+                Notificar(
+                    EnumTipoNotificacao.Informacao,
+                    string.Format(Message.DespesasNaoEncontradas, "")
+                );
                 return new RelatorioGastosDoMesDto();
+            }
 
             string mesAtual = listDespesasMaisRecentes
                 .FirstOrDefault()
@@ -352,17 +378,6 @@ namespace Application.Services.Despesas
             }
 
             return query;
-        }
-
-        public bool HasDespesas(List<Despesa> despesas)
-        {
-            if(despesas.Count <= 0)
-            {
-                Notificar(EnumTipoNotificacao.Informacao, Message.DespesasNaoEncontradas);
-                return false;
-            }
-
-            return true;
         }
         #endregion
     }

@@ -97,7 +97,7 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ainda não a despesas nesse mês..
+        ///   Looks up a localized string similar to Não há despesas {0} nesse mês..
         /// </summary>
         public static string DespesasNaoEncontradas {
             get {
