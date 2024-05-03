@@ -90,7 +90,7 @@ namespace Application.Services.Despesas
 
             if(despesaRecente is null)
             {
-                Notificar(EnumTipoNotificacao.Informacao, Message.DespesasNaoEncontradas);
+                
                 return new();
             }
 
