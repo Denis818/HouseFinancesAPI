@@ -6,7 +6,7 @@ namespace Domain.Converters.DatesTimes
 {
     public class ShortDateFormatConverter : JsonConverter<DateTime>
     {
-        private const string DateFormat = "dd-MM-yyyy";
+        private const string DateFormat = "dd/MM/yyyy";
 
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
