@@ -2,7 +2,6 @@
 using Application.Interfaces.Services.Despesas;
 using Application.Resources.Messages;
 using Application.Services.Base;
-using Application.Services.Despesas.RelatorioPdf;
 using Application.Utilities;
 using Domain.Converters.DatesTimes;
 using Domain.Dtos.Despesas.Criacao;
@@ -13,11 +12,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Despesas
 {
-    public class DespesaAppServices(
+    public class DespesaCrudAppService(
         IServiceProvider service,
-        IDespesaConsultaAppService _despesaConsultaApp,
         ICategoriaRepository _categoriaRepository
-    ) : BaseAppService<Despesa, IDespesaRepository>(service), IDespesaAppServices
+    ) : BaseAppService<Despesa, IDespesaRepository>(service), IDespesaCrudAppService
     {
         #region CRUD
         public async Task<Despesa> GetByIdAsync(int id)
@@ -210,20 +208,5 @@ namespace Application.Services.Despesas
             return true;
         }
         #endregion
-
-        public async Task<byte[]> DownloadPdfRelatorioDeDespesaCasa()
-        {
-            var custosCasaDto = await _despesaConsultaApp.CalcularDistribuicaoCustosCasaAsync();
-
-            return new DespesaCasaPdfReport().GerarRelatorioDespesaCasaPdf(custosCasaDto);
-        }
-
-        public async Task<byte[]> DownloadPdfRelatorioDeDespesaMoradia()
-        {
-            var custosMoradiaDto =
-                await _despesaConsultaApp.CalcularDistribuicaoCustosMoradiaAsync();
-
-            return new DespesaMoradiaPdfReport().GerarRelatorioDespesaMoradiaPdf(custosMoradiaDto);
-        }
     }
 }

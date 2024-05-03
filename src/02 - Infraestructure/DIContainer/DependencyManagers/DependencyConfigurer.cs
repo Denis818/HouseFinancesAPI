@@ -22,6 +22,7 @@ namespace DIContainer.DependencyManagers
 
             services.AddDependecyUtilities();
             services.AddDependecyRepositories();
+            services.AddDependecyDomainServices();
             services.AddDependecyAppServices();
 
             services.AddAuthenticationJwt(config);

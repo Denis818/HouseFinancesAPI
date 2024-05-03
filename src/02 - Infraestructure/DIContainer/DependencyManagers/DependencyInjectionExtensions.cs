@@ -5,6 +5,7 @@ using Application.Interfaces.Services.User;
 using Application.Interfaces.Utilities;
 using Application.Services.Categorias;
 using Application.Services.Despesas;
+using Application.Services.Despesas.ProcessamentoDespesas;
 using Application.Services.Membros;
 using Application.Services.User;
 using Application.Utilities;
@@ -13,6 +14,8 @@ using Data.Repository.Categorias;
 using Data.Repository.Despesas;
 using Data.Repository.User;
 using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Services.Despesa;
+using Domain.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DIContainer.DependencyManagers
@@ -34,14 +37,21 @@ namespace DIContainer.DependencyManagers
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
         }
 
+        public static void AddDependecyDomainServices(this IServiceCollection services)
+        {
+            services.AddScoped<IDespesaDomainServices, DespesaDomainServices>();
+        }
+
         public static void AddDependecyAppServices(this IServiceCollection services)
         {
-
             services.AddScoped<IAuthAppService, AuthAppService>();
-            services.AddScoped<IDespesaAppServices, DespesaAppServices>();
             services.AddScoped<IMembroAppServices, MembroAppServices>();
             services.AddScoped<ICategoriaAppServices, CategoriaAppServices>();
+            services.AddScoped<IDespesaAppService, DespesaAppService>();
 
+            services.AddScoped<IDespesaCrudAppService, DespesaCrudAppService>();
+            services.AddScoped<IDespesaCasaAppService, DespesaCasaAppService>();
+            services.AddScoped<IDespesaMoradiaAppService, DespesaMoradiaAppService>();
             services.AddScoped<IDespesaConsultaAppService, DespesaConsultaAppService>();
         }
     }

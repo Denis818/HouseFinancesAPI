@@ -29,7 +29,6 @@ namespace Application.Services.Despesas.RelatorioPdf
 
             CreateTableValoresParaCada(
                 doc,
-                custosCasaDto.IdJhon,
                 custosCasaDto.Membros,
                 custosCasaDto.DespesaGeraisMaisAlmocoDividioPorMembro,
                 custosCasaDto.TotalAlmocoParteDoJhon
@@ -68,7 +67,6 @@ namespace Application.Services.Despesas.RelatorioPdf
 
         public void CreateTableValoresParaCada(
             Document doc,
-            int idJhon,
             List<Membro> membros,
             double despesaGeraisMaisAlmocoDividioPorMembro,
             double totalAlmocoParteDoJhon
@@ -79,7 +77,7 @@ namespace Application.Services.Despesas.RelatorioPdf
             {
                 double valorParaCada = despesaGeraisMaisAlmocoDividioPorMembro;
 
-                if(membro.Id == idJhon)
+                if(membro.Nome.Contains("Jhon", StringComparison.CurrentCultureIgnoreCase))
                 {
                     valorParaCada = totalAlmocoParteDoJhon;
                 }

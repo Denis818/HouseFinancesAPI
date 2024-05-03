@@ -10,9 +10,7 @@ namespace Application.Services.Despesas.RelatorioPdf
     {
         private readonly PdfTableHelper _pdfTable = new();
 
-        public byte[] GerarRelatorioDespesaMoradiaPdf(
-            DetalhamentoDespesasMoradiaDto custosMoradia
-        )
+        public byte[] GerarRelatorioDespesaMoradiaPdf(DetalhamentoDespesasMoradiaDto custosMoradia)
         {
             using var memoryStream = new MemoryStream();
             using var writer = new PdfWriter(memoryStream);
@@ -23,10 +21,10 @@ namespace Application.Services.Despesas.RelatorioPdf
 
             TableValoresIniciais(
                 doc,
-                custosMoradia.ParcelaApartamento,
-                custosMoradia.ParcelaCaixa,
-                custosMoradia.ContaDeLuz,
-                custosMoradia.Condominio
+                custosMoradia.CustosDespesasMoradia.ParcelaApartamento,
+                custosMoradia.CustosDespesasMoradia.ParcelaCaixa,
+                custosMoradia.CustosDespesasMoradia.ContaDeLuz,
+                custosMoradia.CustosDespesasMoradia.Condominio
             );
 
             TableCalculos(
@@ -39,21 +37,19 @@ namespace Application.Services.Despesas.RelatorioPdf
 
             TableParcelaCaixaApto(
                 doc,
-                custosMoradia.ListMembroForaJhon,
-                custosMoradia.IdPeu,
+                custosMoradia.GrupoListMembrosDespesa.ListMembroForaJhon, //ListMembroForaJhon,
                 custosMoradia.DistribuicaoCustos.ValorAptoMaisCaixaParaCadaMembro
             );
 
             TableContaLuzAndCondominio(
                 doc,
-                custosMoradia.ListMembroForaJhon,
+                custosMoradia.GrupoListMembrosDespesa.ListMembroForaJhon,
                 custosMoradia.DistribuicaoCustos.ValorLuzMaisCondominioParaCadaMembro
             );
 
             TableValoresParaCada(
                 doc,
-                custosMoradia.ListMembroForaJhon,
-                custosMoradia.IdPeu,
+                custosMoradia.GrupoListMembrosDespesa.ListMembroForaJhon,
                 custosMoradia.DistribuicaoCustos.ValorParaMembrosForaPeu,
                 custosMoradia.DistribuicaoCustos.ValorParaDoPeu
             );
@@ -104,8 +100,7 @@ namespace Application.Services.Despesas.RelatorioPdf
 
         private void TableParcelaCaixaApto(
             Document doc,
-            List<Membro> listMembroForaJhon,
-            int idPeu,
+            IList<Membro> listMembroForaJhon,
             double? valorAptoMaisCaixaParaCadaMembro
         )
         {
@@ -115,7 +110,7 @@ namespace Application.Services.Despesas.RelatorioPdf
             {
                 var valorAluguel = valorAptoMaisCaixaParaCadaMembro;
 
-                if(membro.Id == idPeu)
+                if(membro.Nome.Contains("Peu", StringComparison.CurrentCultureIgnoreCase))
                 {
                     valorAluguel = 300;
                 }
@@ -132,7 +127,7 @@ namespace Application.Services.Despesas.RelatorioPdf
 
         private void TableContaLuzAndCondominio(
             Document doc,
-            List<Membro> listMembroForaJhon,
+           IList<Membro> listMembroForaJhon,
             double? valorLuzMaisCondominioParaCadaMembro
         )
         {
@@ -155,8 +150,7 @@ namespace Application.Services.Despesas.RelatorioPdf
 
         private void TableValoresParaCada(
             Document doc,
-            List<Membro> listMembroForaJhon,
-            int idPeu,
+           IList<Membro> listMembroForaJhon,
             double? valorParaMembrosForaPeu,
             double? valorParaDoPeu
         )
@@ -167,7 +161,7 @@ namespace Application.Services.Despesas.RelatorioPdf
             {
                 var valorParaCada = valorParaMembrosForaPeu;
 
-                if(membro.Id == idPeu)
+                if(membro.Nome.Contains("Peu", StringComparison.CurrentCultureIgnoreCase))
                 {
                     valorParaCada = valorParaDoPeu;
                 }

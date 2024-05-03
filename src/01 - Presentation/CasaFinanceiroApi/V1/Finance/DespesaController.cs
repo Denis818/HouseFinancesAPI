@@ -18,7 +18,8 @@ namespace CasaFinanceiroApi.V1.Finance
     [Route("api/v1/[controller]")]
     public class DespesaController(
         IServiceProvider service,
-        IDespesaAppServices _despesaServices,
+        IDespesaCrudAppService _despesaCrudServices,
+        IDespesaAppService _despesaServices,
         IDespesaConsultaAppService _despesaConsultaApp
     ) : BaseApiController(service)
     {
@@ -27,33 +28,33 @@ namespace CasaFinanceiroApi.V1.Finance
         public async Task<PagedResult<Despesa>> GetAllAsync(
             int paginaAtual = 1,
             int itensPorPagina = 10
-        ) => await _despesaServices.GetAllAsync(paginaAtual, itensPorPagina);
+        ) => await _despesaCrudServices.GetAllAsync(paginaAtual, itensPorPagina);
 
         [HttpPost]
-        [PermissoesFinanceAttribute(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<Despesa> PostAsync(DespesaDto vendaDto) =>
-            await _despesaServices.InsertAsync(vendaDto);
+            await _despesaCrudServices.InsertAsync(vendaDto);
 
         [HttpPut]
-        [PermissoesFinanceAttribute(EnumPermissoes.USU_000002)]
+        [PermissoesFinance(EnumPermissoes.USU_000002)]
         public async Task<Despesa> PutAsync(int id, DespesaDto vendaDto) =>
-            await _despesaServices.UpdateAsync(id, vendaDto);
+            await _despesaCrudServices.UpdateAsync(id, vendaDto);
 
         [HttpDelete]
-        [PermissoesFinanceAttribute(EnumPermissoes.USU_000003)]
-        public async Task<bool> DeleteAsync(int id) => await _despesaServices.DeleteAsync(id);
+        [PermissoesFinance(EnumPermissoes.USU_000003)]
+        public async Task<bool> DeleteAsync(int id) => await _despesaCrudServices.DeleteAsync(id);
 
         [HttpPost("inserir-lote")]
-        [PermissoesFinanceAttribute(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<IEnumerable<Despesa>> PostRangeAsync(
             IAsyncEnumerable<DespesaDto> vendaDto
-        ) => await _despesaServices.InsertRangeAsync(vendaDto);
+        ) => await _despesaCrudServices.InsertRangeAsync(vendaDto);
         #endregion
 
         #region Consultas
         [HttpGet("resumo-despesas-mensal")]
-        public async Task<ResumoMensalDto> GetResumoDespesasMensalAsync() =>
-            await _despesaConsultaApp.GetResumoDespesasMensalAsync();
+        public async Task<DespesasDivididasMensalDto> GetResumoDespesasMensalAsync() =>
+            await _despesaConsultaApp.GetDespesasDivididasMensalAsync();
 
         [HttpGet("total-por-categoria")]
         public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync() =>
@@ -102,7 +103,7 @@ namespace CasaFinanceiroApi.V1.Finance
         public async Task<object> ConferirFaturaDoCartao(double faturaCartao)
         {
             (double totalDespesas, double valorSubtraido) =
-                await _despesaConsultaApp.ConferirFaturaDoCartaoComDespesasAsync(faturaCartao);
+                await _despesaServices.CompararFaturaComTotalDeDespesas(faturaCartao);
 
             return new { TotalDespesa = totalDespesas, ValorSubtraido = valorSubtraido };
         }
