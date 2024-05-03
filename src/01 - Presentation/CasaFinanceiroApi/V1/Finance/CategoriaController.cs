@@ -12,7 +12,7 @@ namespace CasaFinanceiroApi.V1.Finance
     [ApiController]
     [ApiVersion("1")]
     [AutorizationFinance]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/categoria")]
     public class CategoriaController(
         IServiceProvider service,
         ICategoriaAppServices _categoriaServices
@@ -24,17 +24,17 @@ namespace CasaFinanceiroApi.V1.Finance
             await _categoriaServices.GetAllAsync();
 
         [HttpPost]
-        [PermissoesFinanceAttribute(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<Categoria> PostAsync(CategoriaDto categoriaDto) =>
             await _categoriaServices.InsertAsync(categoriaDto);
 
         [HttpPut]
-        [PermissoesFinanceAttribute(EnumPermissoes.USU_000002)]
+        [PermissoesFinance(EnumPermissoes.USU_000002)]
         public async Task<Categoria> PutAsync(int id, CategoriaDto categoriaDto) =>
             await _categoriaServices.UpdateAsync(id, categoriaDto);
 
         [HttpDelete]
-        [PermissoesFinanceAttribute(EnumPermissoes.USU_000003)]
+        [PermissoesFinance(EnumPermissoes.USU_000003)]
         public async Task<bool> DeleteAsync(int id) => await _categoriaServices.DeleteAsync(id);
         #endregion
     }

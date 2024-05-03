@@ -12,7 +12,7 @@ namespace CasaFinanceiroApi.V1.Finance
     [ApiController]
     [ApiVersion("1")]
     [AutorizationFinance]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/membro")]
     public class MembroController(IServiceProvider service, IMembroAppServices _membroServices)
         : BaseApiController(service)
     {
@@ -22,17 +22,17 @@ namespace CasaFinanceiroApi.V1.Finance
             await _membroServices.GetAllAsync();
 
         [HttpPost]
-        [PermissoesFinanceAttribute(EnumPermissoes.USU_000001)]
+        [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<Membro> Post(MembroDto vendaDto) =>
             await _membroServices.InsertAsync(vendaDto);
 
         [HttpPut]
-        [PermissoesFinanceAttribute(EnumPermissoes.USU_000002)]
+        [PermissoesFinance(EnumPermissoes.USU_000002)]
         public async Task<Membro> Put(int id, MembroDto vendaDto) =>
             await _membroServices.UpdateAsync(id, vendaDto);
 
         [HttpDelete]
-        [PermissoesFinanceAttribute(EnumPermissoes.USU_000003)]
+        [PermissoesFinance(EnumPermissoes.USU_000003)]
         public async Task<bool> Delete(int id) => await _membroServices.DeleteAsync(id);
         #endregion
 

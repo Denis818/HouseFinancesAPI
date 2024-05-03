@@ -12,7 +12,7 @@ namespace CasaFinanceiroApi.V1.User
 {
     [ApiController]
     [ApiVersion("1")]
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/user")]
     public class UsersController(IAuthAppService _authService, IServiceProvider service)
         : BaseApiController(service)
     {

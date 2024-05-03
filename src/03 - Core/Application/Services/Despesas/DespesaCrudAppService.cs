@@ -1,35 +1,32 @@
 ﻿using Application.Extensions.Help;
 using Application.Interfaces.Services.Despesas;
 using Application.Resources.Messages;
-using Application.Services.Base;
+using Application.Services.Despesas.Base;
 using Application.Utilities;
 using Domain.Converters.DatesTimes;
 using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
-using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Despesas
 {
-    public class DespesaCrudAppService(
-        IServiceProvider service,
-        ICategoriaRepository _categoriaRepository
-    ) : BaseAppService<Despesa, IDespesaRepository>(service), IDespesaCrudAppService
+    public class DespesaCrudAppService(IServiceProvider service)
+        : BaseDespesaService(service),
+            IDespesaCrudAppService
     {
         #region CRUD
         public async Task<Despesa> GetByIdAsync(int id)
         {
-            return await _repository
-                .Get(despesa => despesa.Id == id)
+            return await ListDespesasRecentes
+                .Where(despesa => despesa.Id == id)
                 .Include(x => x.Categoria)
                 .FirstOrDefaultAsync();
         }
 
         public async Task<PagedResult<Despesa>> GetAllAsync(int paginaAtual, int itensPorPagina)
         {
-            var query = _repository
-                .Get()
+            var query = ListDespesasRecentes
                 .Include(c => c.Categoria)
                 .OrderByDescending(d => d.DataCompra);
 
