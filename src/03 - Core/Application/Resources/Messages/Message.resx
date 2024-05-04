@@ -144,6 +144,9 @@
   <data name="ModeloInvalido" xml:space="preserve">
     <value>Modelo não é valido.</value>
   </data>
+  <data name="NaoPodeDeletarGrupoDespesa" xml:space="preserve">
+    <value>Deve existir pelo menos um Grupo.</value>
+  </data>
   <data name="RegistroExistente" xml:space="preserve">
     <value>{0} {1} já existe.</value>
   </data>

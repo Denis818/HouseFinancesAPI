@@ -118,6 +118,17 @@ namespace Application.Services.Despesas
                 return false;
             }
 
+            var IsUnicGroup = await _repository.Get().ToListAsync();
+            if(IsUnicGroup.Count == 1)
+            {
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(Message.NaoPodeDeletarGrupoDespesa)
+                );
+                return false;
+            }
+
+
             _repository.Delete(grupoDespesa);
 
             if(!await _repository.SaveChangesAsync())

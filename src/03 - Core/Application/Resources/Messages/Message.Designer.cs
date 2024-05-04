@@ -142,6 +142,15 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deve existir pelo menos um Grupo..
+        /// </summary>
+        public static string NaoPodeDeletarGrupoDespesa {
+            get {
+                return ResourceManager.GetString("NaoPodeDeletarGrupoDespesa", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} {1} já existe..
         /// </summary>
         public static string RegistroExistente {
