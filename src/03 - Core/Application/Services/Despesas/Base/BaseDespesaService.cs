@@ -5,7 +5,6 @@ using Domain.Interfaces.Services.Despesa;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq.Expressions;
 
 namespace Application.Services.Despesas.Base
 {
@@ -18,7 +17,7 @@ namespace Application.Services.Despesas.Base
         protected readonly CategoriaIdsDto _categoriaIds;
 
         protected (int IdJhon, int IdPeu) _membroId;
-        protected readonly IQueryable<Despesa> ListDespesasRecentes;
+        protected IQueryable<Despesa> ListDespesasRecentes;
 
         public BaseDespesaService(IServiceProvider service)
             : base(service)
@@ -30,34 +29,23 @@ namespace Application.Services.Despesas.Base
             _categoriaIds = _categoriaRepository.GetCategoriaIds();
             _membroId = _membroRepository.GetIdsJhonPeu();
 
-            ListDespesasRecentes = GetDespesasMaisRecentes();
+            ListDespesasRecentes = GetDespesasByGroup();
         }
 
-        protected IQueryable<Despesa> GetDespesasMaisRecentes(
-            Expression<Func<Despesa, bool>> filter = null
-        )
+        public IQueryable<Despesa> GetDespesasByGroup()
         {
-            var dataMaisRecente = _repository
-                .Get()
-                .OrderByDescending(d => d.DataCompra)
-                .Select(d => d.DataCompra)
-                .FirstOrDefault();
+            string grupoDespesasIdHeader = _httpContext.Request.Headers["Grupo-Despesas-Id"];
 
-            var inicioDoMes = new DateTime(dataMaisRecente.Year, dataMaisRecente.Month, 1);
-            var fimDoMes = inicioDoMes.AddMonths(1).AddDays(-1);
-
-            IQueryable<Despesa> query = _repository
-                .Get(d => d.DataCompra.Date >= inicioDoMes && d.DataCompra.Date <= fimDoMes)
-                .Include(c => c.Categoria);
-
-            var t = _repository.Get().Select(d => d.DataCompra).ToList();
-
-            if(filter != null)
+            if(int.TryParse(grupoDespesasIdHeader, out int grupoDespesaId))
             {
-                query = query.Where(filter);
+                var listByGroup = _repository
+                 .Get(d => d.GrupoDespesaId == grupoDespesaId)
+                 .Include(c => c.Categoria);
+
+                return listByGroup;
             }
 
-            return query;
+            return new List<Despesa>().AsQueryable();
         }
     }
 }

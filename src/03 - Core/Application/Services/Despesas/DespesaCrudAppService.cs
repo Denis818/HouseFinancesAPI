@@ -35,7 +35,18 @@ namespace Application.Services.Despesas
                 .Include(c => c.Categoria)
                 .OrderByDescending(d => d.DataCompra);
 
-            return await Pagination.PaginateResultAsync(query, paginaAtual, itensPorPagina);
+            var despesas = await Pagination.PaginateResultAsync(query, paginaAtual, itensPorPagina);
+
+            if(despesas.TotalItens == 0)
+            {
+                Notificar(
+                    EnumTipoNotificacao.Informacao,
+                    string.Format(Message.DespesasNaoEncontradas, "")
+                );
+            }
+
+
+            return despesas;
         }
 
         public async Task<Despesa> InsertAsync(DespesaDto despesaDto)
