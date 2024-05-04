@@ -30,7 +30,15 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
                     string.Format(Message.DespesasNaoEncontradas, "de Moradia")
                 );
 
-                return new();
+                return new DetalhamentoDespesasMoradiaDto
+                {
+                    GrupoListMembrosDespesa = grupoListMembrosDespesa,
+                    CustosDespesasMoradia = custosDespesasMoradiaDto,
+                    DistribuicaoCustos = new DistribuicaoCustosMoradiaDto
+                    {
+                        ValorParaDoPeu = 300, // 300 reais do aluguel e fixo.
+                    }
+                };
             }
 
             return new DetalhamentoDespesasMoradiaDto()
