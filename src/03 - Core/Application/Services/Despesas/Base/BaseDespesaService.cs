@@ -34,18 +34,19 @@ namespace Application.Services.Despesas.Base
 
         public IQueryable<Despesa> GetDespesasByGroup()
         {
+            var queryDespesas = _repository.Get();
             string grupoDespesasIdHeader = _httpContext.Request.Headers["Grupo-Despesas-Id"];
 
             if(int.TryParse(grupoDespesasIdHeader, out int grupoDespesaId))
             {
-                var listByGroup = _repository
-                 .Get(d => d.GrupoDespesaId == grupoDespesaId)
-                 .Include(c => c.Categoria);
+                queryDespesas = queryDespesas
+                    .Where(d => d.GrupoDespesaId == grupoDespesaId)
+                    .Include(c => c.Categoria);
 
-                return listByGroup;
+                return queryDespesas;
             }
 
-            return new List<Despesa>().AsQueryable();
+            return queryDespesas;
         }
     }
 }

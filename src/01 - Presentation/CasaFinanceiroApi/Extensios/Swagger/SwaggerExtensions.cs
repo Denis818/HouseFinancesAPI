@@ -36,6 +36,8 @@ namespace CasaFinanceiroApi.Extensios.Swagger
                 AddSecuritySchema(options);
 
                 options.SchemaFilter<DateSchemaFilter>();
+                options.OperationFilter<GrupoDespesaIdHeaderParameter>();
+
             });
 
             services.AddAuthentication(x =>
