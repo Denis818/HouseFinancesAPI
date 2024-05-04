@@ -5,5 +5,6 @@ namespace Domain.Interfaces.Repositories
 {
     public interface IGrupoDespesaRepository : IRepositoryBase<GrupoDespesa>
     {
+        Task<GrupoDespesa> ExisteAsync(int id = 0, string nome = null);
     }
 }

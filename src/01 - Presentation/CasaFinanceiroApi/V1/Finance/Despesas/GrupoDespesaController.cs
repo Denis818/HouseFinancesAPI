@@ -28,14 +28,14 @@ namespace CasaFinanceiroApi.V1.Finance.Despesas
         public async Task<GrupoDespesa> PostAsync(GrupoDespesaDto categoriaDto) =>
             await _grupoDespesaServices.InsertAsync(categoriaDto);
 
-        //[HttpPut]
-        //[PermissoesFinance(EnumPermissoes.USU_000002)]
-        //public async Task<GrupoDespesa> PutAsync(int id, GrupoDespesaDto categoriaDto) =>
-        //    await _grupoDespesaServices.UpdateAsync(id, categoriaDto);
+        [HttpPut]
+        [PermissoesFinance(EnumPermissoes.USU_000002)]
+        public async Task<GrupoDespesa> PutAsync(int id, GrupoDespesaDto categoriaDto) =>
+            await _grupoDespesaServices.UpdateAsync(id, categoriaDto);
 
-        //[HttpDelete]
-        //[PermissoesFinance(EnumPermissoes.USU_000003)]
-        //public async Task<bool> DeleteAsync(int id) => await _grupoDespesaServices.DeleteAsync(id);
+        [HttpDelete]
+        [PermissoesFinance(EnumPermissoes.USU_000003)]
+        public async Task<bool> DeleteAsync(int id) => await _grupoDespesaServices.DeleteAsync(id);
         #endregion
     }
 }

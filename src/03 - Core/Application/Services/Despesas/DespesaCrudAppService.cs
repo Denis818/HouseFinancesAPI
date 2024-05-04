@@ -6,14 +6,16 @@ using Application.Utilities;
 using Domain.Converters.DatesTimes;
 using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
+using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Despesas
 {
-    public class DespesaCrudAppService(IServiceProvider service)
-        : BaseDespesaService(service),
-            IDespesaCrudAppService
+    public class DespesaCrudAppService(
+        IServiceProvider service,
+        IGrupoDespesaRepository _grupoDespesaRepository
+    ) : BaseDespesaService(service), IDespesaCrudAppService
     {
         #region CRUD
         public async Task<Despesa> GetByIdAsync(int id)
@@ -35,8 +37,7 @@ namespace Application.Services.Despesas
 
         public async Task<Despesa> InsertAsync(DespesaDto despesaDto)
         {
-            despesaDto.Item = despesaDto.Item.Trim();
-            despesaDto.Fornecedor = despesaDto.Fornecedor.Trim();
+            despesaDto.Item = despesaDto.Item;
 
             if(Validator(despesaDto))
                 return null;
@@ -46,6 +47,19 @@ namespace Application.Services.Despesas
                 Notificar(
                     EnumTipoNotificacao.ClientError,
                     string.Format(Message.IdNaoEncontrado, "A categoria", despesaDto.CategoriaId)
+                );
+                return null;
+            }
+
+            if(await _grupoDespesaRepository.ExisteAsync(despesaDto.GrupoDespesaId) is null)
+            {
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(
+                        Message.IdNaoEncontrado,
+                        "O Grupo de Despesa",
+                        despesaDto.GrupoDespesaId
+                    )
                 );
                 return null;
             }

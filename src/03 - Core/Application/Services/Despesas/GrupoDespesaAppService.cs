@@ -10,7 +10,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Services.Despesas
 {
     public class GrupoDespesaAppService(IServiceProvider service)
-        : BaseAppService<GrupoDespesa, IGrupoDespesaRepository>(service), IGrupoDespesaAppService
+        : BaseAppService<GrupoDespesa, IGrupoDespesaRepository>(service),
+            IGrupoDespesaAppService
     {
         public async Task<IEnumerable<GrupoDespesa>> GetAllAsync() =>
             await _repository.Get().OrderBy(c => c.Nome).ToListAsync();
@@ -48,6 +49,87 @@ namespace Application.Services.Despesas
             }
 
             return grupoDespesa;
+        }
+
+        public async Task<GrupoDespesa> UpdateAsync(int id, GrupoDespesaDto grupoDespesaDto)
+        {
+            if(Validator(grupoDespesaDto))
+                return null;
+
+            var grupoDespesa = await _repository.GetByIdAsync(id);
+
+            if(grupoDespesa is null)
+            {
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(Message.IdNaoEncontrado, "Grupo Despesa", id)
+                );
+                return null;
+            }
+
+            if(grupoDespesa.Nome == grupoDespesaDto.Nome)
+                return grupoDespesa;
+
+            if(
+                await _repository.ExisteAsync(nome: grupoDespesaDto.Nome)
+                is GrupoDespesa grupoDespesaExiste
+            )
+            {
+                if(grupoDespesa.Id != grupoDespesaExiste.Id)
+                {
+                    Notificar(
+                        EnumTipoNotificacao.ClientError,
+                        string.Format(
+                            Message.RegistroExistente,
+                            "O Grupo de Despesa",
+                            grupoDespesaDto.Nome
+                        )
+                    );
+                    return null;
+                }
+            }
+
+            _mapper.Map(grupoDespesaDto, grupoDespesa);
+
+            _repository.Update(grupoDespesa);
+
+            if(!await _repository.SaveChangesAsync())
+            {
+                Notificar(
+                    EnumTipoNotificacao.ServerError,
+                    string.Format(Message.ErroAoSalvarNoBanco, "Atualizar")
+                );
+                return null;
+            }
+
+            return grupoDespesa;
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var grupoDespesa = await _repository.GetByIdAsync(id);
+
+            if(grupoDespesa == null)
+            {
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(Message.IdNaoEncontrado, "Grupo Despesa", id)
+                );
+                return false;
+            }
+
+            _repository.Delete(grupoDespesa);
+
+            if(!await _repository.SaveChangesAsync())
+            {
+                Notificar(
+                    EnumTipoNotificacao.ServerError,
+                    string.Format(Message.ErroAoSalvarNoBanco, "Deletar")
+                );
+                return false;
+            }
+
+            return true;
         }
     }
 }
