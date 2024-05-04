@@ -20,10 +20,13 @@ namespace Application.Services.Despesas
         #region CRUD
         public async Task<Despesa> GetByIdAsync(int id)
         {
-            return await ListDespesasRecentes
+            var despesa = await ListDespesasRecentes
                 .Where(despesa => despesa.Id == id)
                 .Include(x => x.Categoria)
+                .Include(x => x.GrupoDespesa)
                 .FirstOrDefaultAsync();
+
+            return despesa;
         }
 
         public async Task<PagedResult<Despesa>> GetAllAsync(int paginaAtual, int itensPorPagina)

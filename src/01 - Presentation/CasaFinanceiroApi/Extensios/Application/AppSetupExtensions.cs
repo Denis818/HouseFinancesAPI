@@ -4,6 +4,7 @@ using DIContainer.DependencyManagers;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CasaFinanceiroApi.Extensios.Application
 {
@@ -33,7 +34,6 @@ namespace CasaFinanceiroApi.Extensios.Application
                 reloadOnChange: true
             );
 
-
             builder
                 .Services.AddControllers(options =>
                 {
@@ -42,6 +42,7 @@ namespace CasaFinanceiroApi.Extensios.Application
                 .AddJsonOptions(opt =>
                 {
                     opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 });
 
             builder.Services.AddEndpointsApiExplorer();
