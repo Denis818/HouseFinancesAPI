@@ -6,15 +6,13 @@ using Application.Utilities;
 using Domain.Converters.DatesTimes;
 using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
-using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Despesas
 {
     public class DespesaCrudAppService(
-        IServiceProvider service,
-        IGrupoDespesaRepository _grupoDespesaRepository
+        IServiceProvider service
     ) : BaseDespesaService(service), IDespesaCrudAppService
     {
         #region CRUD
@@ -51,19 +49,6 @@ namespace Application.Services.Despesas
                 return null;
             }
 
-            if(await _grupoDespesaRepository.ExisteAsync(despesaDto.GrupoDespesaId) is null)
-            {
-                Notificar(
-                    EnumTipoNotificacao.ClientError,
-                    string.Format(
-                        Message.IdNaoEncontrado,
-                        "O Grupo de Despesa",
-                        despesaDto.GrupoDespesaId
-                    )
-                );
-                return null;
-            }
-
             var despesa = _mapper.Map<Despesa>(despesaDto);
 
             despesa.Total = (despesa.Preco * despesa.Quantidade).RoundTo(2);
@@ -79,8 +64,8 @@ namespace Application.Services.Despesas
                 );
                 return null;
             }
-
-            return await GetByIdAsync(despesa.Id);
+            var despesaCreated = await GetByIdAsync(despesa.Id);
+            return despesaCreated;
         }
 
         public async Task<IEnumerable<Despesa>> InsertRangeAsync(

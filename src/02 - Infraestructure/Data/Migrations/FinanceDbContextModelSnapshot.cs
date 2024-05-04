@@ -60,9 +60,6 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(20)");
 
-                    b.Property<int>("GrupoDespesaId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Item")
                         .IsRequired()
                         .HasColumnType("varchar(40)");
@@ -84,9 +81,6 @@ namespace Data.Migrations
                     b.HasIndex("DataCompra")
                         .HasDatabaseName("IX_Despesas_DataCompra");
 
-                    b.HasIndex("GrupoDespesaId")
-                        .HasDatabaseName("IX_Despesas_GrupoDespesaId");
-
                     b.HasIndex("Id")
                         .HasDatabaseName("IX_Despesas_Id");
 
@@ -94,26 +88,6 @@ namespace Data.Migrations
                         .HasDatabaseName("IX_Despesas_Item");
 
                     b.ToTable("Despesas", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Models.Despesas.GrupoDespesa", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("varchar(30)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Nome")
-                        .HasDatabaseName("IX_Grupo_Despesa_Nome");
-
-                    b.ToTable("Grupo_Despesa", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Membros.Membro", b =>
@@ -216,15 +190,7 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.Despesas.GrupoDespesa", "GrupoDespesa")
-                        .WithMany("Despesas")
-                        .HasForeignKey("GrupoDespesaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Categoria");
-
-                    b.Navigation("GrupoDespesa");
                 });
 
             modelBuilder.Entity("Usuario_Permissao", b =>
@@ -243,11 +209,6 @@ namespace Data.Migrations
                 });
 
             modelBuilder.Entity("Domain.Models.Categorias.Categoria", b =>
-                {
-                    b.Navigation("Despesas");
-                });
-
-            modelBuilder.Entity("Domain.Models.Despesas.GrupoDespesa", b =>
                 {
                     b.Navigation("Despesas");
                 });

@@ -10,7 +10,6 @@ namespace Data.DataContext
         : DbContext(options)
     {
         public DbSet<Despesa> Despesas { get; set; }
-        public DbSet<GrupoDespesa> GrupoDespesas { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Membro> Membros { get; set; }
 

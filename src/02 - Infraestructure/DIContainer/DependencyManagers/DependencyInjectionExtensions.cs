@@ -35,7 +35,6 @@ namespace DIContainer.DependencyManagers
             services.AddScoped<IDespesaRepository, DespesaRepository>();
             services.AddScoped<IMembroRepository, MembroRepository>();
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
-            services.AddScoped<IGrupoDespesaRepository, GrupoDespesaRepository>();
 
         }
 
@@ -55,7 +54,6 @@ namespace DIContainer.DependencyManagers
             services.AddScoped<IDespesaCasaAppService, DespesaCasaAppService>();
             services.AddScoped<IDespesaMoradiaAppService, DespesaMoradiaAppService>();
             services.AddScoped<IDespesaConsultaAppService, DespesaConsultaAppService>();
-            services.AddScoped<IGrupoDespesaAppService, GrupoDespesaAppService>();
         }
     }
 }
