@@ -1,14 +1,17 @@
 ﻿using Application.Helpers;
 using Application.Interfaces.Services.User;
 using Data.DataContext;
+using Domain.Converters.DatesTimes;
 using Domain.Dtos.User.Auth;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Categorias;
+using Domain.Models.Despesas;
 using Domain.Models.Membros;
 using Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Globalization;
 
 namespace DIContainer.DataBaseConfiguration
 {
@@ -79,7 +82,6 @@ namespace DIContainer.DataBaseConfiguration
             string email = "dev";
             string senha = "abc@123";
 
-
             if(usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
                 return;
 
@@ -101,6 +103,7 @@ namespace DIContainer.DataBaseConfiguration
         {
             var categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
             var memberRepository = service.GetRequiredService<IMembroRepository>();
+            var grupoDespesaRepository = service.GetRequiredService<IGrupoDespesaRepository>();
 
             if(categoriaRepository.Get().ToList().Count > 0)
                 return;
@@ -127,11 +130,20 @@ namespace DIContainer.DataBaseConfiguration
                 new() { Nome = "Jhon Lenon", Telefone = "(31) 99566-4815" }
             };
 
+            string mesAtualName = DateTimeZoneProvider
+                .GetBrasiliaTimeZone(DateTime.UtcNow)
+                .ToString("MMMM", new CultureInfo("pt-BR"));
+            mesAtualName = char.ToUpper(mesAtualName[0]) + mesAtualName[1..].ToLower();
+
+            var grupoDespesa = new GrupoDespesa { Nome = $"Fatura de {mesAtualName}" };
+
             await categoriaRepository.InsertRangeAsync(listCategoria);
             await memberRepository.InsertRangeAsync(listMember);
+            await grupoDespesaRepository.InsertAsync(grupoDespesa);
 
             await categoriaRepository.SaveChangesAsync();
             await memberRepository.SaveChangesAsync();
+            await grupoDespesaRepository.SaveChangesAsync();
         }
     }
 }
