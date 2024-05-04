@@ -57,8 +57,7 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
             return total;
         }
 
-        private async Task<(double, double)> CalculaTotalAlmocoDivididoComJhon(
-        )
+        private async Task<(double, double)> CalculaTotalAlmocoDivididoComJhon()
         {
             int todosMembros = await _membroRepository.Get().CountAsync();
 
@@ -70,7 +69,7 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
 
             double almocoAbatido = almoco - almocoParteDoJhon;
 
-            return (almocoAbatido, almocoParteDoJhon);
+            return (Math.Max(almocoAbatido, 0), Math.Max(almocoParteDoJhon, 0));
         }
         #endregion
     }

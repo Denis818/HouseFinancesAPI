@@ -36,12 +36,17 @@ namespace Domain.Services
                 ValorParaDoPeu = valorParaDoPeu,
                 TotalAptoMaisCaixa = totalAptoMaisCaixa,
                 TotalLuzMaisCondominio = totalLuzMaisCondominio,
-                ValorParaMembrosForaPeu = valorParaMembrosForaPeu,
-                TotalAptoMaisCaixaAbate300Peu = totalAptoMaisCaixaAbate300Peu,
-                ValorAptoMaisCaixaParaCadaMembro = valorAptoMaisCaixaParaCadaMembro,
-                ValorLuzMaisCondominioParaCadaMembro = valorLuzMaisCondominioParaCadaMembro,
-                TotalLuzMaisCondominioAbate100Estacionamento =
+                ValorParaMembrosForaPeu = Math.Max(valorParaMembrosForaPeu, 0),
+                TotalAptoMaisCaixaAbate300Peu = Math.Max(totalAptoMaisCaixaAbate300Peu, 0),
+                ValorAptoMaisCaixaParaCadaMembro = Math.Max(valorAptoMaisCaixaParaCadaMembro, 0),
+                ValorLuzMaisCondominioParaCadaMembro = Math.Max(
+                    valorLuzMaisCondominioParaCadaMembro,
+                    0
+                ),
+                TotalLuzMaisCondominioAbate100Estacionamento = Math.Max(
                     totalLuzMaisCondominioAbate100Estacionamento,
+                    0
+                ),
             };
         }
     }

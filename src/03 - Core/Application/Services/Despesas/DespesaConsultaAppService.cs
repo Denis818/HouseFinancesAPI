@@ -90,7 +90,6 @@ namespace Application.Services.Despesas
 
             if(despesaRecente is null)
             {
-                
                 return new();
             }
 
@@ -118,7 +117,7 @@ namespace Application.Services.Despesas
 
         private async Task<IEnumerable<DespesaPorMembroDto>> DistribuirDespesasEntreMembros(
             double despesaGeraisMaisAlmocoDividioPorMembro,
-            double totalAlmocoDividioComJhon,
+            double almocoParteDoJhon,
             double aluguelCondominioContaLuzPorMembroForaPeu,
             double aluguelCondominioContaLuzParaPeu
         )
@@ -143,8 +142,8 @@ namespace Application.Services.Despesas
 
                 ValorDespesaCasa =
                     member.Id == _membroId.IdJhon
-                        ? totalAlmocoDividioComJhon.RoundTo(2)
-                        : despesaGeraisMaisAlmocoDividioPorMembro.RoundTo(2),
+                        ? Math.Max(almocoParteDoJhon.RoundTo(2), 0)
+                        : Math.Max(despesaGeraisMaisAlmocoDividioPorMembro.RoundTo(2), 0),
 
                 ValorDespesaMoradia =
                     member.Id == _membroId.IdJhon ? -1 : ValorMoradia(member).RoundTo(2)
