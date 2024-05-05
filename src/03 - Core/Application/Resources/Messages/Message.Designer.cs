@@ -124,6 +124,15 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selecione um Grupo de despesas..
+        /// </summary>
+        public static string GrupoDespesaNaoEncontrado {
+            get {
+                return ResourceManager.GetString("GrupoDespesaNaoEncontrado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} com id:{1} não existe..
         /// </summary>
         public static string IdNaoEncontrado {

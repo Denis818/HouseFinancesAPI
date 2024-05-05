@@ -6,8 +6,10 @@ using Domain.Dtos.Despesas.Consultas;
 using Domain.Dtos.Despesas.Relatorios;
 using Domain.Dtos.Despesas.Resumos;
 using Domain.Enumeradores;
+using Domain.Interfaces.Repositories;
 using Domain.Models.Membros;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 
 namespace Application.Services.Despesas
@@ -15,7 +17,8 @@ namespace Application.Services.Despesas
     public class DespesaConsultaAppService(
         IServiceProvider service,
         IDespesaCasaAppService _despesaCasaApp,
-        IDespesaMoradiaAppService _despesaMoradiaApp
+        IDespesaMoradiaAppService _despesaMoradiaApp,
+        IGrupoDespesaRepository _grupoDespesaRepository
     ) : BaseDespesaService(service), IDespesaConsultaAppService
     {
         #region Consultas
@@ -86,32 +89,41 @@ namespace Application.Services.Despesas
         #region Metodos de Suporte
         private RelatorioGastosDoMesDto GetRelatorioDeGastosDoMesAsync()
         {
-            var despesaRecente = ListDespesasRecentes.FirstOrDefault();
+            string grupoNome = _grupoDespesaRepository
+                .Get(g => g.Id == _grupoDespesaId)
+                .FirstOrDefault()
+                ?.Nome;
 
-            if(despesaRecente is null)
+            if(grupoNome.IsNullOrEmpty())
             {
+                Notificar(EnumTipoNotificacao.ClientError, Message.GrupoDespesaNaoEncontrado);
                 return new();
             }
 
-            string mesAtual = despesaRecente.DataCompra.ToString("Y", new CultureInfo("pt-BR"));
-
-            double aluguelMaisCondominio = ListDespesasRecentes
+            double totalGastoMoradia = ListDespesasRecentes
                 .Where(d =>
                     d.Categoria.Id == _categoriaIds.IdAluguel
                     || d.Categoria.Id == _categoriaIds.IdCondominio
+                    || d.Categoria.Id == _categoriaIds.IdContaDeLuz
                 )
                 .Sum(d => d.Total);
 
-            double totalGeral = ListDespesasRecentes.Sum(d => d.Total);
+            double totalGastosCasa = ListDespesasRecentes
+                .Where(d =>
+                    d.Categoria.Id != _categoriaIds.IdAluguel
+                    || d.Categoria.Id != _categoriaIds.IdCondominio
+                    || d.Categoria.Id != _categoriaIds.IdContaDeLuz
+                )
+                .Sum(d => d.Total);
 
-            double totalGastosGerais = totalGeral - aluguelMaisCondominio;
+            var totalGeral = totalGastosCasa + totalGastosCasa;
 
             return new RelatorioGastosDoMesDto
             {
-                MesAtual = mesAtual,
-                TotalGeral = totalGeral,
-                TotalGastosCasa = totalGastosGerais,
-                TotalGastosMoradia = totalGastosGerais,
+                GrupoDespesaNome = grupoNome,
+                TotalGeral = totalGeral.RoundTo(2),
+                TotalGastosCasa = totalGastosCasa.RoundTo(2),
+                TotalGastosMoradia = totalGastoMoradia.RoundTo(2),
             };
         }
 

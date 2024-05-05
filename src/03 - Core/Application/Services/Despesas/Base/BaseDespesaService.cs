@@ -19,6 +19,8 @@ namespace Application.Services.Despesas.Base
         protected (int IdJhon, int IdPeu) _membroId;
         protected IQueryable<Despesa> ListDespesasRecentes;
 
+        protected int _grupoDespesaId = 0;
+
         public BaseDespesaService(IServiceProvider service)
             : base(service)
         {
@@ -28,6 +30,8 @@ namespace Application.Services.Despesas.Base
 
             _categoriaIds = _categoriaRepository.GetCategoriaIds();
             _membroId = _membroRepository.GetIdsJhonPeu();
+            _grupoDespesaId = GetGropoDespesaId();
+
 
             ListDespesasRecentes = GetDespesasByGroup();
         }
@@ -35,18 +39,29 @@ namespace Application.Services.Despesas.Base
         public IQueryable<Despesa> GetDespesasByGroup()
         {
             var queryDespesas = _repository.Get();
-            string grupoDespesasIdHeader = _httpContext.Request.Headers["Grupo-Despesas-Id"];
 
-            if(int.TryParse(grupoDespesasIdHeader, out int grupoDespesaId))
+            if(_grupoDespesaId != 0)
             {
                 queryDespesas = queryDespesas
-                    .Where(d => d.GrupoDespesaId == grupoDespesaId)
+                    .Where(d => d.GrupoDespesaId == _grupoDespesaId)
                     .Include(c => c.Categoria);
 
                 return queryDespesas;
             }
 
             return queryDespesas;
+        }
+
+        private int GetGropoDespesaId()
+        {
+            string grupoDespesasIdHeader = _httpContext.Request.Headers["Grupo-Despesas-Id"];
+
+            if(int.TryParse(grupoDespesasIdHeader, out int grupoDespesaId))
+            {
+                return grupoDespesaId;
+            }
+
+            return 0;
         }
     }
 }

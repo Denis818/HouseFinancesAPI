@@ -138,6 +138,9 @@
   <data name="ErroAoSalvarNoBanco" xml:space="preserve">
     <value>Ocorreu um erro ao {0}.</value>
   </data>
+  <data name="GrupoDespesaNaoEncontrado" xml:space="preserve">
+    <value>Selecione um Grupo de despesas.</value>
+  </data>
   <data name="IdNaoEncontrado" xml:space="preserve">
     <value>{0} com id:{1} não existe.</value>
   </data>

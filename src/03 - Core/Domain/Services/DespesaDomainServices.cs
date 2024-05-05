@@ -17,14 +17,13 @@ namespace Domain.Services
             double totalAptoMaisCaixa = parcelaApartamento + parcelaCaixa;
             double totalLuzMaisCondominio = contaDeLuzValue + condominioValue;
 
-            double totalAptoMaisCaixaAbate300Peu = totalAptoMaisCaixa - 300; //300 aluguel cobrado do peu
-            double totalLuzMaisCondominioAbate100Estacionamento = totalLuzMaisCondominio - 100; //estacionamento alugado
+            double totalAptoMaisCaixaAbate300Peu100Estacionamento = totalAptoMaisCaixa - 300; //300 aluguel cobrado do peu
 
             double valorAptoMaisCaixaParaCadaMembro =
-                totalAptoMaisCaixaAbate300Peu / listMembroForaJhonPeuCount;
+                (totalAptoMaisCaixaAbate300Peu100Estacionamento - 100) / listMembroForaJhonPeuCount; // 100 reais do estacionamento alugado.
 
             double valorLuzMaisCondominioParaCadaMembro =
-                totalLuzMaisCondominioAbate100Estacionamento / listMembroForaJhonCount;
+                totalLuzMaisCondominio / listMembroForaJhonCount;
 
             double valorParaMembrosForaPeu =
                 valorAptoMaisCaixaParaCadaMembro + valorLuzMaisCondominioParaCadaMembro;
@@ -37,14 +36,13 @@ namespace Domain.Services
                 TotalAptoMaisCaixa = totalAptoMaisCaixa,
                 TotalLuzMaisCondominio = totalLuzMaisCondominio,
                 ValorParaMembrosForaPeu = Math.Max(valorParaMembrosForaPeu, 0),
-                TotalAptoMaisCaixaAbate300Peu = Math.Max(totalAptoMaisCaixaAbate300Peu, 0),
                 ValorAptoMaisCaixaParaCadaMembro = Math.Max(valorAptoMaisCaixaParaCadaMembro, 0),
-                ValorLuzMaisCondominioParaCadaMembro = Math.Max(
-                    valorLuzMaisCondominioParaCadaMembro,
+                TotalAptoMaisCaixaAbate300Peu100Estacionamento = Math.Max(
+                    totalAptoMaisCaixaAbate300Peu100Estacionamento,
                     0
                 ),
-                TotalLuzMaisCondominioAbate100Estacionamento = Math.Max(
-                    totalLuzMaisCondominioAbate100Estacionamento,
+                ValorLuzMaisCondominioParaCadaMembro = Math.Max(
+                    valorLuzMaisCondominioParaCadaMembro,
                     0
                 ),
             };

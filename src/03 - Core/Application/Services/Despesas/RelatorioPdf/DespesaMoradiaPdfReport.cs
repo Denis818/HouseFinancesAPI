@@ -31,8 +31,7 @@ namespace Application.Services.Despesas.RelatorioPdf
                 doc,
                 custosMoradia.DistribuicaoCustos.TotalAptoMaisCaixa,
                 custosMoradia.DistribuicaoCustos.TotalLuzMaisCondominio,
-                custosMoradia.DistribuicaoCustos.TotalAptoMaisCaixaAbate300Peu,
-                custosMoradia.DistribuicaoCustos.TotalLuzMaisCondominioAbate100Estacionamento
+                custosMoradia.DistribuicaoCustos.TotalAptoMaisCaixaAbate300Peu100Estacionamento
             );
 
             TableParcelaCaixaApto(
@@ -81,18 +80,16 @@ namespace Application.Services.Despesas.RelatorioPdf
             Document doc,
             double? totalAptoMaisCaixa,
             double? totalLuzMaisCondominio,
-            double? totalAptoMaisCaixaAbate300Peu,
-            double? totalLuzMaisCondominioAbate100Estacionamento
+            double? totalAptoMaisCaixaAbate300Peu100Estacionamento
         )
         {
             var columnsCalculos = new Dictionary<string, string>
             {
                 { "Parcela Apto mais Caixa", $"R$ {totalAptoMaisCaixa:F2}" },
                 { "Conta de Luz mais Condomínio", $"R$ {totalLuzMaisCondominio:F2}" },
-                { "Apto mais Caixa menos R$ 300 do Peu", $"R$ {totalAptoMaisCaixaAbate300Peu:F2}" },
                 {
-                    "Conta de Luz e Condomínio menos R$ 100 do estacionamento",
-                    $"R$ {totalLuzMaisCondominioAbate100Estacionamento:F2}"
+                    "Apto mais Caixa menos R$ 300 do Peu e R$ 100 do estacionamento alugado",
+                    $"R$ {totalAptoMaisCaixaAbate300Peu100Estacionamento:F2}"
                 },
             };
             _pdfTable.CreateTable(doc, "Cálculos", columnsCalculos);
@@ -127,7 +124,7 @@ namespace Application.Services.Despesas.RelatorioPdf
 
         private void TableContaLuzAndCondominio(
             Document doc,
-           IList<Membro> listMembroForaJhon,
+            IList<Membro> listMembroForaJhon,
             double? valorLuzMaisCondominioParaCadaMembro
         )
         {
@@ -150,7 +147,7 @@ namespace Application.Services.Despesas.RelatorioPdf
 
         private void TableValoresParaCada(
             Document doc,
-           IList<Membro> listMembroForaJhon,
+            IList<Membro> listMembroForaJhon,
             double? valorParaMembrosForaPeu,
             double? valorParaDoPeu
         )
