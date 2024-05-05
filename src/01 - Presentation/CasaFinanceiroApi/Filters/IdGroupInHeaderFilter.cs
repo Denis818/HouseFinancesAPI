@@ -1,6 +1,7 @@
-﻿using Application.Interfaces.Utilities;
-using Application.Resources.Messages;
+﻿using Application.Resources.Messages;
+using CasaFinanceiroApi.Base;
 using Domain.Enumeradores;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CasaFinanceiroApi.Filters
@@ -17,12 +18,17 @@ namespace CasaFinanceiroApi.Filters
             {
                 httpContext.Items["GrupoDespesaId"] = grupoDespesasId;
             }
-            else
+            else if (httpContext.Request.Method == "GET")
             {
-                var notifier = context.HttpContext.RequestServices.GetService<INotifier>();
-
-                notifier.Notify(EnumTipoNotificacao.ClientError, Message.GrupoDespesaNaoEncontrado);
-                context.Result = null;
+                context.Result = new BadRequestObjectResult(
+                    new ResponseDTO<string>()
+                    {
+                        Mensagens =
+                        [
+                            new(Message.GrupoDespesaNaoEncontrado, EnumTipoNotificacao.ClientError)
+                        ]
+                    }
+                );
             }
         }
 
