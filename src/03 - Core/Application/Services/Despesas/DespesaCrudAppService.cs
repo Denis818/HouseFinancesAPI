@@ -51,8 +51,6 @@ namespace Application.Services.Despesas
 
         public async Task<Despesa> InsertAsync(DespesaDto despesaDto)
         {
-            despesaDto.Item = despesaDto.Item;
-
             if (Validator(despesaDto))
                 return null;
 
