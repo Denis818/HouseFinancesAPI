@@ -33,6 +33,7 @@ namespace Application.Services.Despesas
         {
             var query = ListDespesasPorGrupo
                 .Include(c => c.Categoria)
+                .Include(c => c.GrupoDespesa)
                 .OrderByDescending(d => d.DataCompra);
 
             var despesas = await Pagination.PaginateResultAsync(query, paginaAtual, itensPorPagina);
