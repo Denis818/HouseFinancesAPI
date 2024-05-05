@@ -106,6 +106,15 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A despesa relacionada a moradia já existe nesse grupo..
+        /// </summary>
+        public static string DespesaMoradiaExiste {
+            get {
+                return ResourceManager.GetString("DespesaMoradiaExiste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Não há despesas {0} nesse mês..
         /// </summary>
         public static string DespesasNaoEncontradas {

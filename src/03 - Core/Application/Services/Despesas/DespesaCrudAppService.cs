@@ -76,6 +76,13 @@ namespace Application.Services.Despesas
                 return null;
             }
 
+            if (await IsDespesaExistenteAsync(despesaDto))
+            {
+                Notificar(EnumTipoNotificacao.ClientError, Message.DespesaMoradiaExiste);
+
+                return null;
+            }
+
             var despesa = _mapper.Map<Despesa>(despesaDto);
 
             despesa.Total = (despesa.Preco * despesa.Quantidade).RoundTo(2);
@@ -172,6 +179,15 @@ namespace Application.Services.Despesas
             if (Validator(despesaDto))
                 return null;
 
+            if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
+            {
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(Message.IdNaoEncontrado, "A categoria", despesaDto.CategoriaId)
+                );
+                return null;
+            }
+
             if (await _grupoDespesaRepository.ExisteAsync(despesaDto.GrupoDespesaId) is null)
             {
                 Notificar(
@@ -241,6 +257,58 @@ namespace Application.Services.Despesas
 
             return true;
         }
+        #endregion
+
+
+        #region Metodos de Suporte
+
+        private async Task<bool> IsDespesaExistenteAsync(DespesaDto despesaDto)
+        {
+            var despesaCaixaExistente = await _repository
+                .Get(d =>
+                    d.GrupoDespesaId == despesaDto.GrupoDespesaId
+                    && despesaDto.CategoriaId == _categoriaIds.IdAluguel
+                    && despesaDto.Item.ToLower().Contains("caixa")
+                )
+                .FirstOrDefaultAsync();
+
+            var despesaApPontoExistente = await _repository
+                .Get(d =>
+                    d.GrupoDespesaId == despesaDto.GrupoDespesaId
+                    && despesaDto.CategoriaId == _categoriaIds.IdAluguel
+                    && despesaDto.Item.ToLower().Contains("ap ponto")
+                )
+                .FirstOrDefaultAsync();
+
+            var despesaContaLuzExistente = await _repository
+                .Get(d =>
+                    d.GrupoDespesaId == despesaDto.GrupoDespesaId
+                    && despesaDto.CategoriaId == _categoriaIds.IdContaDeLuz
+                    && despesaDto.Item.ToLower().Contains("Conta de Luz")
+                )
+                .FirstOrDefaultAsync();
+
+            var despesaCondominioExistente = await _repository
+                .Get(d =>
+                    d.GrupoDespesaId == despesaDto.GrupoDespesaId
+                    && despesaDto.CategoriaId == _categoriaIds.IdCondominio
+                    && despesaDto.Item.ToLower().Contains("Condomínio")
+                )
+                .FirstOrDefaultAsync();
+
+            if (
+                despesaCaixaExistente is null
+                && despesaApPontoExistente is null
+                && despesaContaLuzExistente is null
+                && despesaCondominioExistente is null
+            )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         #endregion
     }
 }
