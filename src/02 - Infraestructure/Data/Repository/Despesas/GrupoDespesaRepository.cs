@@ -12,14 +12,17 @@ namespace Data.Repository.Despesas
     {
         public async Task<GrupoDespesa> ExisteAsync(int id, string nome)
         {
-            if(nome != null)
+            GrupoDespesa grupoDespesa = null;
+            if (nome != null)
             {
-                return await Get(c => c.Nome == nome).FirstOrDefaultAsync();
+                grupoDespesa = await Get(c => c.Nome == nome).FirstOrDefaultAsync();
             }
             else
             {
-                return await Get(c => c.Id == id).FirstOrDefaultAsync();
+                grupoDespesa = await Get(c => c.Id == id).FirstOrDefaultAsync();
             }
+
+            return grupoDespesa;
         }
     }
 }

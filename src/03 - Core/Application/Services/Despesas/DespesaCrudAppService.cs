@@ -37,14 +37,13 @@ namespace Application.Services.Despesas
 
             var despesas = await Pagination.PaginateResultAsync(query, paginaAtual, itensPorPagina);
 
-            if(despesas.TotalItens == 0)
+            if (despesas.TotalItens == 0)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
                     string.Format(Message.DespesasNaoEncontradas, "")
                 );
             }
-
 
             return despesas;
         }
@@ -53,10 +52,10 @@ namespace Application.Services.Despesas
         {
             despesaDto.Item = despesaDto.Item;
 
-            if(Validator(despesaDto))
+            if (Validator(despesaDto))
                 return null;
 
-            if(await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
+            if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -65,7 +64,7 @@ namespace Application.Services.Despesas
                 return null;
             }
 
-            if(await _grupoDespesaRepository.ExisteAsync(despesaDto.GrupoDespesaId) is null)
+            if (await _grupoDespesaRepository.ExisteAsync(despesaDto.GrupoDespesaId) is null)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -85,7 +84,7 @@ namespace Application.Services.Despesas
 
             await _repository.InsertAsync(despesa);
 
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -104,14 +103,14 @@ namespace Application.Services.Despesas
             int totalRecebido = 0;
             var despesasParaInserir = new List<Despesa>();
 
-            await foreach(var despesaDto in listDespesasDto)
+            await foreach (var despesaDto in listDespesasDto)
             {
                 totalRecebido++;
 
-                if(Validator(despesaDto))
+                if (Validator(despesaDto))
                     continue;
 
-                if(await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
+                if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
                 {
                     Notificar(
                         EnumTipoNotificacao.ClientError,
@@ -131,7 +130,7 @@ namespace Application.Services.Despesas
                 despesasParaInserir.Add(despesa);
             }
 
-            if(despesasParaInserir.Count == 0)
+            if (despesasParaInserir.Count == 0)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -141,7 +140,7 @@ namespace Application.Services.Despesas
             }
 
             await _repository.InsertRangeAsync(despesasParaInserir);
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -150,7 +149,7 @@ namespace Application.Services.Despesas
                 return null;
             }
 
-            if(totalRecebido > despesasParaInserir.Count)
+            if (totalRecebido > despesasParaInserir.Count)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -170,12 +169,25 @@ namespace Application.Services.Despesas
 
         public async Task<Despesa> UpdateAsync(int id, DespesaDto despesaDto)
         {
-            if(Validator(despesaDto))
+            if (Validator(despesaDto))
                 return null;
+
+            if (await _grupoDespesaRepository.ExisteAsync(despesaDto.GrupoDespesaId) is null)
+            {
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(
+                        Message.IdNaoEncontrado,
+                        "O Grupo de Despesa",
+                        despesaDto.GrupoDespesaId
+                    )
+                );
+                return null;
+            }
 
             var despesa = await _repository.GetByIdAsync(id);
 
-            if(despesa == null)
+            if (despesa == null)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -191,7 +203,7 @@ namespace Application.Services.Despesas
 
             _repository.Update(despesa);
 
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -207,7 +219,7 @@ namespace Application.Services.Despesas
         {
             var despesa = await _repository.GetByIdAsync(id);
 
-            if(despesa == null)
+            if (despesa == null)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -218,7 +230,7 @@ namespace Application.Services.Despesas
 
             _repository.Delete(despesa);
 
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
