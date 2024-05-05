@@ -19,7 +19,7 @@ namespace CasaFinanceiroApi.V1.Finance.Despesas
     ) : BaseApiController(service)
     {
         #region Consultas
-        [HttpGet("resumo-despesas-mensal")]
+        [HttpGet("analise-despesa-por-grupo")]
         public async Task<DespesasDivididasMensalDto> GetResumoDespesasMensalAsync() =>
             await _despesaConsultaApp.GetDespesasDivididasMensalAsync();
 
@@ -27,7 +27,7 @@ namespace CasaFinanceiroApi.V1.Finance.Despesas
         public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync() =>
             await _despesaConsultaApp.GetTotalPorCategoriaAsync();
 
-        [HttpGet("total-por-mes")]
+        [HttpGet("total-por-grupo")]
         public async Task<
             IEnumerable<DespesasPorMesDto>
         > GetTotaisComprasPorGrupoParaGraficoAsync() =>

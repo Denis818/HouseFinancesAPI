@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Services.Despesas;
+﻿using System.Text.RegularExpressions;
+using Application.Interfaces.Services.Despesas;
 using Application.Interfaces.Services.Membros;
 using Application.Resources.Messages;
 using Application.Services.Base;
@@ -8,7 +9,6 @@ using Domain.Interfaces.Repositories;
 using Domain.Models.Membros;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text.RegularExpressions;
 
 namespace Application.Services.Membros
 {
@@ -25,12 +25,12 @@ namespace Application.Services.Membros
 
         public async Task<Membro> InsertAsync(MembroDto membroDto)
         {
-            if(Validator(membroDto))
+            if (Validator(membroDto))
                 return null;
 
             membroDto.Telefone = FormatFone(membroDto.Telefone);
 
-            if(await _repository.ExisteAsync(membroDto.Nome) != null)
+            if (await _repository.ExisteAsync(membroDto.Nome) != null)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -43,7 +43,7 @@ namespace Application.Services.Membros
 
             await _repository.InsertAsync(membro);
 
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -57,12 +57,12 @@ namespace Application.Services.Membros
 
         public async Task<Membro> UpdateAsync(int id, MembroDto membroDto)
         {
-            if(Validator(membroDto))
+            if (Validator(membroDto))
                 return null;
 
             var membro = await _repository.GetByIdAsync(id);
 
-            if(membro is null)
+            if (membro is null)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -71,15 +71,15 @@ namespace Application.Services.Membros
                 return null;
             }
 
-            if(_repository.ValidaMembroParaAcao(membro.Id))
+            if (_repository.ValidaMembroParaAcao(membro.Id))
             {
                 Notificar(EnumTipoNotificacao.ClientError, Message.AvisoMembroImutavel);
                 return null;
             }
 
-            if(await _repository.ExisteAsync(membroDto.Nome) is Membro membroExiste)
+            if (await _repository.ExisteAsync(membroDto.Nome) is Membro membroExiste)
             {
-                if(membro.Id != membroExiste.Id)
+                if (membro.Id != membroExiste.Id)
                 {
                     Notificar(
                         EnumTipoNotificacao.ClientError,
@@ -93,7 +93,7 @@ namespace Application.Services.Membros
 
             _repository.Update(membro);
 
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -109,7 +109,7 @@ namespace Application.Services.Membros
         {
             var membro = await _repository.GetByIdAsync(id);
 
-            if(membro == null)
+            if (membro == null)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -118,7 +118,7 @@ namespace Application.Services.Membros
                 return false;
             }
 
-            if(_repository.ValidaMembroParaAcao(membro.Id))
+            if (_repository.ValidaMembroParaAcao(membro.Id))
             {
                 Notificar(EnumTipoNotificacao.ClientError, Message.AvisoMembroImutavel);
                 return false;
@@ -126,7 +126,7 @@ namespace Application.Services.Membros
 
             _repository.Delete(membro);
 
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -149,7 +149,7 @@ namespace Application.Services.Membros
         {
             var membro = await _repository.Get(membro => membro.Nome == nome).FirstOrDefaultAsync();
 
-            if(membro is null)
+            if (membro is null)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -159,7 +159,7 @@ namespace Application.Services.Membros
                 return null;
             }
 
-            if(isMoradia && membro.Nome.Contains("Jhon"))
+            if (isMoradia && membro.Nome.Contains("Jhon"))
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -202,7 +202,7 @@ namespace Application.Services.Membros
                 : titleMessage + "\r\n\r\n";
 
             string messageBody =
-                $"As despesas de casa vieram com um valor total de: *R${resumoMensal.RelatorioGastosDoMes.TotalGastosCasa:F2}*.\r\n\r\n"
+                $"As despesas de casa vieram com um valor total de: *R${resumoMensal.RelatorioGastosDoGrupo.TotalGastosCasa:F2}*.\r\n\r\n"
                 + $"Dividido para cada vai ficar: *R$ {valorPorMembro:F2}*."
                 + $"\r\n\r\nMeu pix: *{pix}*.";
 
@@ -228,7 +228,7 @@ namespace Application.Services.Membros
                 : titleMessage + "\r\n\r\n";
 
             string messageBody =
-                $"As despesas Moradia (Aluguel, comdomínio, conta de luz) vieram com um valor total de: *R${resumoMensal.RelatorioGastosDoMes.TotalGastosMoradia:F2}*.\r\n\r\n"
+                $"As despesas Moradia (Aluguel, comdomínio, conta de luz) vieram com um valor total de: *R${resumoMensal.RelatorioGastosDoGrupo.TotalGastosMoradia:F2}*.\r\n\r\n"
                 + $"Dividido para cada vai ficar: *R$ {valorPorMembro:F2}*."
                 + $"\r\n\r\nMeu pix: *{pix}*.";
 
@@ -239,11 +239,11 @@ namespace Application.Services.Membros
         {
             string numeros = Regex.Replace(telefone, "[^0-9]", "");
 
-            if(numeros.Length == 10)
+            if (numeros.Length == 10)
             {
                 return $"({numeros.Substring(0, 2)}) {numeros.Substring(2, 4)}-{numeros.Substring(6)}";
             }
-            else if(numeros.Length == 11)
+            else if (numeros.Length == 11)
             {
                 return $"({numeros.Substring(0, 2)}) {numeros.Substring(2, 5)}-{numeros.Substring(7)}";
             }

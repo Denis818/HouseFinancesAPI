@@ -7,7 +7,7 @@ using Domain.Enumeradores;
 using Domain.Models.Categorias;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CasaFinanceiroApi.V1.Finance
+namespace CasaFinanceiroApi.V1.Finance.Categorias
 {
     [ApiController]
     [ApiVersion("1")]

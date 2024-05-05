@@ -77,11 +77,11 @@ namespace Application.Services.Despesas
                 distribuicaoCustosMoradia.DistribuicaoCustos.ValorParaDoPeu
             );
 
-            var relatorioGastosDoMes = await GetRelatorioDeGastosDoMesAsync();
+            var relatorioGastosDoGrupo = await GetRelatorioDeGastosDoMesAsync();
 
             return new DespesasDivididasMensalDto
             {
-                RelatorioGastosDoMes = relatorioGastosDoMes,
+                RelatorioGastosDoGrupo = relatorioGastosDoGrupo,
 
                 DespesasPorMembro = despesasPorMembro
             };
