@@ -43,7 +43,7 @@ namespace Application.Services.Despesas
             ));
         }
 
-        public async Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorGrupoParaGraficoAsync()
+        public async Task<IEnumerable<DespesasPorMesDto>> GetDespesaGrupoParaGraficoAsync()
         {
             var despesasPorMes = ListDespesasPorGrupo
                 .GroupBy(d => new { d.DataCompra.Year, d.DataCompra.Month })
