@@ -36,7 +36,8 @@ namespace Application.Services.Despesas.Base
 
             var queryDespesas = _repository
                 .Get(d => d.GrupoDespesaId == _grupoDespesaId)
-                .Include(c => c.Categoria);
+                .Include(c => c.Categoria)
+                .Include(c => c.GrupoDespesa);
 
             return queryDespesas;
         }

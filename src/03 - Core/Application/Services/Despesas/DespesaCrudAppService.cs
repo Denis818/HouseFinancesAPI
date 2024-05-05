@@ -163,6 +163,7 @@ namespace Application.Services.Despesas
             var despesasInseridas = await _repository
                 .Get(d => ids.Contains(d.Id))
                 .Include(c => c.Categoria)
+                .Include(c => c.GrupoDespesa)
                 .ToListAsync();
 
             return despesasInseridas;
