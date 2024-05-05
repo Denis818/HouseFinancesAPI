@@ -2,6 +2,7 @@
 using Asp.Versioning;
 using CasaFinanceiroApi.Attributes.Auth;
 using CasaFinanceiroApi.Base;
+using CasaFinanceiroApi.Filters;
 using Domain.Dtos.Despesas.Consultas;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,7 @@ namespace CasaFinanceiroApi.V1.Finance.Despesas
     [ApiController]
     [ApiVersion("1")]
     [AutorizationFinance]
+    [IdGroupInHeaderFilter]
     [Route("api/v1/despesa")]
     public class DespesaConsultaController(
         IServiceProvider service,
@@ -26,7 +28,9 @@ namespace CasaFinanceiroApi.V1.Finance.Despesas
             await _despesaConsultaApp.GetTotalPorCategoriaAsync();
 
         [HttpGet("total-por-mes")]
-        public async Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorGrupoParaGraficoAsync() =>
+        public async Task<
+            IEnumerable<DespesasPorMesDto>
+        > GetTotaisComprasPorGrupoParaGraficoAsync() =>
             await _despesaConsultaApp.GetTotaisComprasPorGrupoParaGraficoAsync();
         #endregion
     }

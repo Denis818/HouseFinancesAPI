@@ -20,7 +20,7 @@ namespace Application.Services.Despesas
         #region CRUD
         public async Task<Despesa> GetByIdAsync(int id)
         {
-            var despesa = await ListDespesasRecentes
+            var despesa = await ListDespesasPorGrupo
                 .Where(despesa => despesa.Id == id)
                 .Include(x => x.Categoria)
                 .Include(x => x.GrupoDespesa)
@@ -31,7 +31,7 @@ namespace Application.Services.Despesas
 
         public async Task<PagedResult<Despesa>> GetAllAsync(int paginaAtual, int itensPorPagina)
         {
-            var query = ListDespesasRecentes
+            var query = ListDespesasPorGrupo
                 .Include(c => c.Categoria)
                 .OrderByDescending(d => d.DataCompra);
 
@@ -170,9 +170,6 @@ namespace Application.Services.Despesas
 
         public async Task<Despesa> UpdateAsync(int id, DespesaDto despesaDto)
         {
-            despesaDto.Item = despesaDto.Item.Trim();
-            despesaDto.Fornecedor = despesaDto.Fornecedor.Trim();
-
             if(Validator(despesaDto))
                 return null;
 

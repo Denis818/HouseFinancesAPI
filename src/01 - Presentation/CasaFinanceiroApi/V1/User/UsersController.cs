@@ -25,9 +25,6 @@ namespace CasaFinanceiroApi.V1.User
                 return null;
             }
 
-            if(userDto.Email.Replace(" ", "").Equals("master", StringComparison.CurrentCultureIgnoreCase))
-                userDto.Email = _configuration["UserMaster:Email"];
-
             return await _authService.AutenticarUsuario(userDto);
         }
 

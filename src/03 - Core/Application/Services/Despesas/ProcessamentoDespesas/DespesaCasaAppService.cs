@@ -45,7 +45,7 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
         #region Metodos de Suporte
         private double CalculaTotalDespesaForaAlmocoDespesaMoradia()
         {
-            double total = ListDespesasRecentes
+            double total = ListDespesasPorGrupo
                 .Where(d =>
                     d.CategoriaId != _categoriaIds.IdAluguel
                     && d.CategoriaId != _categoriaIds.IdCondominio
@@ -61,7 +61,7 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
         {
             int todosMembros = await _membroRepository.Get().CountAsync();
 
-            double almoco = ListDespesasRecentes
+            double almoco = ListDespesasPorGrupo
                 .Where(d => d.CategoriaId == _categoriaIds.IdAlmoco)
                 .Sum(d => d.Total);
 

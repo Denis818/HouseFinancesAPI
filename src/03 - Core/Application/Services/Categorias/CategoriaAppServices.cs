@@ -21,8 +21,6 @@ namespace Application.Services.Categorias
 
         public async Task<Categoria> InsertAsync(CategoriaDto categoriaDto)
         {
-            categoriaDto.Descricao = categoriaDto.Descricao.Trim();
-
             if(Validator(categoriaDto))
                 return null;
 
@@ -52,8 +50,6 @@ namespace Application.Services.Categorias
 
         public async Task<Categoria> UpdateAsync(int id, CategoriaDto categoriaDto)
         {
-            categoriaDto.Descricao = categoriaDto.Descricao.Trim();
-
             if(Validator(categoriaDto))
                 return null;
 

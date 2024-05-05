@@ -18,8 +18,6 @@ namespace Application.Services.Despesas
 
         public async Task<GrupoDespesa> InsertAsync(GrupoDespesaDto grupoDto)
         {
-            grupoDto.Nome = grupoDto.Nome.Trim();
-
             if(Validator(grupoDto))
                 return null;
 
@@ -123,7 +121,7 @@ namespace Application.Services.Despesas
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
-                    string.Format(Message.NaoPodeDeletarGrupoDespesa)
+                    string.Format(Message.DeletarUnicoGrupoDespesa)
                 );
                 return false;
             }

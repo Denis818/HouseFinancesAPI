@@ -97,6 +97,15 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deve existir pelo menos um Grupo..
+        /// </summary>
+        public static string DeletarUnicoGrupoDespesa {
+            get {
+                return ResourceManager.GetString("DeletarUnicoGrupoDespesa", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Não há despesas {0} nesse mês..
         /// </summary>
         public static string DespesasNaoEncontradas {
@@ -147,15 +156,6 @@ namespace Application.Resources.Messages {
         public static string ModeloInvalido {
             get {
                 return ResourceManager.GetString("ModeloInvalido", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Deve existir pelo menos um Grupo..
-        /// </summary>
-        public static string NaoPodeDeletarGrupoDespesa {
-            get {
-                return ResourceManager.GetString("NaoPodeDeletarGrupoDespesa", resourceCulture);
             }
         }
         

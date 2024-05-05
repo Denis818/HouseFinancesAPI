@@ -129,6 +129,9 @@
   <data name="CampoFormatoInvalido" xml:space="preserve">
     <value>Campo {0} não está em um formato válido.</value>
   </data>
+  <data name="DeletarUnicoGrupoDespesa" xml:space="preserve">
+    <value>Deve existir pelo menos um Grupo.</value>
+  </data>
   <data name="DespesasNaoEncontradas" xml:space="preserve">
     <value>Não há despesas {0} nesse mês.</value>
   </data>
@@ -146,9 +149,6 @@
   </data>
   <data name="ModeloInvalido" xml:space="preserve">
     <value>Modelo não é valido.</value>
-  </data>
-  <data name="NaoPodeDeletarGrupoDespesa" xml:space="preserve">
-    <value>Deve existir pelo menos um Grupo.</value>
   </data>
   <data name="RegistroExistente" xml:space="preserve">
     <value>{0} {1} já existe.</value>

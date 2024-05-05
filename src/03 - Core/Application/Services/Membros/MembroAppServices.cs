@@ -28,7 +28,6 @@ namespace Application.Services.Membros
             if(Validator(membroDto))
                 return null;
 
-            membroDto.Nome = membroDto.Nome.Trim();
             membroDto.Telefone = FormatFone(membroDto.Telefone);
 
             if(await _repository.ExisteAsync(membroDto.Nome) != null)
@@ -58,8 +57,6 @@ namespace Application.Services.Membros
 
         public async Task<Membro> UpdateAsync(int id, MembroDto membroDto)
         {
-            membroDto.Nome = membroDto.Nome.Trim();
-
             if(Validator(membroDto))
                 return null;
 

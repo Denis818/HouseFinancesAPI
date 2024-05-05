@@ -3,6 +3,7 @@ using Application.Utilities;
 using Asp.Versioning;
 using CasaFinanceiroApi.Attributes.Auth;
 using CasaFinanceiroApi.Base;
+using CasaFinanceiroApi.Filters;
 using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
 using Domain.Models.Despesas;
@@ -13,6 +14,7 @@ namespace CasaFinanceiroApi.V1.Finance.Despesas
     [ApiController]
     [ApiVersion("1")]
     [AutorizationFinance]
+    [IdGroupInHeaderFilter]
     [Route("api/v1/despesa")]
     public class DespesaCrudController(
         IServiceProvider service,

@@ -3,15 +3,17 @@ using Application.Resources.Messages;
 using Application.Services.Despesas.Base;
 using Domain.Dtos.Despesas.Relatorios;
 using Domain.Enumeradores;
+using Domain.Interfaces.Services.Despesa;
 using Domain.Models.Despesas;
 using Domain.Models.Membros;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Despesas.ProcessamentoDespesas
 {
-    public class DespesaMoradiaAppService(IServiceProvider service)
-        : BaseDespesaService(service),
-            IDespesaMoradiaAppService
+    public class DespesaMoradiaAppService(
+        IServiceProvider service,
+        IDespesaDomainServices _despesaDomainServices
+    ) : BaseDespesaService(service), IDespesaMoradiaAppService
     {
         public async Task<DetalhamentoDespesasMoradiaDto> CalcularDistribuicaoCustosMoradiaAsync()
         {
@@ -61,7 +63,7 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
         #region Metodos de Suporte
         private async Task<CustosDespesasMoradiaDto> GetCustosDespesasMoradiaAsync()
         {
-            var listAluguel = ListDespesasRecentes.Where(d =>
+            var listAluguel = ListDespesasPorGrupo.Where(d =>
                 d.CategoriaId == _categoriaIds.IdAluguel
             );
 
@@ -73,11 +75,11 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
                 .Where(aluguel => aluguel.Item.ToLower().Contains("caixa"))
                 .FirstOrDefaultAsync();
 
-            Despesa contaDeLuz = await ListDespesasRecentes
+            Despesa contaDeLuz = await ListDespesasPorGrupo
                 .Where(despesa => despesa.CategoriaId == _categoriaIds.IdContaDeLuz)
                 .FirstOrDefaultAsync();
 
-            Despesa condominio = await ListDespesasRecentes
+            Despesa condominio = await ListDespesasPorGrupo
                 .Where(despesa => despesa.CategoriaId == _categoriaIds.IdCondominio)
                 .FirstOrDefaultAsync();
 
@@ -100,7 +102,7 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
                 .Where(m => m.Id != _membroId.IdPeu)
                 .ToList();
 
-            List<Despesa> listAluguel = await ListDespesasRecentes
+            List<Despesa> listAluguel = await ListDespesasPorGrupo
                 .Where(d => d.CategoriaId == _categoriaIds.IdAluguel)
                 .ToListAsync();
 
