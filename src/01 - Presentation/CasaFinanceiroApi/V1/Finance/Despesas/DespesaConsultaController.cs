@@ -26,8 +26,8 @@ namespace CasaFinanceiroApi.V1.Finance.Despesas
             await _despesaConsultaApp.GetTotalPorCategoriaAsync();
 
         [HttpGet("total-por-mes")]
-        public async Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorMesAsync() =>
-            await _despesaConsultaApp.GetTotaisComprasPorMesAsync();
+        public async Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorGrupoParaGraficoAsync() =>
+            await _despesaConsultaApp.GetTotaisComprasPorGrupoParaGraficoAsync();
         #endregion
     }
 }

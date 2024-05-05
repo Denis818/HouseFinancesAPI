@@ -43,10 +43,9 @@ namespace Application.Services.Despesas
             ));
         }
 
-        public async Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorMesAsync()
+        public async Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorGrupoParaGraficoAsync()
         {
-            var despesasPorMes = _repository
-                .Get()
+            var despesasPorMes = ListDespesasRecentes
                 .GroupBy(d => new { d.DataCompra.Year, d.DataCompra.Month })
                 .OrderBy(g => g.Key.Month)
                 .ThenBy(g => g.Key.Month)
@@ -71,23 +70,27 @@ namespace Application.Services.Despesas
             var distribuicaoCustosCasa =
                 await _despesaCasaApp.CalcularDistribuicaoCustosCasaAsync();
 
+            var despesasPorMembro = await DistribuirDespesasEntreMembrosAsync(
+                distribuicaoCustosCasa.DespesaGeraisMaisAlmocoDividioPorMembro,
+                distribuicaoCustosCasa.TotalAlmocoParteDoJhon,
+                distribuicaoCustosMoradia.DistribuicaoCustos.ValorParaMembrosForaPeu,
+                distribuicaoCustosMoradia.DistribuicaoCustos.ValorParaDoPeu
+            );
+
+            var relatorioGastosDoMes = await GetRelatorioDeGastosDoMesAsync();
+
             return new DespesasDivididasMensalDto
             {
-                RelatorioGastosDoMes = GetRelatorioDeGastosDoMesAsync(),
+                RelatorioGastosDoMes = relatorioGastosDoMes,
 
-                DespesasPorMembro = await DistribuirDespesasEntreMembros(
-                    distribuicaoCustosCasa.DespesaGeraisMaisAlmocoDividioPorMembro,
-                    distribuicaoCustosCasa.TotalAlmocoParteDoJhon,
-                    distribuicaoCustosMoradia.DistribuicaoCustos.ValorParaMembrosForaPeu,
-                    distribuicaoCustosMoradia.DistribuicaoCustos.ValorParaDoPeu
-                )
+                DespesasPorMembro = despesasPorMembro
             };
         }
 
         #endregion
 
         #region Metodos de Suporte
-        private RelatorioGastosDoMesDto GetRelatorioDeGastosDoMesAsync()
+        private async Task<RelatorioGastosDoMesDto> GetRelatorioDeGastosDoMesAsync()
         {
             string grupoNome = _grupoDespesaRepository
                 .Get(g => g.Id == _grupoDespesaId)
@@ -100,21 +103,21 @@ namespace Application.Services.Despesas
                 return new();
             }
 
-            double totalGastoMoradia = ListDespesasRecentes
+            double totalGastoMoradia = await ListDespesasRecentes
                 .Where(d =>
                     d.Categoria.Id == _categoriaIds.IdAluguel
                     || d.Categoria.Id == _categoriaIds.IdCondominio
                     || d.Categoria.Id == _categoriaIds.IdContaDeLuz
                 )
-                .Sum(d => d.Total);
+                .SumAsync(d => d.Total);
 
-            double totalGastosCasa = ListDespesasRecentes
+            double totalGastosCasa = await ListDespesasRecentes
                 .Where(d =>
                     d.Categoria.Id != _categoriaIds.IdAluguel
                     || d.Categoria.Id != _categoriaIds.IdCondominio
                     || d.Categoria.Id != _categoriaIds.IdContaDeLuz
                 )
-                .Sum(d => d.Total);
+                .SumAsync(d => d.Total);
 
             var totalGeral = totalGastosCasa + totalGastosCasa;
 
@@ -127,7 +130,7 @@ namespace Application.Services.Despesas
             };
         }
 
-        private async Task<IEnumerable<DespesaPorMembroDto>> DistribuirDespesasEntreMembros(
+        private async Task<IEnumerable<DespesaPorMembroDto>> DistribuirDespesasEntreMembrosAsync(
             double despesaGeraisMaisAlmocoDividioPorMembro,
             double almocoParteDoJhon,
             double aluguelCondominioContaLuzPorMembroForaPeu,
