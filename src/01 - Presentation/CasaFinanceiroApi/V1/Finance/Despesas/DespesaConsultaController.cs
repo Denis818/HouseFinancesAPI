@@ -20,8 +20,8 @@ namespace CasaFinanceiroApi.V1.Finance.Despesas
     {
         #region Consultas
         [HttpGet("analise-despesa-por-grupo")]
-        public async Task<DespesasDivididasMensalDto> GetResumoDespesasMensalAsync() =>
-            await _despesaConsultaApp.GetDespesasDivididasMensalAsync();
+        public async Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync() =>
+            await _despesaConsultaApp.GetAnaliseDesesasPorGrupoAsync();
 
         [HttpGet("total-por-categoria")]
         public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync() =>

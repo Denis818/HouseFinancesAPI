@@ -6,6 +6,6 @@ namespace Application.Interfaces.Services.Despesas
     {
         Task<IEnumerable<DespesasPorMesDto>> GetTotaisComprasPorGrupoParaGraficoAsync();
         Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync();
-        Task<DespesasDivididasMensalDto> GetDespesasDivididasMensalAsync();
+        Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync();
     }
 }

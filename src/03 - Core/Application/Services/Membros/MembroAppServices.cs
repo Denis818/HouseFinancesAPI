@@ -189,7 +189,7 @@ namespace Application.Services.Membros
             string titleMessage
         )
         {
-            var resumoMensal = await _despesaConsultaApp.GetDespesasDivididasMensalAsync();
+            var resumoMensal = await _despesaConsultaApp.GetAnaliseDesesasPorGrupoAsync();
 
             double valorPorMembro =
                 resumoMensal
@@ -215,7 +215,7 @@ namespace Application.Services.Membros
             string titleMessage
         )
         {
-            var resumoMensal = await _despesaConsultaApp.GetDespesasDivididasMensalAsync();
+            var resumoMensal = await _despesaConsultaApp.GetAnaliseDesesasPorGrupoAsync();
 
             double valorPorMembro =
                 resumoMensal

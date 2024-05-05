@@ -60,7 +60,7 @@ namespace Application.Services.Despesas
             return await despesasPorMes.ToListAsync();
         }
 
-        public async Task<DespesasDivididasMensalDto> GetDespesasDivididasMensalAsync()
+        public async Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync()
         {
             //Aluguel + Condomínio + Conta de Luz
             var distribuicaoCustosMoradia =
