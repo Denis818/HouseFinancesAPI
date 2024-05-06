@@ -292,7 +292,11 @@ namespace Application.Services.Despesas
                 return false;
             }
 
-            foreach (var despesa in despesasExistentes)
+            var despesasOutrasCategorias = despesasExistentes.Where(d =>
+                d.CategoriaId != _categoriaIds.IdAluguel
+            );
+
+            foreach (var despesa in despesasOutrasCategorias)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,

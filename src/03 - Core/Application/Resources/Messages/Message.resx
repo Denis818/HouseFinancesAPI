@@ -127,7 +127,7 @@
     <value>Esse membro faz parta da regra de negócio. Não pode ser alterado.</value>
   </data>
   <data name="CadastroAluguelIncorreto" xml:space="preserve">
-    <value>Para cadastro de aluguel o campo 'item' deve ser 'Parcela Ap ponto' ou 'Parcela Caixa'.</value>
+    <value>Para cadastro de aluguel o campo 'item' deve ser 'Parcela Ap Ponto' ou 'Parcela Caixa'.</value>
   </data>
   <data name="CampoFormatoInvalido" xml:space="preserve">
     <value>Campo {0} não está em um formato válido.</value>

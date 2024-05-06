@@ -88,7 +88,7 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Para cadastro de aluguel o campo &apos;item&apos; deve ser &apos;Parcela Ap ponto&apos; ou &apos;Parcela Caixa&apos;..
+        ///   Looks up a localized string similar to Para cadastro de aluguel o campo &apos;item&apos; deve ser &apos;Parcela Ap Ponto&apos; ou &apos;Parcela Caixa&apos;..
         /// </summary>
         public static string CadastroAluguelIncorreto {
             get {
