@@ -126,6 +126,9 @@
   <data name="AvisoMembroImutavel" xml:space="preserve">
     <value>Esse membro faz parta da regra de negócio. Não pode ser alterado.</value>
   </data>
+  <data name="CadastroAluguelIncorreto" xml:space="preserve">
+    <value>Para cadastro de aluguel o campo 'item' deve ser 'Ap ponto' ou 'Caixa'.</value>
+  </data>
   <data name="CampoFormatoInvalido" xml:space="preserve">
     <value>Campo {0} não está em um formato válido.</value>
   </data>

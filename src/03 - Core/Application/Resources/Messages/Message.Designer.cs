@@ -88,6 +88,15 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Para cadastro de aluguel o campo &apos;item&apos; deve ser &apos;Ap ponto&apos; ou &apos;Caixa&apos;..
+        /// </summary>
+        public static string CadastroAluguelIncorreto {
+            get {
+                return ResourceManager.GetString("CadastroAluguelIncorreto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Campo {0} não está em um formato válido..
         /// </summary>
         public static string CampoFormatoInvalido {

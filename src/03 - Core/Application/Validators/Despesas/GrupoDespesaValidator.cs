@@ -9,10 +9,10 @@ namespace Application.Validators.Despesas
         {
             RuleFor(x => x.Nome)
                 .NotEmpty()
-                .WithMessage("A {PropertyName} é obrigatória.")
+                .WithMessage("O campo {PropertyName} é obrigatória.")
                 .Length(3, 25)
                 .WithMessage(
-                    "A {PropertyName} deve ter entre {MinLength} a {MaxLength} caracteres."
+                    "O campo {PropertyName} deve ter entre {MinLength} a {MaxLength} caracteres."
                 );
         }
     }

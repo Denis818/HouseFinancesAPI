@@ -54,34 +54,8 @@ namespace Application.Services.Despesas
             if (Validator(despesaDto))
                 return null;
 
-            if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
-            {
-                Notificar(
-                    EnumTipoNotificacao.ClientError,
-                    string.Format(Message.IdNaoEncontrado, "A categoria", despesaDto.CategoriaId)
-                );
+            if (!await ValidarDespesaAsync(despesaDto))
                 return null;
-            }
-
-            if (await _grupoDespesaRepository.ExisteAsync(despesaDto.GrupoDespesaId) is null)
-            {
-                Notificar(
-                    EnumTipoNotificacao.ClientError,
-                    string.Format(
-                        Message.IdNaoEncontrado,
-                        "O Grupo de Despesa",
-                        despesaDto.GrupoDespesaId
-                    )
-                );
-                return null;
-            }
-
-            if (await IsDespesaExistenteAsync(despesaDto))
-            {
-                Notificar(EnumTipoNotificacao.ClientError, Message.DespesaMoradiaExiste);
-
-                return null;
-            }
 
             var despesa = _mapper.Map<Despesa>(despesaDto);
 
@@ -179,27 +153,8 @@ namespace Application.Services.Despesas
             if (Validator(despesaDto))
                 return null;
 
-            if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
-            {
-                Notificar(
-                    EnumTipoNotificacao.ClientError,
-                    string.Format(Message.IdNaoEncontrado, "A categoria", despesaDto.CategoriaId)
-                );
+            if (!await ValidarDespesaAsync(despesaDto))
                 return null;
-            }
-
-            if (await _grupoDespesaRepository.ExisteAsync(despesaDto.GrupoDespesaId) is null)
-            {
-                Notificar(
-                    EnumTipoNotificacao.ClientError,
-                    string.Format(
-                        Message.IdNaoEncontrado,
-                        "O Grupo de Despesa",
-                        despesaDto.GrupoDespesaId
-                    )
-                );
-                return null;
-            }
 
             var despesa = await _repository.GetByIdAsync(id);
 
@@ -262,21 +217,58 @@ namespace Application.Services.Despesas
 
         #region Metodos de Suporte
 
-        private async Task<bool> IsDespesaExistenteAsync(DespesaDto despesaDto)
+        private async Task<bool> ValidarDespesaAsync(DespesaDto despesaDto)
         {
-            var despesaCaixaExistente = await _repository
-                .Get(d =>
-                    d.GrupoDespesaId == despesaDto.GrupoDespesaId
-                    && despesaDto.CategoriaId == _categoriaIds.IdAluguel
-                    && despesaDto.Item.ToLower().Contains("caixa")
-                )
-                .FirstOrDefaultAsync();
+            if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
+            {
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(Message.IdNaoEncontrado, "A categoria", despesaDto.CategoriaId)
+                );
+                return false;
+            }
 
-            var despesaApPontoExistente = await _repository
+            if (
+                despesaDto.CategoriaId == _categoriaIds.IdAluguel
+                && despesaDto.Item.ToLower() != "caixa"
+                && despesaDto.Item.ToLower() != "ap ponto"
+            )
+            {
+                Notificar(EnumTipoNotificacao.ClientError, Message.CadastroAluguelIncorreto);
+                return false;
+            }
+
+            if (await _grupoDespesaRepository.ExisteAsync(despesaDto.GrupoDespesaId) is null)
+            {
+                Notificar(
+                    EnumTipoNotificacao.ClientError,
+                    string.Format(
+                        Message.IdNaoEncontrado,
+                        "O Grupo de Despesa",
+                        despesaDto.GrupoDespesaId
+                    )
+                );
+                return false;
+            }
+
+            if (!await DespesaExistenteAsync(despesaDto))
+            {
+                Notificar(EnumTipoNotificacao.ClientError, Message.DespesaMoradiaExiste);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private async Task<bool> DespesaExistenteAsync(DespesaDto despesaDto)
+        {
+            var despesaAluguelExistente = await _repository
                 .Get(d =>
                     d.GrupoDespesaId == despesaDto.GrupoDespesaId
-                    && despesaDto.CategoriaId == _categoriaIds.IdAluguel
-                    && despesaDto.Item.ToLower().Contains("ap ponto")
+                        && despesaDto.CategoriaId == _categoriaIds.IdAluguel
+                        && despesaDto.Item.ToLower().Contains("caixa")
+                    || despesaDto.Item.ToLower().Contains("ap ponto")
                 )
                 .FirstOrDefaultAsync();
 
@@ -296,11 +288,16 @@ namespace Application.Services.Despesas
                 )
                 .FirstOrDefaultAsync();
 
+            bool aluguelExistente = false;
+            if (despesaAluguelExistente is not null)
+            {
+                aluguelExistente = despesaAluguelExistente.Item == despesaDto.Item;
+            }
+
             if (
-                despesaCaixaExistente is null
-                && despesaApPontoExistente is null
-                && despesaContaLuzExistente is null
-                && despesaCondominioExistente is null
+                aluguelExistente
+                || despesaContaLuzExistente is null
+                || despesaCondominioExistente is null
             )
             {
                 return true;
