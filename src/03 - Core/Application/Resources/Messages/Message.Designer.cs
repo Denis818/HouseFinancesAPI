@@ -115,11 +115,11 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A despesa relacionada a moradia já existe nesse grupo..
+        ///   Looks up a localized string similar to Despesa de {0} já adicionada ao grupo.
         /// </summary>
-        public static string DespesaMoradiaExiste {
+        public static string DespesaExistente {
             get {
-                return ResourceManager.GetString("DespesaMoradiaExiste", resourceCulture);
+                return ResourceManager.GetString("DespesaExistente", resourceCulture);
             }
         }
         

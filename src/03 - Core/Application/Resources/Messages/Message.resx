@@ -135,8 +135,8 @@
   <data name="DeletarUnicoGrupoDespesa" xml:space="preserve">
     <value>Deve existir pelo menos um Grupo.</value>
   </data>
-  <data name="DespesaMoradiaExiste" xml:space="preserve">
-    <value>A despesa relacionada a moradia já existe nesse grupo.</value>
+  <data name="DespesaExistente" xml:space="preserve">
+    <value>Despesa de {0} já adicionada ao grupo</value>
   </data>
   <data name="DespesasNaoEncontradas" xml:space="preserve">
     <value>Não há despesas {0} nesse mês.</value>

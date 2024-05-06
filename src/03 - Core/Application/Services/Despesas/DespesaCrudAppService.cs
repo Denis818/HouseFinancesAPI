@@ -20,8 +20,8 @@ namespace Application.Services.Despesas
         #region CRUD
         public async Task<Despesa> GetByIdAsync(int id)
         {
-            var despesa = await ListDespesasPorGrupo
-                .Where(despesa => despesa.Id == id)
+            var despesa = await _repository
+                .Get(despesa => despesa.Id == id)
                 .Include(x => x.Categoria)
                 .Include(x => x.GrupoDespesa)
                 .FirstOrDefaultAsync();
@@ -253,8 +253,6 @@ namespace Application.Services.Despesas
 
             if (!await IsDespesaExistenteAsync(despesaDto))
             {
-                Notificar(EnumTipoNotificacao.ClientError, Message.DespesaMoradiaExiste);
-
                 return false;
             }
 
@@ -263,43 +261,43 @@ namespace Application.Services.Despesas
 
         private async Task<bool> IsDespesaExistenteAsync(DespesaDto despesaDto)
         {
-            var despesaAluguelExistente = await _repository
-                .Get(d =>
-                    d.GrupoDespesaId == despesaDto.GrupoDespesaId
-                    && despesaDto.CategoriaId == _categoriaIds.IdAluguel
-                    && d.Item == despesaDto.Item
-                )
-                .FirstOrDefaultAsync();
-
-            var despesaContaLuzExistente = await _repository
-                .Get(d =>
-                    d.GrupoDespesaId == despesaDto.GrupoDespesaId
-                    && despesaDto.CategoriaId == _categoriaIds.IdContaDeLuz
-                )
-                .FirstOrDefaultAsync();
-
-            var despesaCondominioExistente = await _repository
-                .Get(d =>
-                    d.GrupoDespesaId == despesaDto.GrupoDespesaId
-                    && despesaDto.CategoriaId == _categoriaIds.IdCondominio
-                )
-                .FirstOrDefaultAsync();
-
-            var despesaInternetExistente = await _repository
-                .Get(d =>
-                    d.GrupoDespesaId == despesaDto.GrupoDespesaId
-                    && despesaDto.CategoriaId == _categoriaIds.IdInternet
-                )
-                .FirstOrDefaultAsync();
-
-            if (
-                despesaAluguelExistente is null
-                && despesaContaLuzExistente is null
-                && despesaCondominioExistente is null
-                && despesaInternetExistente is null
-            )
+            if (!_categoriaRepository.IdentificarCategoriaParaAcao(despesaDto.CategoriaId))
             {
                 return true;
+            }
+
+            var despesasExistentes = await _repository
+                .Get(d =>
+                    d.GrupoDespesaId == despesaDto.GrupoDespesaId
+                    && d.CategoriaId == despesaDto.CategoriaId
+                )
+                .ToListAsync();
+
+            if (despesasExistentes.Count == 0)
+            {
+                return true;
+            }
+
+            var despesaAluguel = despesasExistentes.FirstOrDefault(d =>
+                d.CategoriaId == _categoriaIds.IdAluguel
+                && d.Item.Equals(despesaDto.Item, StringComparison.OrdinalIgnoreCase)
+            );
+
+            if (despesaAluguel != null)
+            {
+                Notificar(
+                    EnumTipoNotificacao.Informacao,
+                    string.Format(Message.DespesaExistente, despesaAluguel.Item)
+                );
+                return false;
+            }
+
+            foreach (var despesa in despesasExistentes)
+            {
+                Notificar(
+                    EnumTipoNotificacao.Informacao,
+                    string.Format(Message.DespesaExistente, despesa.Item)
+                );
             }
 
             return false;

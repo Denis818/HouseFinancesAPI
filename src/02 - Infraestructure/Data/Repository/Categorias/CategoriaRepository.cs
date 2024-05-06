@@ -23,7 +23,7 @@ namespace Data.Repository.Categorias
             }
         }
 
-        public bool ValidaCategoriaParaAcao(int idCategoria)
+        public bool IdentificarCategoriaParaAcao(int idCategoria)
         {
             var categoriaIds = GetCategoriaIds();
 

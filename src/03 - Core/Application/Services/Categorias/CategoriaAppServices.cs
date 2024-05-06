@@ -21,10 +21,10 @@ namespace Application.Services.Categorias
 
         public async Task<Categoria> InsertAsync(CategoriaDto categoriaDto)
         {
-            if(Validator(categoriaDto))
+            if (Validator(categoriaDto))
                 return null;
 
-            if(await _repository.ExisteAsync(nome: categoriaDto.Descricao) != null)
+            if (await _repository.ExisteAsync(nome: categoriaDto.Descricao) != null)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -36,7 +36,7 @@ namespace Application.Services.Categorias
             var categoria = _mapper.Map<Categoria>(categoriaDto);
             await _repository.InsertAsync(categoria);
 
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -50,12 +50,12 @@ namespace Application.Services.Categorias
 
         public async Task<Categoria> UpdateAsync(int id, CategoriaDto categoriaDto)
         {
-            if(Validator(categoriaDto))
+            if (Validator(categoriaDto))
                 return null;
 
             var categoria = await _repository.GetByIdAsync(id);
 
-            if(categoria is null)
+            if (categoria is null)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -64,21 +64,21 @@ namespace Application.Services.Categorias
                 return null;
             }
 
-            if(categoria.Descricao == categoriaDto.Descricao)
+            if (categoria.Descricao == categoriaDto.Descricao)
                 return categoria;
 
-            if(_repository.ValidaCategoriaParaAcao(categoria.Id))
+            if (_repository.IdentificarCategoriaParaAcao(categoria.Id))
             {
                 Notificar(EnumTipoNotificacao.ClientError, Message.AvisoCategoriaImutavel);
                 return null;
             }
 
-            if(
+            if (
                 await _repository.ExisteAsync(nome: categoriaDto.Descricao)
                 is Categoria catergoriaExiste
             )
             {
-                if(categoria.Id != catergoriaExiste.Id)
+                if (categoria.Id != catergoriaExiste.Id)
                 {
                     Notificar(
                         EnumTipoNotificacao.ClientError,
@@ -96,7 +96,7 @@ namespace Application.Services.Categorias
 
             _repository.Update(categoria);
 
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -112,7 +112,7 @@ namespace Application.Services.Categorias
         {
             var categoria = await _repository.GetByIdAsync(id);
 
-            if(categoria == null)
+            if (categoria == null)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -121,7 +121,7 @@ namespace Application.Services.Categorias
                 return false;
             }
 
-            if(_repository.ValidaCategoriaParaAcao(categoria.Id))
+            if (_repository.IdentificarCategoriaParaAcao(categoria.Id))
             {
                 Notificar(EnumTipoNotificacao.ClientError, Message.AvisoCategoriaImutavel);
                 return false;
@@ -129,7 +129,7 @@ namespace Application.Services.Categorias
 
             _repository.Delete(categoria);
 
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
