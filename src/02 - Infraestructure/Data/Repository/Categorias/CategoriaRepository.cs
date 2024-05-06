@@ -41,7 +41,7 @@ namespace Data.Repository.Categorias
         {
             var categ = Get();
 
-            int idAlmoco = categ.FirstOrDefault(c => c.Descricao == "Almoço").Id;
+            int idAlmoco = categ.FirstOrDefault(c => c.Descricao == "Almoço/Janta").Id;
             int idAluguel = categ.FirstOrDefault(c => c.Descricao == "Aluguel").Id;
             int idCondominio = categ.FirstOrDefault(c => c.Descricao == "Condomínio").Id;
             int idContaDeLuz = categ.FirstOrDefault(c => c.Descricao == "Conta de Luz").Id;
