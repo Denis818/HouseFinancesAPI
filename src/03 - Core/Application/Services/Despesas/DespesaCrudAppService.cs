@@ -266,9 +266,7 @@ namespace Application.Services.Despesas
             var despesaAluguelExistente = await _repository
                 .Get(d =>
                     d.GrupoDespesaId == despesaDto.GrupoDespesaId
-                        && despesaDto.CategoriaId == _categoriaIds.IdAluguel
-                        && despesaDto.Item.ToLower().Contains("caixa")
-                    || despesaDto.Item.ToLower().Contains("ap ponto")
+                    && despesaDto.CategoriaId == _categoriaIds.IdAluguel
                 )
                 .FirstOrDefaultAsync();
 
@@ -276,7 +274,6 @@ namespace Application.Services.Despesas
                 .Get(d =>
                     d.GrupoDespesaId == despesaDto.GrupoDespesaId
                     && despesaDto.CategoriaId == _categoriaIds.IdContaDeLuz
-                    && despesaDto.Item.ToLower().Contains("Conta de Luz")
                 )
                 .FirstOrDefaultAsync();
 
@@ -284,7 +281,13 @@ namespace Application.Services.Despesas
                 .Get(d =>
                     d.GrupoDespesaId == despesaDto.GrupoDespesaId
                     && despesaDto.CategoriaId == _categoriaIds.IdCondominio
-                    && despesaDto.Item.ToLower().Contains("Condomínio")
+                )
+                .FirstOrDefaultAsync();
+
+            var despesaInternetExistente = await _repository
+                .Get(d =>
+                    d.GrupoDespesaId == despesaDto.GrupoDespesaId
+                    && despesaDto.CategoriaId == _categoriaIds.IdInternet
                 )
                 .FirstOrDefaultAsync();
 
@@ -298,6 +301,7 @@ namespace Application.Services.Despesas
                 aluguelExistente
                 || despesaContaLuzExistente is null
                 || despesaCondominioExistente is null
+                || despesaInternetExistente is null
             )
             {
                 return true;

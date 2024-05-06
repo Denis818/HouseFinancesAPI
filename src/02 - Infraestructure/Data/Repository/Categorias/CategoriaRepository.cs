@@ -13,7 +13,7 @@ namespace Data.Repository.Categorias
     {
         public async Task<Categoria> ExisteAsync(int id, string nome)
         {
-            if(nome != null)
+            if (nome != null)
             {
                 return await Get(c => c.Descricao == nome).FirstOrDefaultAsync();
             }
@@ -31,7 +31,8 @@ namespace Data.Repository.Categorias
                 idCategoria == categoriaIds.IdAluguel
                 || idCategoria == categoriaIds.IdCondominio
                 || idCategoria == categoriaIds.IdContaDeLuz
-                || idCategoria == categoriaIds.IdAlmoco;
+                || idCategoria == categoriaIds.IdAlmoco
+                || idCategoria == categoriaIds.IdInternet;
 
             return ehAlteravel;
         }
@@ -44,13 +45,15 @@ namespace Data.Repository.Categorias
             int idAluguel = categ.FirstOrDefault(c => c.Descricao.StartsWith("Aluguel")).Id;
             int idCondominio = categ.FirstOrDefault(c => c.Descricao.StartsWith("Condomínio")).Id;
             int idContaDeLuz = categ.FirstOrDefault(c => c.Descricao.StartsWith("Conta de Luz")).Id;
+            int idInternet = categ.FirstOrDefault(c => c.Descricao.StartsWith("Internt")).Id;
 
             return new CategoriaIdsDto
             {
                 IdAluguel = idAluguel,
                 IdCondominio = idCondominio,
                 IdContaDeLuz = idContaDeLuz,
-                IdAlmoco = idAlmoco
+                IdAlmoco = idAlmoco,
+                IdInternet = idInternet
             };
         }
     }
