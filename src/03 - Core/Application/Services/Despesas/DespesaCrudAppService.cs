@@ -251,7 +251,7 @@ namespace Application.Services.Despesas
                 return false;
             }
 
-            if (!await DespesaExistenteAsync(despesaDto))
+            if (!await IsDespesaExistenteAsync(despesaDto))
             {
                 Notificar(EnumTipoNotificacao.ClientError, Message.DespesaMoradiaExiste);
 
@@ -261,12 +261,13 @@ namespace Application.Services.Despesas
             return true;
         }
 
-        private async Task<bool> DespesaExistenteAsync(DespesaDto despesaDto)
+        private async Task<bool> IsDespesaExistenteAsync(DespesaDto despesaDto)
         {
             var despesaAluguelExistente = await _repository
                 .Get(d =>
                     d.GrupoDespesaId == despesaDto.GrupoDespesaId
                     && despesaDto.CategoriaId == _categoriaIds.IdAluguel
+                    && d.Item == despesaDto.Item
                 )
                 .FirstOrDefaultAsync();
 
@@ -291,17 +292,11 @@ namespace Application.Services.Despesas
                 )
                 .FirstOrDefaultAsync();
 
-            bool aluguelExistente = false;
-            if (despesaAluguelExistente is not null)
-            {
-                aluguelExistente = despesaAluguelExistente.Item == despesaDto.Item;
-            }
-
             if (
-                aluguelExistente
-                || despesaContaLuzExistente is null
-                || despesaCondominioExistente is null
-                || despesaInternetExistente is null
+                despesaAluguelExistente is null
+                && despesaContaLuzExistente is null
+                && despesaCondominioExistente is null
+                && despesaInternetExistente is null
             )
             {
                 return true;
