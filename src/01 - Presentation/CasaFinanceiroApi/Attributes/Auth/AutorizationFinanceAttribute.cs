@@ -10,11 +10,11 @@ namespace CasaFinanceiroApi.Attributes.Auth
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            if(!context.HttpContext.User.Identity.IsAuthenticated)
+            if (!context.HttpContext.User.Identity.IsAuthenticated)
             {
                 var response = new ResponseDTO<string>()
                 {
-                    Mensagens = [new Notificacao("Acesso não autorizado.")]
+                    Mensagens = [new Notificacao("Você não esta autenticado.")]
                 };
 
                 context.Result = new ObjectResult(response) { StatusCode = 401 };

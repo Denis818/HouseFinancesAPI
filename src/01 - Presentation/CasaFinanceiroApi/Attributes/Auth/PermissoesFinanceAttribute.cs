@@ -20,14 +20,11 @@ namespace CasaFinanceiroApi.Attributes.Auth
                 context.HttpContext.User.Claims.Any(claim => claim.Value == permissao)
             );
 
-            if(!possuiTodasPermissoes)
+            if (!possuiTodasPermissoes)
             {
                 var response = new ResponseDTO<string>()
                 {
-                    Mensagens =
-                    [
-                        new Notificacao("Você não tem permissão para acessar esse recurso.")
-                    ]
+                    Mensagens = [new Notificacao("Oops você não tem permissão.")]
                 };
 
                 context.Result = new ObjectResult(response) { StatusCode = 401 };
