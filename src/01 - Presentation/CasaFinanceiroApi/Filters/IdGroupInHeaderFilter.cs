@@ -25,7 +25,7 @@ namespace CasaFinanceiroApi.Filters
                     {
                         Mensagens =
                         [
-                            new(Message.GrupoDespesaNaoEncontrado, EnumTipoNotificacao.ClientError)
+                            new(Message.SelecioneUmGrupoDesesa, EnumTipoNotificacao.ClientError)
                         ]
                     }
                 );

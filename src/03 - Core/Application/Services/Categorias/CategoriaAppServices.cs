@@ -27,7 +27,7 @@ namespace Application.Services.Categorias
             if (await _repository.ExisteAsync(nome: categoriaDto.Descricao) != null)
             {
                 Notificar(
-                    EnumTipoNotificacao.ClientError,
+                    EnumTipoNotificacao.Informacao,
                     string.Format(Message.RegistroExistente, "A categoria", categoriaDto.Descricao)
                 );
                 return null;
@@ -58,7 +58,7 @@ namespace Application.Services.Categorias
             if (categoria is null)
             {
                 Notificar(
-                    EnumTipoNotificacao.ClientError,
+                    EnumTipoNotificacao.NotFount,
                     string.Format(Message.IdNaoEncontrado, "Categoria", id)
                 );
                 return null;
@@ -69,7 +69,7 @@ namespace Application.Services.Categorias
 
             if (_repository.IdentificarCategoriaParaAcao(categoria.Id))
             {
-                Notificar(EnumTipoNotificacao.ClientError, Message.AvisoCategoriaImutavel);
+                Notificar(EnumTipoNotificacao.Informacao, Message.AvisoCategoriaImutavel);
                 return null;
             }
 
@@ -81,7 +81,7 @@ namespace Application.Services.Categorias
                 if (categoria.Id != catergoriaExiste.Id)
                 {
                     Notificar(
-                        EnumTipoNotificacao.ClientError,
+                        EnumTipoNotificacao.Informacao,
                         string.Format(
                             Message.RegistroExistente,
                             "A categoria",
@@ -115,7 +115,7 @@ namespace Application.Services.Categorias
             if (categoria == null)
             {
                 Notificar(
-                    EnumTipoNotificacao.ClientError,
+                    EnumTipoNotificacao.NotFount,
                     string.Format(Message.IdNaoEncontrado, "Categoria", id)
                 );
                 return false;
@@ -123,7 +123,7 @@ namespace Application.Services.Categorias
 
             if (_repository.IdentificarCategoriaParaAcao(categoria.Id))
             {
-                Notificar(EnumTipoNotificacao.ClientError, Message.AvisoCategoriaImutavel);
+                Notificar(EnumTipoNotificacao.Informacao, Message.AvisoCategoriaImutavel);
                 return false;
             }
 

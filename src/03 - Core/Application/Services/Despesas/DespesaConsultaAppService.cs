@@ -99,7 +99,7 @@ namespace Application.Services.Despesas
 
             if (grupoNome.IsNullOrEmpty())
             {
-                Notificar(EnumTipoNotificacao.ClientError, Message.GrupoDespesaNaoEncontrado);
+                Notificar(EnumTipoNotificacao.Informacao, Message.SelecioneUmGrupoDesesa);
                 return new();
             }
 

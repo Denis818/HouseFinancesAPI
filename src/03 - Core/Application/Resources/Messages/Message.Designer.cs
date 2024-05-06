@@ -88,7 +88,7 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Para cadastro de aluguel o campo &apos;item&apos; deve ser &apos;Ap ponto&apos; ou &apos;Caixa&apos;..
+        ///   Looks up a localized string similar to Para cadastro de aluguel o campo &apos;item&apos; deve ser &apos;Parcela Ap ponto&apos; ou &apos;Parcela Caixa&apos;..
         /// </summary>
         public static string CadastroAluguelIncorreto {
             get {
@@ -151,15 +151,6 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Selecione um Grupo de despesas..
-        /// </summary>
-        public static string GrupoDespesaNaoEncontrado {
-            get {
-                return ResourceManager.GetString("GrupoDespesaNaoEncontrado", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {0} com id:{1} não existe..
         /// </summary>
         public static string IdNaoEncontrado {
@@ -183,6 +174,15 @@ namespace Application.Resources.Messages {
         public static string RegistroExistente {
             get {
                 return ResourceManager.GetString("RegistroExistente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selecione um Grupo de Desesa..
+        /// </summary>
+        public static string SelecioneUmGrupoDesesa {
+            get {
+                return ResourceManager.GetString("SelecioneUmGrupoDesesa", resourceCulture);
             }
         }
         

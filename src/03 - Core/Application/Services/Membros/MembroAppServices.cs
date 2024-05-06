@@ -33,7 +33,7 @@ namespace Application.Services.Membros
             if (await _repository.ExisteAsync(membroDto.Nome) != null)
             {
                 Notificar(
-                    EnumTipoNotificacao.ClientError,
+                    EnumTipoNotificacao.Informacao,
                     string.Format(Message.RegistroExistente, "O membro", membroDto.Nome)
                 );
                 return null;
@@ -65,7 +65,7 @@ namespace Application.Services.Membros
             if (membro is null)
             {
                 Notificar(
-                    EnumTipoNotificacao.ClientError,
+                    EnumTipoNotificacao.NotFount,
                     string.Format(Message.IdNaoEncontrado, "O membro", id)
                 );
                 return null;
@@ -82,7 +82,7 @@ namespace Application.Services.Membros
                 if (membro.Id != membroExiste.Id)
                 {
                     Notificar(
-                        EnumTipoNotificacao.ClientError,
+                        EnumTipoNotificacao.Informacao,
                         string.Format(Message.RegistroExistente, "O membro", membroDto.Nome)
                     );
                     return null;
@@ -112,7 +112,7 @@ namespace Application.Services.Membros
             if (membro == null)
             {
                 Notificar(
-                    EnumTipoNotificacao.ClientError,
+                    EnumTipoNotificacao.NotFount,
                     string.Format(Message.IdNaoEncontrado, "O membro", id)
                 );
                 return false;
@@ -120,7 +120,7 @@ namespace Application.Services.Membros
 
             if (_repository.ValidaMembroParaAcao(membro.Id))
             {
-                Notificar(EnumTipoNotificacao.ClientError, Message.AvisoMembroImutavel);
+                Notificar(EnumTipoNotificacao.Informacao, Message.AvisoMembroImutavel);
                 return false;
             }
 
@@ -152,7 +152,7 @@ namespace Application.Services.Membros
             if (membro is null)
             {
                 Notificar(
-                    EnumTipoNotificacao.ClientError,
+                    EnumTipoNotificacao.NotFount,
                     string.Format(Message.AcaoNaoInvalida, "Membro não encontrado")
                 );
 

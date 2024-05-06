@@ -1,3 +1,6 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Application.Helpers;
 using Application.Interfaces.Services.User;
 using Application.Resources.Messages;
@@ -10,9 +13,6 @@ using Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Application.Services.User
 {
@@ -22,7 +22,7 @@ namespace Application.Services.User
     {
         public async Task<UserTokenDto> AutenticarUsuario(UserDto userDto)
         {
-            if(userDto == null)
+            if (userDto == null)
             {
                 Notificar(EnumTipoNotificacao.ClientError, Message.ModeloInvalido);
                 return null;
@@ -33,15 +33,15 @@ namespace Application.Services.User
                 .Include(c => c.Permissoes)
                 .SingleOrDefaultAsync(u => u.Email == userDto.Email);
 
-            if(usuario == null)
+            if (usuario == null)
             {
-                Notificar(EnumTipoNotificacao.ClientError, Message.EmailNaoEncontrado);
+                Notificar(EnumTipoNotificacao.NotFount, Message.EmailNaoEncontrado);
                 return null;
             }
 
             bool senhaValida = VerificarSenhaHash(userDto.Password, usuario.Password, usuario.Salt);
 
-            if(!senhaValida)
+            if (!senhaValida)
             {
                 Notificar(EnumTipoNotificacao.ClientError, Message.SenhaInvalida);
                 return null;
@@ -68,13 +68,13 @@ namespace Application.Services.User
                 .Include(p => p.Permissoes)
                 .FirstOrDefaultAsync();
 
-            foreach(var permissao in userPermissao.Permissoes)
+            foreach (var permissao in userPermissao.Permissoes)
             {
                 var possuiPermissao = usuario
                     .Permissoes.Where(p => p.Descricao == permissao.ToString())
                     .FirstOrDefault();
 
-                if(possuiPermissao is null)
+                if (possuiPermissao is null)
                 {
                     usuario.Permissoes.Add(new Permissao { Descricao = permissao.ToString() });
                 }
@@ -104,9 +104,9 @@ namespace Application.Services.User
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            if(usuario.Permissoes.Count > 0)
+            if (usuario.Permissoes.Count > 0)
             {
-                foreach(var permissao in usuario.Permissoes)
+                foreach (var permissao in usuario.Permissoes)
                 {
                     claims.Add(new Claim("Permission", permissao.Descricao));
                 }

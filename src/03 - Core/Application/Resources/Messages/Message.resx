@@ -127,7 +127,7 @@
     <value>Esse membro faz parta da regra de negócio. Não pode ser alterado.</value>
   </data>
   <data name="CadastroAluguelIncorreto" xml:space="preserve">
-    <value>Para cadastro de aluguel o campo 'item' deve ser 'Ap ponto' ou 'Caixa'.</value>
+    <value>Para cadastro de aluguel o campo 'item' deve ser 'Parcela Ap ponto' ou 'Parcela Caixa'.</value>
   </data>
   <data name="CampoFormatoInvalido" xml:space="preserve">
     <value>Campo {0} não está em um formato válido.</value>
@@ -147,9 +147,6 @@
   <data name="ErroAoSalvarNoBanco" xml:space="preserve">
     <value>Ocorreu um erro ao {0}.</value>
   </data>
-  <data name="GrupoDespesaNaoEncontrado" xml:space="preserve">
-    <value>Selecione um Grupo de despesas.</value>
-  </data>
   <data name="IdNaoEncontrado" xml:space="preserve">
     <value>{0} com id:{1} não existe.</value>
   </data>
@@ -158,6 +155,9 @@
   </data>
   <data name="RegistroExistente" xml:space="preserve">
     <value>{0} {1} já existe.</value>
+  </data>
+  <data name="SelecioneUmGrupoDesesa" xml:space="preserve">
+    <value>Selecione um Grupo de Desesa.</value>
   </data>
   <data name="SenhaInvalida" xml:space="preserve">
     <value>Senha inválida.</value>

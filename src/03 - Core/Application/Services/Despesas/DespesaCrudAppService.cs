@@ -93,7 +93,7 @@ namespace Application.Services.Despesas
                 if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
                 {
                     Notificar(
-                        EnumTipoNotificacao.ClientError,
+                        EnumTipoNotificacao.NotFount,
                         string.Format(
                             Message.IdNaoEncontrado,
                             "A categoria",
@@ -161,7 +161,7 @@ namespace Application.Services.Despesas
             if (despesa == null)
             {
                 Notificar(
-                    EnumTipoNotificacao.ClientError,
+                    EnumTipoNotificacao.NotFount,
                     string.Format(Message.IdNaoEncontrado, "A despesa", id)
                 );
                 return null;
@@ -193,7 +193,7 @@ namespace Application.Services.Despesas
             if (despesa == null)
             {
                 Notificar(
-                    EnumTipoNotificacao.ClientError,
+                    EnumTipoNotificacao.NotFount,
                     string.Format(Message.IdNaoEncontrado, "A despesa", id)
                 );
                 return false;
@@ -222,7 +222,7 @@ namespace Application.Services.Despesas
             if (await _categoriaRepository.ExisteAsync(despesaDto.CategoriaId) is null)
             {
                 Notificar(
-                    EnumTipoNotificacao.ClientError,
+                    EnumTipoNotificacao.NotFount,
                     string.Format(Message.IdNaoEncontrado, "A categoria", despesaDto.CategoriaId)
                 );
                 return false;
@@ -230,18 +230,18 @@ namespace Application.Services.Despesas
 
             if (
                 despesaDto.CategoriaId == _categoriaIds.IdAluguel
-                && despesaDto.Item.ToLower() != "caixa"
-                && despesaDto.Item.ToLower() != "ap ponto"
+                && !despesaDto.Item.ToLower().Contains("caixa")
+                && !despesaDto.Item.ToLower().Contains("parcela ap ponto")
             )
             {
-                Notificar(EnumTipoNotificacao.ClientError, Message.CadastroAluguelIncorreto);
+                Notificar(EnumTipoNotificacao.Informacao, Message.CadastroAluguelIncorreto);
                 return false;
             }
 
             if (await _grupoDespesaRepository.ExisteAsync(despesaDto.GrupoDespesaId) is null)
             {
                 Notificar(
-                    EnumTipoNotificacao.ClientError,
+                    EnumTipoNotificacao.NotFount,
                     string.Format(
                         Message.IdNaoEncontrado,
                         "O Grupo de Despesa",

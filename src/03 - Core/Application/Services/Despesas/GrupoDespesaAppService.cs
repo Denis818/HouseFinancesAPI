@@ -18,17 +18,17 @@ namespace Application.Services.Despesas
 
         public async Task<GrupoDespesa> InsertAsync(GrupoDespesaDto grupoDto)
         {
-            if(Validator(grupoDto))
+            if (Validator(grupoDto))
                 return null;
 
             var existingGrupo = await _repository
                 .Get(grupo => grupo.Nome == grupoDto.Nome)
                 .FirstOrDefaultAsync();
 
-            if(existingGrupo != null)
+            if (existingGrupo != null)
             {
                 Notificar(
-                    EnumTipoNotificacao.ClientError,
+                    EnumTipoNotificacao.Informacao,
                     string.Format(Message.RegistroExistente, "o Grupo", grupoDto.Nome)
                 );
                 return null;
@@ -37,7 +37,7 @@ namespace Application.Services.Despesas
             var grupoDespesa = _mapper.Map<GrupoDespesa>(grupoDto);
             await _repository.InsertAsync(grupoDespesa);
 
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -51,32 +51,32 @@ namespace Application.Services.Despesas
 
         public async Task<GrupoDespesa> UpdateAsync(int id, GrupoDespesaDto grupoDespesaDto)
         {
-            if(Validator(grupoDespesaDto))
+            if (Validator(grupoDespesaDto))
                 return null;
 
             var grupoDespesa = await _repository.GetByIdAsync(id);
 
-            if(grupoDespesa is null)
+            if (grupoDespesa is null)
             {
                 Notificar(
-                    EnumTipoNotificacao.ClientError,
+                    EnumTipoNotificacao.NotFount,
                     string.Format(Message.IdNaoEncontrado, "Grupo Despesa", id)
                 );
                 return null;
             }
 
-            if(grupoDespesa.Nome == grupoDespesaDto.Nome)
+            if (grupoDespesa.Nome == grupoDespesaDto.Nome)
                 return grupoDespesa;
 
-            if(
+            if (
                 await _repository.ExisteAsync(nome: grupoDespesaDto.Nome)
                 is GrupoDespesa grupoDespesaExiste
             )
             {
-                if(grupoDespesa.Id != grupoDespesaExiste.Id)
+                if (grupoDespesa.Id != grupoDespesaExiste.Id)
                 {
                     Notificar(
-                        EnumTipoNotificacao.ClientError,
+                        EnumTipoNotificacao.Informacao,
                         string.Format(
                             Message.RegistroExistente,
                             "O Grupo de Despesa",
@@ -91,7 +91,7 @@ namespace Application.Services.Despesas
 
             _repository.Update(grupoDespesa);
 
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -107,17 +107,17 @@ namespace Application.Services.Despesas
         {
             var grupoDespesa = await _repository.GetByIdAsync(id);
 
-            if(grupoDespesa == null)
+            if (grupoDespesa == null)
             {
                 Notificar(
-                    EnumTipoNotificacao.ClientError,
+                    EnumTipoNotificacao.NotFount,
                     string.Format(Message.IdNaoEncontrado, "Grupo Despesa", id)
                 );
                 return false;
             }
 
             var IsUnicGroup = await _repository.Get().ToListAsync();
-            if(IsUnicGroup.Count == 1)
+            if (IsUnicGroup.Count == 1)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -126,10 +126,9 @@ namespace Application.Services.Despesas
                 return false;
             }
 
-
             _repository.Delete(grupoDespesa);
 
-            if(!await _repository.SaveChangesAsync())
+            if (!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
