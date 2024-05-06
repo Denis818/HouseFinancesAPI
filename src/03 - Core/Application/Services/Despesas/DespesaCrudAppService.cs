@@ -273,38 +273,36 @@ namespace Application.Services.Despesas
                 )
                 .ToListAsync();
 
-            if (despesasExistentes.Count == 0)
+            foreach (var despesa in despesasExistentes)
             {
+                if (
+                    despesa.CategoriaId == _categoriaIds.IdAluguel
+                    && despesa.Item.Equals(despesaDto.Item, StringComparison.OrdinalIgnoreCase)
+                )
+                {
+                    Notificar(
+                        EnumTipoNotificacao.Informacao,
+                        string.Format(
+                            Message.DespesaExistente,
+                            $"{despesa.Categoria.Descricao} {despesa.Item}"
+                        )
+                    );
+                    return false;
+                }
+                else if (despesa.CategoriaId != _categoriaIds.IdAluguel)
+                {
+                    Notificar(
+                        EnumTipoNotificacao.Informacao,
+                        string.Format(Message.DespesaExistente, despesa.Categoria.Descricao)
+                    );
+
+                    return false;
+                }
+
                 return true;
             }
 
-            var despesaAluguel = despesasExistentes.FirstOrDefault(d =>
-                d.CategoriaId == _categoriaIds.IdAluguel
-                && d.Item.Equals(despesaDto.Item, StringComparison.OrdinalIgnoreCase)
-            );
-
-            if (despesaAluguel != null)
-            {
-                Notificar(
-                    EnumTipoNotificacao.Informacao,
-                    string.Format(Message.DespesaExistente, despesaAluguel.Item)
-                );
-                return false;
-            }
-
-            var despesasOutrasCategorias = despesasExistentes.Where(d =>
-                d.CategoriaId != _categoriaIds.IdAluguel
-            );
-
-            foreach (var despesa in despesasOutrasCategorias)
-            {
-                Notificar(
-                    EnumTipoNotificacao.Informacao,
-                    string.Format(Message.DespesaExistente, despesa.Item)
-                );
-            }
-
-            return false;
+            return true;
         }
 
         private bool IdentificarCategoria(int idCategoria)

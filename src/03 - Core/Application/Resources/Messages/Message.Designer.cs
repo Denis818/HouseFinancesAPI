@@ -115,7 +115,7 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Despesa de {0} já adicionada ao grupo.
+        ///   Looks up a localized string similar to {0}  já adicionada ao grupo..
         /// </summary>
         public static string DespesaExistente {
             get {
