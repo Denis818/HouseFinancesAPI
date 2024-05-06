@@ -261,7 +261,7 @@ namespace Application.Services.Despesas
 
         private async Task<bool> IsDespesaExistenteAsync(DespesaDto despesaDto)
         {
-            if (!_categoriaRepository.IdentificarCategoriaParaAcao(despesaDto.CategoriaId))
+            if (!IdentificarCategoria(despesaDto.CategoriaId))
             {
                 return true;
             }
@@ -301,6 +301,14 @@ namespace Application.Services.Despesas
             }
 
             return false;
+        }
+
+        private bool IdentificarCategoria(int idCategoria)
+        {
+            return idCategoria == _categoriaIds.IdAluguel
+                || idCategoria == _categoriaIds.IdCondominio
+                || idCategoria == _categoriaIds.IdContaDeLuz
+                || idCategoria == _categoriaIds.IdInternet;
         }
 
         #endregion
