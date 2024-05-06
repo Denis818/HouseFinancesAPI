@@ -41,11 +41,11 @@ namespace Data.Repository.Categorias
         {
             var categ = Get();
 
-            int idAlmoco = categ.FirstOrDefault(c => c.Descricao.StartsWith("Almoço")).Id;
-            int idAluguel = categ.FirstOrDefault(c => c.Descricao.StartsWith("Aluguel")).Id;
-            int idCondominio = categ.FirstOrDefault(c => c.Descricao.StartsWith("Condomínio")).Id;
-            int idContaDeLuz = categ.FirstOrDefault(c => c.Descricao.StartsWith("Conta de Luz")).Id;
-            int idInternet = categ.FirstOrDefault(c => c.Descricao.StartsWith("Internt")).Id;
+            int idAlmoco = categ.FirstOrDefault(c => c.Descricao == "Almoço").Id;
+            int idAluguel = categ.FirstOrDefault(c => c.Descricao == "Aluguel").Id;
+            int idCondominio = categ.FirstOrDefault(c => c.Descricao == "Condomínio").Id;
+            int idContaDeLuz = categ.FirstOrDefault(c => c.Descricao == "Conta de Luz").Id;
+            int idInternet = categ.FirstOrDefault(c => c.Descricao == "Internet").Id;
 
             return new CategoriaIdsDto
             {
