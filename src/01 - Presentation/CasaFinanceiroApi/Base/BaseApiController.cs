@@ -31,7 +31,7 @@ namespace CasaFinanceiroApi.Base
         {
             if (_notifier.HasNotifications(EnumTipoNotificacao.NotFount, out var NotFount))
             {
-                return BadRequest(new ResponseDTO<TResponse>(content) { Mensagens = NotFount });
+                return NotFound(new ResponseDTO<TResponse>(content) { Mensagens = NotFount });
             }
 
             if (_notifier.HasNotifications(EnumTipoNotificacao.ClientError, out var clientErrors))
