@@ -24,7 +24,13 @@ namespace CasaFinanceiroApi.Attributes.Auth
             {
                 var response = new ResponseDTO<string>()
                 {
-                    Mensagens = [new Notificacao("Oops você não tem permissão.")]
+                    Mensagens =
+                    [
+                        new Notificacao(
+                            "Oops você não tem permissão.",
+                            EnumTipoNotificacao.AcessoNegado
+                        )
+                    ]
                 };
 
                 context.Result = new ObjectResult(response) { StatusCode = 401 };

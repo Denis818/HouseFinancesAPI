@@ -1,4 +1,5 @@
 ﻿using CasaFinanceiroApi.Base;
+using Domain.Enumeradores;
 using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -14,7 +15,13 @@ namespace CasaFinanceiroApi.Attributes.Auth
             {
                 var response = new ResponseDTO<string>()
                 {
-                    Mensagens = [new Notificacao("Você não esta autenticado.")]
+                    Mensagens =
+                    [
+                        new Notificacao(
+                            "Você não esta autenticado.",
+                            EnumTipoNotificacao.AcessoNegado
+                        )
+                    ]
                 };
 
                 context.Result = new ObjectResult(response) { StatusCode = 401 };

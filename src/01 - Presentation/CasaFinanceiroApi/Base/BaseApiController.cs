@@ -29,9 +29,16 @@ namespace CasaFinanceiroApi.Base
 
         private IActionResult CustomResponse<TResponse>(TResponse content)
         {
-            if (_notifier.HasNotifications(EnumTipoNotificacao.NotFount, out var NotFount))
+            if (_notifier.HasNotifications(EnumTipoNotificacao.AcessoNegado, out var acessoNegado))
             {
-                return NotFound(new ResponseDTO<TResponse>(content) { Mensagens = NotFount });
+                return Unauthorized(
+                    new ResponseDTO<TResponse>(content) { Mensagens = acessoNegado }
+                );
+            }
+
+            if (_notifier.HasNotifications(EnumTipoNotificacao.NotFount, out var notFount))
+            {
+                return NotFound(new ResponseDTO<TResponse>(content) { Mensagens = notFount });
             }
 
             if (_notifier.HasNotifications(EnumTipoNotificacao.ClientError, out var clientErrors))
