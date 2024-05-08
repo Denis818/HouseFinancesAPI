@@ -70,9 +70,40 @@ namespace CasaFinanceiroApi.Base
 
         private string IdentificarStringConexao(ActionExecutingContext context)
         {
-            var hostName = context.HttpContext.Request.Host.Host;
+            // Tentar obter o valor do header 'Origin'
+            var origin = context.HttpContext.Request.Headers["Origin"].FirstOrDefault();
+
+            if(string.IsNullOrEmpty(origin))
+            {
+                // Se não houver um 'Origin', usa o header 'Referer'
+                origin = context.HttpContext.Request.Headers["Referer"].FirstOrDefault();
+                // Opcionalmente, remover qualquer path após o domínio
+                if(!string.IsNullOrEmpty(origin))
+                {
+                    var uri = new Uri(origin);
+                    origin = $"{uri.Scheme}://{uri.Host}";
+                }
+            }
+
+            if(string.IsNullOrEmpty(origin))
+            {
+                context.Result = new BadRequestObjectResult(
+                    new ResponseDTO<string>(
+                        null,
+                        [
+                            new Notificacao(
+                                "A origem da requisição não pôde ser determinada.",
+                                EnumTipoNotificacao.ClientError
+                            )
+                        ]
+                    )
+                );
+                return null;
+            }
+
+            // Buscar a conexão correspondente ao domínio origin
             var empresaLocalizada = _companyConnections.List.FirstOrDefault(empresa =>
-                empresa.NomeDominio == hostName
+                empresa.NomeDominio == origin
             );
 
             if(empresaLocalizada == null)
@@ -82,15 +113,15 @@ namespace CasaFinanceiroApi.Base
                         null,
                         [
                             new Notificacao(
-                                $"O nome de domínio '{hostName}' não existe",
+                                $"O nome de domínio '{origin}' não existe",
                                 EnumTipoNotificacao.ClientError
                             )
                         ]
                     )
                 );
-
                 return null;
             }
+
             return empresaLocalizada.ConnnectionString;
         }
     }
