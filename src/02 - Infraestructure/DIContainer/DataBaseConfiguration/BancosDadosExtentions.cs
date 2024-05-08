@@ -20,8 +20,7 @@ namespace DIContainer.DataBaseConfiguration
     {
         public static void ConfigurarBancoDados(
             this IServiceProvider serviceProvider,
-            CompanyConnectionStrings companies,
-            string environmentName
+            CompanyConnectionStrings companies
         )
         {
             foreach(var company in companies.List)
@@ -36,24 +35,25 @@ namespace DIContainer.DataBaseConfiguration
 
                 dbContext.Database.Migrate(); // Aplica a migração
 
-                PrepareUserMaster(services, environmentName);
+                PrepareUserMaster(services, company.NomeDominio);
                 PrepareUser(services);
 
                 PrepareCategoryAndMember(services).Wait();
             }
         }
 
-        public static void PrepareUserMaster(IServiceProvider services, string environmentName)
+        public static void PrepareUserMaster(IServiceProvider services, string nomeDominio)
         {
             var usuarioRepository = services.GetRequiredService<IUsuarioRepository>();
             var authService = services.GetRequiredService<IAuthAppService>();
 
             string email = "master@gmail.com";
-            string senha = "admin@123";
+            string senha = "Master@123456";
 
-            if(environmentName == "Production")
+            if(nomeDominio.Contains("dev"))
             {
-                senha = "Master@123456";
+                email = "dev@gmail.com";
+                senha = "dev@123";
             }
 
             if(usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)

@@ -23,7 +23,7 @@ app.UseRouting();
 
 var companyConnections = app.Services.GetRequiredService<CompanyConnectionStrings>();
 
-app.Services.ConfigurarBancoDados(companyConnections, builder.Environment.EnvironmentName);
+app.Services.ConfigurarBancoDados(companyConnections);
 
 app.UseMiddleware<MiddlewareException>();
 
