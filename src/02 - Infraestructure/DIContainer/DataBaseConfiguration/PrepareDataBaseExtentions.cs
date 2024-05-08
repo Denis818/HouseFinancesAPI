@@ -19,7 +19,7 @@ namespace DIContainer.DataBaseConfiguration
         {
             PrepareUserMaster(service, nomeDominio);
             PrepareUser(service);
-            PrepareCategoryAndMember(service);
+            PrepareCategoryAndMember(service).Wait();
         }
 
         private static void PrepareUserMaster(IServiceProvider service, string nomeDominio)
