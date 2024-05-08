@@ -17,6 +17,7 @@ namespace DIContainer.DataBaseConfiguration
                 {
                     var connectionStringResolver =
                         serviceProvider.GetRequiredService<IConnectionStringResolver>();
+
                     string connectionString = connectionStringResolver.IdentificarStringConexao();
 
                     dbContextBuilder.UseMySql(
