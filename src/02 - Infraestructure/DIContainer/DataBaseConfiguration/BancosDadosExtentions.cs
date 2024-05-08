@@ -80,7 +80,7 @@ namespace DIContainer.DataBaseConfiguration
             var authService = services.GetRequiredService<IAuthAppService>();
 
             string email = "dev";
-            string senha = "abc@123";
+            string senha = "1234";
 
             if(usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
                 return;
