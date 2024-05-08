@@ -98,7 +98,7 @@ namespace CasaFinanceiroApi.Base
 
             // Buscar a conexão correspondente ao domínio origin
             var empresaLocalizada = _companyConnections.List.FirstOrDefault(empresa =>
-                empresa.NomeDominio == domain
+                empresa.NomeDominio.Contains(domain)
             );
 
             if(empresaLocalizada == null)

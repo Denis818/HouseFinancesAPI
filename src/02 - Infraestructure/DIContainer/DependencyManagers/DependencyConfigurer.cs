@@ -19,6 +19,7 @@ namespace DIContainer.DependencyManagers
         )
         {
 
+            services.AddDbContext();
             services.AddDependecyUtilities();
             services.AddDependecyRepositories();
             services.AddDependecyDomainServices();
@@ -26,10 +27,6 @@ namespace DIContainer.DependencyManagers
 
             services.AddAuthenticationJwt(config);
             services.AddAssemblyConfigurations();
-            services.AddDbContext();
-
-
-
         }
 
         public static void AddAuthenticationJwt(
