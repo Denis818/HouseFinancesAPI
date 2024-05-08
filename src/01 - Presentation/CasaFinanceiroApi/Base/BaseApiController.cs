@@ -3,6 +3,7 @@ using CasaFinanceiroApi.APIValidators;
 using Data.Configurations;
 using Data.DataContext;
 using DIContainer.DataBaseConfiguration.ConnectionString;
+using Domain.Dtos.BaseResponse;
 using Domain.Enumeradores;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

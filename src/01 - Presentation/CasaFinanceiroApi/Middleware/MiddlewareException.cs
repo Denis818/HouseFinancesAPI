@@ -1,4 +1,4 @@
-﻿using CasaFinanceiroApi.Base;
+﻿using Domain.Dtos.BaseResponse;
 using Domain.Enumeradores;
 using System.Text.Json;
 

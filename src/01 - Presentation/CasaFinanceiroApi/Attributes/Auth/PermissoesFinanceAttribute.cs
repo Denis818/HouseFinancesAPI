@@ -1,4 +1,4 @@
-﻿using CasaFinanceiroApi.Base;
+﻿using Domain.Dtos.BaseResponse;
 using Domain.Enumeradores;
 using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +20,7 @@ namespace CasaFinanceiroApi.Attributes.Auth
                 context.HttpContext.User.Claims.Any(claim => claim.Value == permissao)
             );
 
-            if (!possuiTodasPermissoes)
+            if(!possuiTodasPermissoes)
             {
                 var response = new ResponseDTO<string>()
                 {

@@ -1,5 +1,5 @@
 ﻿using Application.Resources.Messages;
-using CasaFinanceiroApi.Base;
+using Domain.Dtos.BaseResponse;
 using Domain.Enumeradores;
 using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;

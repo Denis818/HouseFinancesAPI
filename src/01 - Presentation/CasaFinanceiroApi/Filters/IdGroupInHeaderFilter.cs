@@ -1,5 +1,5 @@
 ﻿using Application.Resources.Messages;
-using CasaFinanceiroApi.Base;
+using Domain.Dtos.BaseResponse;
 using Domain.Enumeradores;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -14,11 +14,11 @@ namespace CasaFinanceiroApi.Filters
             var httpContext = context.HttpContext;
             string grupoId = httpContext.Request.Headers["Grupo-Despesas-Id"];
 
-            if (int.TryParse(grupoId, out int grupoDespesasId))
+            if(int.TryParse(grupoId, out int grupoDespesasId))
             {
                 httpContext.Items["GrupoDespesaId"] = grupoDespesasId;
             }
-            else if (httpContext.Request.Method == "GET")
+            else if(httpContext.Request.Method == "GET")
             {
                 context.Result = new BadRequestObjectResult(
                     new ResponseDTO<string>()

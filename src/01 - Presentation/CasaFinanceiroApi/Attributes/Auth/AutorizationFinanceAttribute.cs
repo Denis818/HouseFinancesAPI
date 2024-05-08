@@ -1,4 +1,4 @@
-﻿using CasaFinanceiroApi.Base;
+﻿using Domain.Dtos.BaseResponse;
 using Domain.Enumeradores;
 using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,7 @@ namespace CasaFinanceiroApi.Attributes.Auth
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            if (!context.HttpContext.User.Identity.IsAuthenticated)
+            if(!context.HttpContext.User.Identity.IsAuthenticated)
             {
                 var response = new ResponseDTO<string>()
                 {
