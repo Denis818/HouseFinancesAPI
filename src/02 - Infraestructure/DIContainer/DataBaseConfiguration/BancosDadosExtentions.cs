@@ -11,10 +11,16 @@ namespace DIContainer.DataBaseConfiguration
         {
             serviceCollection.AddDbContext<FinanceDbContext>(options =>
                 options.UseMySql(
-
-                    new MySqlServerVersion(new Version(8, 0, 21))
+                    new MySqlServerVersion(new Version(8, 4, 0)),
+                    mySqlOptions => mySqlOptions
+                        .EnableRetryOnFailure(
+                            maxRetryCount: 5,
+                            maxRetryDelay: TimeSpan.FromSeconds(10),
+                            errorNumbersToAdd: null
+                        )
                 ));
         }
+
 
         public static void ConfigurarBancoDeDados(
             this IServiceProvider serviceProvider,

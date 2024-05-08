@@ -13,7 +13,7 @@ namespace Data.Repository.Categorias
     {
         public async Task<Categoria> ExisteAsync(int id, string nome)
         {
-            if (nome != null)
+            if(nome != null)
             {
                 return await Get(c => c.Descricao == nome).FirstOrDefaultAsync();
             }
