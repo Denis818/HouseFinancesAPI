@@ -10,8 +10,6 @@ namespace DIContainer.DataBaseConfiguration
     {
         public static void AddDbContext(this IServiceCollection services)
         {
-            services.AddSingleton<IConnectionStringResolver, ConnectionStringResolver>();
-
             services.AddDbContext<FinanceDbContext>(
                 (serviceProvider, dbContextBuilder) =>
                 {
