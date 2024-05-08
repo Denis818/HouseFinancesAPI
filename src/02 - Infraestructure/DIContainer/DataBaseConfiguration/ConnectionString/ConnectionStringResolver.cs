@@ -19,15 +19,7 @@ namespace DIContainer.DataBaseConfiguration.ConnectionString
 
         public string IdentificarStringConexao()
         {
-            var originHeader = _httpContext.HttpContext.Request.Headers["Origin"].FirstOrDefault();
-
-            string domain = null;
-
-            if(!string.IsNullOrEmpty(originHeader))
-            {
-                var originUri = new Uri(originHeader);
-                domain = originUri.Host;
-            }
+            string domain = GetHostName();
 
             if(string.IsNullOrEmpty(domain))
             {
@@ -51,15 +43,7 @@ namespace DIContainer.DataBaseConfiguration.ConnectionString
 
         public string IdentificarStringConexao(ActionExecutingContext context)
         {
-            var originHeader = context.HttpContext.Request.Headers["Origin"].FirstOrDefault();
-
-            string domain = null;
-
-            if(!string.IsNullOrEmpty(originHeader))
-            {
-                var originUri = new Uri(originHeader);
-                domain = originUri.Host;
-            }
+            string domain = GetHostName();
 
             if(string.IsNullOrEmpty(domain))
             {
@@ -77,7 +61,6 @@ namespace DIContainer.DataBaseConfiguration.ConnectionString
                 return null;
             }
 
-            // Buscar a conexão correspondente ao domínio origin
             var empresaLocalizada = _companyConnections.List.FirstOrDefault(empresa =>
                 empresa.NomeDominio.Contains(domain)
             );
@@ -97,7 +80,23 @@ namespace DIContainer.DataBaseConfiguration.ConnectionString
                 );
                 return null;
             }
+
             return empresaLocalizada.ConnnectionString;
+        }
+
+        private string GetHostName()
+        {
+            var originHeader = _httpContext.HttpContext.Request.Headers["Origin"].FirstOrDefault();
+
+            string domain = null;
+
+            if(!string.IsNullOrEmpty(originHeader))
+            {
+                var originUri = new Uri(originHeader);
+                domain = originUri.Host;
+            }
+
+            return domain;
         }
     }
 }

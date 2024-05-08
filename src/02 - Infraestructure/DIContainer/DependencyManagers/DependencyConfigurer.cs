@@ -19,7 +19,7 @@ namespace DIContainer.DependencyManagers
         )
         {
 
-            services.AddDbContext(config);
+            services.AddDbContext();
             services.AddDependecyUtilities();
             services.AddDependecyRepositories();
             services.AddDependecyDomainServices();
