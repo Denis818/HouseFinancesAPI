@@ -8,7 +8,6 @@ using DIContainer.DependencyManagers;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.SetupApplication();
-
 CarregarAppSettings(builder.Services, builder.Configuration);
 
 var app = builder.Build();
@@ -23,7 +22,7 @@ app.UseRouting();
 
 var companyConnections = app.Services.GetRequiredService<CompanyConnectionStrings>();
 
-app.Services.ConfigurarBancoDados(companyConnections);
+app.Services.ConfigurarBancoDeDados(companyConnections);
 
 app.UseMiddleware<MiddlewareException>();
 
