@@ -1,5 +1,6 @@
 ﻿using Application.Helpers;
 using Application.Interfaces.Services.User;
+using Data.Configurations;
 using Data.DataContext;
 using Domain.Converters.DatesTimes;
 using Domain.Dtos.User.Auth;
@@ -19,20 +20,27 @@ namespace DIContainer.DataBaseConfiguration
     {
         public static void ConfigurarBancoDados(
             this IServiceProvider serviceProvider,
+            CompanyConnectionStrings companies,
             string environmentName
         )
         {
-            using var serviceScope = serviceProvider.CreateScope();
-            var services = serviceScope.ServiceProvider;
+            foreach(var company in companies.List)
+            {
+                using var serviceScope = serviceProvider.CreateScope();
+                var services = serviceScope.ServiceProvider;
 
-            var dbContext = services.GetRequiredService<FinanceDbContext>();
+                var optionsBuilder = new DbContextOptionsBuilder<FinanceDbContext>();
+                optionsBuilder.UseMySql(company.ConnnectionString, ServerVersion.AutoDetect(company.ConnnectionString));
 
-            dbContext.Database.Migrate();
+                using var dbContext = new FinanceDbContext(optionsBuilder.Options);
 
-            PrepareUserMaster(services, environmentName);
-            PrepareUser(services);
+                dbContext.Database.Migrate(); // Aplica a migração
 
-            PrepareCategoryAndMember(services).Wait();
+                PrepareUserMaster(services, environmentName);
+                PrepareUser(services);
+
+                PrepareCategoryAndMember(services).Wait();
+            }
         }
 
         public static void PrepareUserMaster(IServiceProvider services, string environmentName)

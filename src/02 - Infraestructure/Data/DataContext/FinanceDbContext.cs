@@ -23,5 +23,12 @@ namespace Data.DataContext
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(FinanceDbContext).Assembly);
         }
+
+        public void SetConnectionString(string newStringConnection)
+        {
+            Database.CurrentTransaction?.Commit();
+
+            Database.SetConnectionString(newStringConnection);
+        }
     }
 }

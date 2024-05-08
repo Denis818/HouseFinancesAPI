@@ -1,5 +1,7 @@
 ﻿using Application.Interfaces.Utilities;
 using CasaFinanceiroApi.APIValidators;
+using Data.Configurations;
+using Data.DataContext;
 using Domain.Enumeradores;
 using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -9,19 +11,31 @@ namespace CasaFinanceiroApi.Base
 {
     public abstract class BaseApiController(IServiceProvider service) : Controller
     {
+        private readonly CompanyConnectionStrings _companyConnections =
+            service.GetRequiredService<CompanyConnectionStrings>();
+
         private readonly INotifier _notifier = service.GetRequiredService<INotifier>();
         private readonly ModelStateValidator _modelState = new();
 
+        private readonly FinanceDbContext _context = service.GetRequiredService<FinanceDbContext>();
+
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if (!_modelState.ValidarModelState(context))
+            if(!_modelState.ValidarModelState(context))
                 return;
+
+            var connectionString = IdentificarStringConexao(context);
+
+            if(string.IsNullOrEmpty(connectionString))
+                return;
+
+            _context.SetConnectionString(connectionString);
         }
 
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             base.OnActionExecuted(context);
-            if (context.Result is ObjectResult result)
+            if(context.Result is ObjectResult result)
             {
                 context.Result = CustomResponse(result.Value);
             }
@@ -29,17 +43,17 @@ namespace CasaFinanceiroApi.Base
 
         private IActionResult CustomResponse<TResponse>(TResponse content)
         {
-            if (_notifier.HasNotifications(EnumTipoNotificacao.NotFount, out var notFount))
+            if(_notifier.HasNotifications(EnumTipoNotificacao.NotFount, out var notFount))
             {
                 return NotFound(new ResponseDTO<TResponse>(content) { Mensagens = notFount });
             }
 
-            if (_notifier.HasNotifications(EnumTipoNotificacao.ClientError, out var clientErrors))
+            if(_notifier.HasNotifications(EnumTipoNotificacao.ClientError, out var clientErrors))
             {
                 return BadRequest(new ResponseDTO<TResponse>(content) { Mensagens = clientErrors });
             }
 
-            if (_notifier.HasNotifications(EnumTipoNotificacao.ServerError, out var serverErrors))
+            if(_notifier.HasNotifications(EnumTipoNotificacao.ServerError, out var serverErrors))
             {
                 return StatusCode(
                     StatusCodes.Status500InternalServerError,
@@ -53,6 +67,32 @@ namespace CasaFinanceiroApi.Base
 
         protected void Notificar(EnumTipoNotificacao tipo, string message) =>
             _notifier.Notify(tipo, message);
+
+        private string IdentificarStringConexao(ActionExecutingContext context)
+        {
+            var hostName = context.HttpContext.Request.Host.Host;
+            var empresaLocalizada = _companyConnections.List.FirstOrDefault(empresa =>
+                empresa.NomeDominio == hostName
+            );
+
+            if(empresaLocalizada == null)
+            {
+                context.Result = new BadRequestObjectResult(
+                    new ResponseDTO<string>(
+                        null,
+                        [
+                            new Notificacao(
+                                $"O nome de domínio '{hostName}' não existe",
+                                EnumTipoNotificacao.ClientError
+                            )
+                        ]
+                    )
+                );
+
+                return null;
+            }
+            return empresaLocalizada.ConnnectionString;
+        }
     }
 
     public class ResponseDTO<T>
