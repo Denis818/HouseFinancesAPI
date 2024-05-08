@@ -2,8 +2,8 @@
 using CasaFinanceiroApi.APIValidators;
 using Data.Configurations;
 using Data.DataContext;
+using DIContainer.DataBaseConfiguration.ConnectionString;
 using Domain.Enumeradores;
-using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -18,13 +18,15 @@ namespace CasaFinanceiroApi.Base
         private readonly ModelStateValidator _modelState = new();
 
         private readonly FinanceDbContext _context = service.GetRequiredService<FinanceDbContext>();
+        private readonly IConnectionStringResolver connectionStringResolver =
+            service.GetRequiredService<IConnectionStringResolver>();
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if(!_modelState.ValidarModelState(context))
                 return;
 
-            var connectionString = IdentificarStringConexao(context);
+            var connectionString = connectionStringResolver.IdentificarStringConexao(context);
 
             if(string.IsNullOrEmpty(connectionString))
                 return;
@@ -67,75 +69,5 @@ namespace CasaFinanceiroApi.Base
 
         protected void Notificar(EnumTipoNotificacao tipo, string message) =>
             _notifier.Notify(tipo, message);
-
-        private string IdentificarStringConexao(ActionExecutingContext context)
-        {
-            var originHeader = context.HttpContext.Request.Headers["Origin"].FirstOrDefault();
-
-            string domain = null;
-
-            if(!string.IsNullOrEmpty(originHeader))
-            {
-                var originUri = new Uri(originHeader);
-                domain = originUri.Host;
-            }
-
-            if(string.IsNullOrEmpty(domain))
-            {
-                context.Result = new BadRequestObjectResult(
-                    new ResponseDTO<string>(
-                        null,
-                        [
-                            new Notificacao(
-                                "A origem da requisição não pôde ser determinada.",
-                                EnumTipoNotificacao.ClientError
-                            )
-                        ]
-                    )
-                );
-                return null;
-            }
-
-            // Buscar a conexão correspondente ao domínio origin
-            var empresaLocalizada = _companyConnections.List.FirstOrDefault(empresa =>
-                empresa.NomeDominio.Contains(domain)
-            );
-
-            if(empresaLocalizada == null)
-            {
-                context.Result = new BadRequestObjectResult(
-                    new ResponseDTO<string>(
-                        null,
-                        [
-                            new Notificacao(
-                                $"O nome de domínio '{domain}' não existe",
-                                EnumTipoNotificacao.ClientError
-                            )
-                        ]
-                    )
-                );
-                return null;
-            }
-            return empresaLocalizada.ConnnectionString;
-        }
-    }
-
-    public class ResponseDTO<T>
-    {
-        public T Dados { get; set; }
-        public Notificacao[] Mensagens { get; set; }
-
-        public ResponseDTO(T data, Notificacao[] messages = null)
-        {
-            Dados = data;
-            Mensagens = messages ?? [];
-        }
-
-        public ResponseDTO() { }
-
-        public void ContentTypeInvalido()
-        {
-            Mensagens = [new("Content-Type inválido.", EnumTipoNotificacao.ClientError)];
-        }
     }
 }

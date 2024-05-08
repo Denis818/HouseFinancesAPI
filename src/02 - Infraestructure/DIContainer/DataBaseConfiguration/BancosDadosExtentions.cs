@@ -1,5 +1,6 @@
 ﻿using Data.Configurations;
 using Data.DataContext;
+using DIContainer.DataBaseConfiguration.ConnectionString;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -7,20 +8,24 @@ namespace DIContainer.DataBaseConfiguration
 {
     public static class SeedUser
     {
-        public static void AddDbContext(this IServiceCollection serviceCollection)
+        public static void AddDbContext(this IServiceCollection services)
         {
-            serviceCollection.AddDbContext<FinanceDbContext>(options =>
-                options.UseMySql(
-                    new MySqlServerVersion(new Version(8, 4, 0)),
-                    mySqlOptions => mySqlOptions
-                        .EnableRetryOnFailure(
-                            maxRetryCount: 5,
-                            maxRetryDelay: TimeSpan.FromSeconds(10),
-                            errorNumbersToAdd: null
-                        )
-                ));
-        }
+            services.AddSingleton<IConnectionStringResolver, ConnectionStringResolver>();
 
+            services.AddDbContext<FinanceDbContext>(
+                (serviceProvider, dbContextBuilder) =>
+                {
+                    var connectionStringResolver =
+                        serviceProvider.GetRequiredService<IConnectionStringResolver>();
+                    string connectionString = connectionStringResolver.IdentificarStringConexao();
+
+                    dbContextBuilder.UseMySql(
+                        connectionString,
+                        ServerVersion.AutoDetect(connectionString)
+                    );
+                }
+            );
+        }
 
         public static void ConfigurarBancoDeDados(
             this IServiceProvider serviceProvider,
