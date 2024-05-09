@@ -98,7 +98,7 @@ namespace CasaFinanceiroApi.Base
             }
 
             var empresaLocalizada = _companyConnections.List.FirstOrDefault(empresa =>
-                empresa.NomeDominio.Contains("dev")
+                empresa.NomeDominio.Contains(domain)
             );
 
             if(empresaLocalizada == null)
