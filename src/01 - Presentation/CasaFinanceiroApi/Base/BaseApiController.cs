@@ -69,7 +69,7 @@ namespace CasaFinanceiroApi.Base
         protected void Notificar(EnumTipoNotificacao tipo, string message) =>
             _notifier.Notify(tipo, message);
 
-        public string IdentificarStringConexao(ActionExecutingContext context)
+        private string IdentificarStringConexao(ActionExecutingContext context)
         {
             var originHeader = context.HttpContext.Request.Headers.Origin.FirstOrDefault();
 
