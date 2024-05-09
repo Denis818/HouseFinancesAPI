@@ -13,7 +13,7 @@ using System.Globalization;
 
 namespace DIContainer.DataBaseConfiguration
 {
-    public class PrepareDataBaseExtentions
+    public class PrepareDataBaseExtensions
     {
         public static void PrepareDataBase(IServiceProvider service, string nomeDominio)
         {

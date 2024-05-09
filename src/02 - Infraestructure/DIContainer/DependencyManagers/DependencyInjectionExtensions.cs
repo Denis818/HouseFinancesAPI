@@ -13,7 +13,6 @@ using Data.Repository.Base.Membros;
 using Data.Repository.Categorias;
 using Data.Repository.Despesas;
 using Data.Repository.User;
-using DIContainer.DataBaseConfiguration.ConnectionString;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services.Despesa;
 using Domain.Services;
@@ -28,7 +27,6 @@ namespace DIContainer.DependencyManagers
             services.AddHttpContextAccessor();
             services.AddSingleton<IMapper, Mapper>();
             services.AddScoped<INotifier, Notifier>();
-            services.AddScoped<IConnectionStringResolver, ConnectionStringResolver>();
         }
 
         public static void AddDependecyRepositories(this IServiceCollection services)
