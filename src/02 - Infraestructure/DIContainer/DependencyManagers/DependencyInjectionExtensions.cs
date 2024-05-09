@@ -9,6 +9,7 @@ using Application.Services.Despesas.ProcessamentoDespesas;
 using Application.Services.Membros;
 using Application.Services.User;
 using Application.Utilities;
+using Data.Configurations;
 using Data.Repository.Base.Membros;
 using Data.Repository.Categorias;
 using Data.Repository.Despesas;
@@ -16,6 +17,7 @@ using Data.Repository.User;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services.Despesa;
 using Domain.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DIContainer.DependencyManagers
@@ -57,5 +59,13 @@ namespace DIContainer.DependencyManagers
             services.AddScoped<IDespesaConsultaAppService, DespesaConsultaAppService>();
             services.AddScoped<IGrupoDespesaAppService, GrupoDespesaAppService>();
         }
+
+        public static void AddCompanyConnectionStrings(this IServiceCollection services, IConfiguration configuration)
+        {
+            var appSettingsSection = configuration.GetSection(nameof(CompanyConnectionStrings));
+            var appSettings = appSettingsSection.Get<CompanyConnectionStrings>();
+            services.AddSingleton(appSettings);
+        }
+
     }
 }
