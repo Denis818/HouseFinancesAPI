@@ -30,7 +30,7 @@ namespace DIContainer.DataBaseConfiguration
             string email = "master@gmail.com";
             string senha = "Master@123456";
 
-            if(nomeDominio.Contains("dev"))
+            if(nomeDominio.Contains("dev") || nomeDominio.Contains("railway"))
             {
                 email = "dev@gmail.com";
                 senha = "dev@123";
