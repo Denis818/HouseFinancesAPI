@@ -10,7 +10,7 @@ namespace Application.Validators.Despesas
             RuleFor(x => x.Item)
                 .NotEmpty()
                 .WithMessage("O {PropertyName} é obrigatório.")
-                .Length(3, 25)
+                .Length(3, 50)
                 .WithMessage(
                     "O {PropertyName} deve ter entre {MinLength} a {MaxLength} caracteres."
                 );
@@ -30,7 +30,7 @@ namespace Application.Validators.Despesas
             RuleFor(x => x.Fornecedor)
                 .NotEmpty()
                 .WithMessage("O {PropertyName} é obrigatório.")
-                .Length(3, 25)
+                .Length(3, 50)
                 .WithMessage(
                     "O {PropertyName} deve ter entre {MinLength} a {MaxLength} caracteres."
                 );
