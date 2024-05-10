@@ -14,7 +14,6 @@ namespace CasaFinanceiroApi.V1.Finance.Despesas
     [ApiController]
     [ApiVersion("1")]
     [AutorizationFinance]
-    [IdGroupInHeaderFilter]
     [Route("api/v1/despesa")]
     public class DespesaCrudController(
         IServiceProvider service,
@@ -23,6 +22,7 @@ namespace CasaFinanceiroApi.V1.Finance.Despesas
     {
         #region CRUD
         [HttpGet]
+        [GetIdGroupInHeaderFilter]
         public async Task<PagedResult<Despesa>> GetAllAsync(
             int paginaAtual = 1,
             int itensPorPagina = 10

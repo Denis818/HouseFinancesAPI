@@ -1,17 +1,17 @@
-﻿using System.Net.Mime;
-using Application.Interfaces.Services.Despesas;
+﻿using Application.Interfaces.Services.Despesas;
 using Asp.Versioning;
 using CasaFinanceiroApi.Attributes.Auth;
 using CasaFinanceiroApi.Base;
 using CasaFinanceiroApi.Filters;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
 
 namespace CasaFinanceiroApi.V1.Finance.Despesas
 {
     [ApiController]
     [ApiVersion("1")]
     [AutorizationFinance]
-    [IdGroupInHeaderFilter]
+    [GetIdGroupInHeaderFilter]
     [Route("api/v1/despesa")]
     public class DespesaController(IServiceProvider service, IDespesaAppService _despesaServices)
         : BaseApiController(service)

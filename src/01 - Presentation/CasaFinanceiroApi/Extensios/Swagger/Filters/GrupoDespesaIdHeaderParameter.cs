@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using CasaFinanceiroApi.Filters;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace CasaFinanceiroApi.Extensios.Swagger.Filters
@@ -7,25 +8,35 @@ namespace CasaFinanceiroApi.Extensios.Swagger.Filters
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            var controllerName = context.MethodInfo.DeclaringType.Name;
+            var controllerPrecisaIdGrupo = context
+                .MethodInfo.DeclaringType.GetCustomAttributes(true)
+                .OfType<GetIdGroupInHeaderFilterAttribute>()
+                .Any();
 
-            if(controllerName.StartsWith("Despesa") && context.ApiDescription.HttpMethod == "GET")
+            var endPointPrecisaIdGrupo = context
+                .MethodInfo.GetCustomAttributes(true)
+                .OfType<GetIdGroupInHeaderFilterAttribute>()
+                .Any();
+
+            if(
+                (controllerPrecisaIdGrupo || endPointPrecisaIdGrupo)
+                && context.ApiDescription.HttpMethod == "GET"
+            )
             {
-                operation.Parameters ??= [];
+                operation.Parameters ??= new List<OpenApiParameter>();
 
-                operation.Parameters.Add(new OpenApiParameter
-                {
-                    Name = "Grupo-Despesas-Id",
-                    In = ParameterLocation.Header,
-                    Description = "Adiciona um Id de um grupo de despesas no cabeçario da requisição",
-                    Required = false,
-                    Schema = new OpenApiSchema
+                operation.Parameters.Add(
+                    new OpenApiParameter
                     {
-                        Type = "int"
+                        Name = "Grupo-Despesas-Id",
+                        In = ParameterLocation.Header,
+                        Description =
+                            "Adiciona um Id de um grupo de despesas no cabeçalho da requisição",
+                        Required = false,
+                        Schema = new OpenApiSchema { Type = "int" }
                     }
-                });
+                );
             }
         }
     }
-
 }

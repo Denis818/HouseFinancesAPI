@@ -2,6 +2,7 @@
 using Asp.Versioning;
 using CasaFinanceiroApi.Attributes.Auth;
 using CasaFinanceiroApi.Base;
+using CasaFinanceiroApi.Filters;
 using Domain.Dtos.Membros;
 using Domain.Enumeradores;
 using Domain.Models.Membros;
@@ -37,6 +38,7 @@ namespace CasaFinanceiroApi.V1.Finance.Membros
         #endregion
 
         [HttpGet("enviar-mensagem")]
+        [GetIdGroupInHeaderFilter]
         public async Task<object> EnviarValoresDividosPeloWhatsAppAsync(
             string nome,
             string pix,

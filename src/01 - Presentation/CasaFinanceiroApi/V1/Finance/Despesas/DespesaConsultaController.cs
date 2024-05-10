@@ -11,7 +11,7 @@ namespace CasaFinanceiroApi.V1.Finance.Despesas
     [ApiController]
     [ApiVersion("1")]
     [AutorizationFinance]
-    [IdGroupInHeaderFilter]
+    [GetIdGroupInHeaderFilter]
     [Route("api/v1/despesa")]
     public class DespesaConsultaController(
         IServiceProvider service,

@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CasaFinanceiroApi.Filters
 {
-    [AttributeUsage(AttributeTargets.Class)]
-    public class IdGroupInHeaderFilterAttribute : Attribute, IResourceFilter
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+    public class GetIdGroupInHeaderFilterAttribute : Attribute, IResourceFilter
     {
         public void OnResourceExecuting(ResourceExecutingContext context)
         {
