@@ -58,14 +58,14 @@ namespace Data.Migrations
 
                     b.Property<string>("Fornecedor")
                         .IsRequired()
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<int>("GrupoDespesaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Item")
                         .IsRequired()
-                        .HasColumnType("varchar(40)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<double>("Preco")
                         .HasColumnType("double(7, 2)");

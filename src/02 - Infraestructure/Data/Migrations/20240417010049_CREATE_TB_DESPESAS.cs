@@ -18,11 +18,11 @@ namespace Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     DataCompra = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Item = table.Column<string>(type: "varchar(40)", nullable: false)
+                    Item = table.Column<string>(type: "varchar(50)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Preco = table.Column<double>(type: "double(7, 2)", nullable: false),
                     Quantidade = table.Column<int>(type: "int", nullable: false),
-                    Fornecedor = table.Column<string>(type: "varchar(20)", nullable: false)
+                    Fornecedor = table.Column<string>(type: "varchar(50)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Total = table.Column<double>(type: "double(7, 2)", nullable: false),
                     CategoriaId = table.Column<int>(type: "int", nullable: false)
