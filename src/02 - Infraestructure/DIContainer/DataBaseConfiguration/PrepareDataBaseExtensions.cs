@@ -1,4 +1,5 @@
-﻿using Application.Helpers;
+﻿using System.Globalization;
+using Application.Helpers;
 using Application.Interfaces.Services.User;
 using Domain.Converters.DatesTimes;
 using Domain.Dtos.User.Auth;
@@ -9,7 +10,6 @@ using Domain.Models.Despesas;
 using Domain.Models.Membros;
 using Domain.Models.Users;
 using Microsoft.Extensions.DependencyInjection;
-using System.Globalization;
 
 namespace DIContainer.DataBaseConfiguration
 {
@@ -18,7 +18,7 @@ namespace DIContainer.DataBaseConfiguration
         public static void PrepareDataBase(IServiceProvider service, string nomeDominio)
         {
             PrepareUserMaster(service, nomeDominio);
-            PrepareUser(service);
+            PrepararVisitante(service);
             PrepareCategoryAndMember(service).Wait();
         }
 
@@ -30,13 +30,13 @@ namespace DIContainer.DataBaseConfiguration
             string email = "master@gmail.com";
             string senha = "Master@123456";
 
-            if(nomeDominio.Contains("dev") || nomeDominio.Contains("railway"))
+            if (nomeDominio.Contains("dev") || nomeDominio.Contains("railway"))
             {
                 email = "dev@gmail.com";
                 senha = "dev@123";
             }
 
-            if(usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
+            if (usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
                 return;
 
             var (Salt, PasswordHash) = new PasswordHasherHelper().CriarHashSenha(senha);
@@ -62,15 +62,15 @@ namespace DIContainer.DataBaseConfiguration
             authService.AddPermissaoAsync(new AddUserPermissionDto(usuario.Id, permissoes)).Wait();
         }
 
-        private static void PrepareUser(IServiceProvider service)
+        private static void PrepararVisitante(IServiceProvider service)
         {
             var usuarioRepository = service.GetRequiredService<IUsuarioRepository>();
             var authService = service.GetRequiredService<IAuthAppService>();
 
-            string email = "dev";
-            string senha = "1234";
+            string email = "visitante";
+            string senha = "123456";
 
-            if(usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
+            if (usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
                 return;
 
             var (Salt, PasswordHash) = new PasswordHasherHelper().CriarHashSenha(senha);
@@ -93,7 +93,7 @@ namespace DIContainer.DataBaseConfiguration
             var memberRepository = service.GetRequiredService<IMembroRepository>();
             var grupoDespesaRepository = service.GetRequiredService<IGrupoDespesaRepository>();
 
-            if(categoriaRepository.Get().ToList().Count > 0)
+            if (categoriaRepository.Get().ToList().Count > 0)
                 return;
 
             var listCategoria = new List<Categoria>
@@ -105,7 +105,6 @@ namespace DIContainer.DataBaseConfiguration
                 new() { Descricao = "Lanches" },
                 new() { Descricao = "Higiêne" },
                 new() { Descricao = "Internet" },
-                new() { Descricao = "Conta de Água" },
                 new() { Descricao = "Conta de Luz" }
             };
 
