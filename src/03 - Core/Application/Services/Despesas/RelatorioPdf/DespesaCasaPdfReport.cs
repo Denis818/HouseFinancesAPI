@@ -24,7 +24,8 @@ namespace Application.Services.Despesas.RelatorioPdf
                 custosCasaDto.TotalDespesaGerais,
                 custosCasaDto.TotalAlmocoDividioComJhon,
                 custosCasaDto.TotalAlmocoParteDoJhon,
-                custosCasaDto.DespesaGeraisMaisAlmoco
+                custosCasaDto.DespesaGeraisMaisAlmoco,
+                custosCasaDto.Membros.Count
             );
 
             CreateTableValoresParaCada(
@@ -41,21 +42,23 @@ namespace Application.Services.Despesas.RelatorioPdf
 
         public void CreateTableCalculos(
             Document doc,
-            double totalDespesaGerais,
+            double totalDespesaGeraisForaAlmoco,
             double totalAlmocoDividioComJhon,
             double totalAlmocoParteDoJhon,
-            double despesaGeraisMaisAlmoco
+            double despesaGeraisMaisAlmoco,
+            int countMembros
         )
         {
+            double totalAlmoco = totalAlmocoDividioComJhon + totalAlmocoParteDoJhon;
+
             var columnsValoresCalculados = new Dictionary<string, string>
             {
-                { "Despesas gerais fora almoço", $"R$ {totalDespesaGerais:F2}" },
-                { "Almoço divido com o Jhon", $"R$ {totalAlmocoDividioComJhon:F2}" },
+                { "Total de membros", $"{countMembros}" },
+                { "Despesas fora almoço", $"R$ {totalDespesaGeraisForaAlmoco:F2}" },
+                { "Despesas somente almoço", $"R$ {totalAlmoco:F2}" },
+                { "Almoço fora parte do Jhon", $"R$ {totalAlmocoDividioComJhon:F2}" },
                 { "Almoço parte do Jhon", $"R$ {totalAlmocoParteDoJhon:F2}" },
-                {
-                    "Despesa gerais somado com Almoço divido com o Jhon",
-                    $"R$ {despesaGeraisMaisAlmoco:F2}"
-                },
+                { "Total das despesas com almoço", $"R$ {despesaGeraisMaisAlmoco:F2}" },
             };
 
             _pdfTable.CreateTable(
@@ -85,11 +88,7 @@ namespace Application.Services.Despesas.RelatorioPdf
                 columnsTotalParaCada.Add(membro.Nome, $"{valorParaCada:F2}");
             }
 
-            _pdfTable.CreateTable(
-                doc,
-                "Valor que cada um deve pagar",
-                columnsTotalParaCada
-            );
+            _pdfTable.CreateTable(doc, "Valor que cada um deve pagar", columnsTotalParaCada);
         }
     }
 }

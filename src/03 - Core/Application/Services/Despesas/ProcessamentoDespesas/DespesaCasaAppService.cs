@@ -26,7 +26,8 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
                 await CalculaTotalAlmocoDivididoComJhon();
 
             //Despesa gerais Limpesa, Higiêne etc... somado com Almoço divido com Jhon
-            double despesaGeraisMaisAlmoco = totalDespesaGerais + totalAlmocoDividioComJhon;
+            double valorTotalDoAlmoco = totalAlmocoDividioComJhon + totalAlmocoParteDoJhon;
+            double despesaGeraisMaisAlmoco = totalDespesaGerais + valorTotalDoAlmoco;
 
             double despesaGeraisMaisAlmocoDividioPorMembro =
                 despesaGeraisMaisAlmoco / listMembersForaJhon.Count;
