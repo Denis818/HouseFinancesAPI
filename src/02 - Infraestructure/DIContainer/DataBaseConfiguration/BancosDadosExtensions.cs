@@ -18,8 +18,8 @@ namespace DIContainer.DataBaseConfiguration
             {
                 services.AddDbContext<FinanceDbContext>(options =>
                     options.UseMySql(
-                        company.ConnnectionString,
-                        ServerVersion.AutoDetect(company.ConnnectionString)
+                        company.ConnectionString,
+                        ServerVersion.AutoDetect(company.ConnectionString)
                     )
                 );
 
@@ -27,7 +27,7 @@ namespace DIContainer.DataBaseConfiguration
 
                 var dbContext = scope.ServiceProvider.GetRequiredService<FinanceDbContext>();
 
-                dbContext.Database.SetConnectionString(company.ConnnectionString);
+                dbContext.Database.SetConnectionString(company.ConnectionString);
                 dbContext.Database.Migrate();
 
                 PrepareDataBaseExtensions.PrepareDataBase(

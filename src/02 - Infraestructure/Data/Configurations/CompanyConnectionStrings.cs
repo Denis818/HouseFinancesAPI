@@ -8,6 +8,6 @@
     public class CompanyInfo
     {
         public string NomeDominio { get; set; }
-        public string ConnnectionString { get; set; }
+        public string ConnectionString { get; set; }
     }
 }

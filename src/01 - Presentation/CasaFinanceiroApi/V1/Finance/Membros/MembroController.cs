@@ -7,9 +7,11 @@ using Domain.Dtos.Membros;
 using Domain.Enumeradores;
 using Domain.Models.Membros;
 using Microsoft.AspNetCore.Mvc;
+using Save.Cache.Memory;
 
 namespace CasaFinanceiroApi.V1.Finance.Membros
 {
+    [Cached]
     [ApiController]
     [ApiVersion("1")]
     [AutorizationFinance]

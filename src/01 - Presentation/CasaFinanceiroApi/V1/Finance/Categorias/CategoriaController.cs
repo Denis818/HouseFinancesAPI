@@ -6,9 +6,11 @@ using Domain.Dtos.Categorias;
 using Domain.Enumeradores;
 using Domain.Models.Categorias;
 using Microsoft.AspNetCore.Mvc;
+using Save.Cache.Memory;
 
 namespace CasaFinanceiroApi.V1.Finance.Categorias
 {
+    [Cached]
     [ApiController]
     [ApiVersion("1")]
     [AutorizationFinance]

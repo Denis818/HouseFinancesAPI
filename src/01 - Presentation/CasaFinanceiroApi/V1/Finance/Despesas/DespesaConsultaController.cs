@@ -5,9 +5,11 @@ using CasaFinanceiroApi.Base;
 using CasaFinanceiroApi.Filters;
 using Domain.Dtos.Despesas.Consultas;
 using Microsoft.AspNetCore.Mvc;
+using Save.Cache.Memory;
 
 namespace CasaFinanceiroApi.V1.Finance.Despesas
 {
+    [Cached]
     [ApiController]
     [ApiVersion("1")]
     [AutorizationFinance]
