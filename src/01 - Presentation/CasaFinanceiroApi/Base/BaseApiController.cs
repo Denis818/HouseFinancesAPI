@@ -22,12 +22,12 @@ namespace CasaFinanceiroApi.Base
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if(!_modelState.ValidarModelState(context))
+            if (!_modelState.ValidarModelState(context))
                 return;
 
             var connectionString = IdentificarStringConexao(context);
 
-            if(string.IsNullOrEmpty(connectionString))
+            if (string.IsNullOrEmpty(connectionString))
                 return;
 
             _context.SetConnectionString(connectionString);
@@ -36,7 +36,7 @@ namespace CasaFinanceiroApi.Base
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             base.OnActionExecuted(context);
-            if(context.Result is ObjectResult result)
+            if (context.Result is ObjectResult result)
             {
                 context.Result = CustomResponse(result.Value);
             }
@@ -44,17 +44,17 @@ namespace CasaFinanceiroApi.Base
 
         private IActionResult CustomResponse<TResponse>(TResponse content)
         {
-            if(_notifier.HasNotifications(EnumTipoNotificacao.NotFount, out var notFount))
+            if (_notifier.HasNotifications(EnumTipoNotificacao.NotFount, out var notFount))
             {
                 return NotFound(new ResponseDTO<TResponse>(content) { Mensagens = notFount });
             }
 
-            if(_notifier.HasNotifications(EnumTipoNotificacao.ClientError, out var clientErrors))
+            if (_notifier.HasNotifications(EnumTipoNotificacao.ClientError, out var clientErrors))
             {
                 return BadRequest(new ResponseDTO<TResponse>(content) { Mensagens = clientErrors });
             }
 
-            if(_notifier.HasNotifications(EnumTipoNotificacao.ServerError, out var serverErrors))
+            if (_notifier.HasNotifications(EnumTipoNotificacao.ServerError, out var serverErrors))
             {
                 return StatusCode(
                     StatusCodes.Status500InternalServerError,
@@ -75,33 +75,22 @@ namespace CasaFinanceiroApi.Base
 
             string domain = null;
 
-            if(!string.IsNullOrEmpty(originHeader))
+            if (!string.IsNullOrEmpty(originHeader))
             {
                 var originUri = new Uri(originHeader);
                 domain = originUri.Host;
             }
 
-            if(string.IsNullOrEmpty(domain))
+            if (string.IsNullOrEmpty(domain))
             {
-                context.Result = new BadRequestObjectResult(
-                    new ResponseDTO<string>(
-                        null,
-                        [
-                            new Notificacao(
-                                "A origem da requisição não pôde ser determinada.",
-                                EnumTipoNotificacao.ClientError
-                            )
-                        ]
-                    )
-                );
-                return null;
+                domain = "localhost";
             }
 
             var empresaLocalizada = _companyConnections.List.FirstOrDefault(empresa =>
                 empresa.NomeDominio == domain
             );
 
-            if(empresaLocalizada == null)
+            if (empresaLocalizada == null)
             {
                 context.Result = new BadRequestObjectResult(
                     new ResponseDTO<string>(

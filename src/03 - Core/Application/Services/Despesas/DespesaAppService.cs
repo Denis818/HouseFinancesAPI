@@ -29,7 +29,13 @@ namespace Application.Services.Despesas
 
         public async Task<(double, double)> CompararFaturaComTotalDeDespesas(double faturaCartao)
         {
-            double totalDespesas = await ListDespesasPorGrupo.SumAsync(despesa => despesa.Total);
+            double totalDespesas = await ListDespesasPorGrupo
+                .Where(despesa =>
+                    despesa.CategoriaId != _categoriaIds.IdAluguel
+                    && despesa.CategoriaId != _categoriaIds.IdContaDeLuz
+                    && despesa.CategoriaId != _categoriaIds.IdCondominio
+                )
+                .SumAsync(despesa => despesa.Total);
 
             double valorSubtraido = totalDespesas - faturaCartao;
 
