@@ -5,7 +5,6 @@ using CasaFinanceiroApi.Base;
 using CasaFinanceiroApi.Filters;
 using Domain.Dtos.Despesas.Consultas;
 using Microsoft.AspNetCore.Mvc;
-using Save.Cache.Memory;
 
 namespace CasaFinanceiroApi.V1.Finance.Despesas
 {
@@ -29,7 +28,7 @@ namespace CasaFinanceiroApi.V1.Finance.Despesas
             await _despesaConsultaApp.GetTotalPorCategoriaAsync();
 
         [HttpGet("total-por-grupo")]
-        public async Task<IEnumerable<DespesasPorMesDto>> GetDespesaGrupoParaGraficoAsync() =>
+        public async Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync() =>
             await _despesaConsultaApp.GetDespesaGrupoParaGraficoAsync();
         #endregion
     }

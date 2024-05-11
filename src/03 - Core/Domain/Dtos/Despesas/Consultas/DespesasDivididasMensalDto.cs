@@ -5,7 +5,7 @@ namespace Domain.Dtos.Despesas.Consultas
 {
     public class DespesasDivididasMensalDto
     {
-        public RelatorioGastosDoMesDto RelatorioGastosDoGrupo { get; set; }
+        public RelatorioGastosDoGrupoDto RelatorioGastosDoGrupo { get; set; }
         public IEnumerable<DespesaPorMembroDto> DespesasPorMembro { get; set; }
     }
 }

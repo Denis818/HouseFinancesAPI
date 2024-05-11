@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Application.Extensions.Help;
+﻿using Application.Extensions.Help;
 using Application.Interfaces.Services.Despesas;
 using Application.Resources.Messages;
 using Application.Services.Despesas.Base;
@@ -43,21 +42,19 @@ namespace Application.Services.Despesas
             ));
         }
 
-        public async Task<IEnumerable<DespesasPorMesDto>> GetDespesaGrupoParaGraficoAsync()
+        public async Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync()
         {
-            var despesasPorMes = ListDespesasPorGrupo
-                .GroupBy(d => new { d.DataCompra.Year, d.DataCompra.Month })
-                .OrderBy(g => g.Key.Month)
-                .ThenBy(g => g.Key.Month)
-                .Select(group => new DespesasPorMesDto(
-                    new DateTime(group.Key.Year, group.Key.Month, 1).ToString(
-                        "MMMM",
-                        new CultureInfo("pt-BR")
-                    ),
-                    group.Sum(d => d.Total).RoundTo(2)
-                ));
+            var despesasPorGrupo = _repository
+                .Get()
+                .OrderBy(d => d.DataCompra)
+                .GroupBy(d => d.GrupoDespesa.Nome)
+                .Select(group => new DespesasPorGrupoDto
+                {
+                    GrupoNome = group.Key,
+                    Total = group.Sum(d => d.Total)
+                });
 
-            return await despesasPorMes.ToListAsync();
+            return await despesasPorGrupo.ToListAsync();
         }
 
         public async Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync()
@@ -90,7 +87,7 @@ namespace Application.Services.Despesas
         #endregion
 
         #region Metodos de Suporte
-        private async Task<RelatorioGastosDoMesDto> GetRelatorioDeGastosDoMesAsync()
+        private async Task<RelatorioGastosDoGrupoDto> GetRelatorioDeGastosDoMesAsync()
         {
             string grupoNome = _grupoDespesaRepository
                 .Get(g => g.Id == _grupoDespesaId)
@@ -119,9 +116,9 @@ namespace Application.Services.Despesas
                 )
                 .SumAsync(d => d.Total);
 
-            var totalGeral = totalGastosCasa + totalGastosCasa;
+            var totalGeral = totalGastoMoradia + totalGastosCasa;
 
-            return new RelatorioGastosDoMesDto
+            return new RelatorioGastosDoGrupoDto
             {
                 GrupoDespesaNome = grupoNome,
                 TotalGeral = totalGeral.RoundTo(2),

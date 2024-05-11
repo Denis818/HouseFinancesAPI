@@ -1,6 +1,6 @@
 ﻿namespace Domain.Dtos.Despesas.Relatorios
 {
-    public record RelatorioGastosDoMesDto
+    public record RelatorioGastosDoGrupoDto
     {
         public string GrupoDespesaNome { get; set; }
         public double TotalGastosMoradia { get; set; }
