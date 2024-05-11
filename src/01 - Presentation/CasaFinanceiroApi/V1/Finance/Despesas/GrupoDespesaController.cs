@@ -10,7 +10,6 @@ using Save.Cache.Memory;
 
 namespace CasaFinanceiroApi.V1.Finance.Despesas
 {
-    [Cached]
     [ApiController]
     [ApiVersion("1")]
     [AutorizationFinance]
