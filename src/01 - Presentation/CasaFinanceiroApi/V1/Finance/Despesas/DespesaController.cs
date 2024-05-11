@@ -4,12 +4,10 @@ using CasaFinanceiroApi.Attributes.Auth;
 using CasaFinanceiroApi.Base;
 using CasaFinanceiroApi.Filters;
 using Microsoft.AspNetCore.Mvc;
-using Save.Cache.Memory;
 using System.Net.Mime;
 
 namespace CasaFinanceiroApi.V1.Finance.Despesas
 {
-    [Cached]
     [ApiController]
     [ApiVersion("1")]
     [AutorizationFinance]
