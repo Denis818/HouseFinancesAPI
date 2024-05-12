@@ -44,17 +44,41 @@ namespace Application.Services.Despesas
 
         public async Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync()
         {
+            // Mapeamento de nomes de meses para valores numéricos
+            var monthOrder = new Dictionary<string, int>
+            {
+                { "Janeiro", 1 },
+                { "Fevereiro", 2 },
+                { "Março", 3 },
+                { "Abril", 4 },
+                { "Maio", 5 },
+                { "Junho", 6 },
+                { "Julho", 7 },
+                { "Agosto", 8 },
+                { "Setembro", 9 },
+                { "Outubro", 10 },
+                { "Novembro", 11 },
+                { "Dezembro", 12 }
+            };
+
             var despesasPorGrupo = _repository
                 .Get()
-                .OrderBy(d => d.DataCompra)
                 .GroupBy(d => d.GrupoDespesa.Nome)
                 .Select(group => new DespesasPorGrupoDto
                 {
                     GrupoNome = group.Key,
                     Total = group.Sum(d => d.Total)
+                })
+                .AsEnumerable() // Processamento local para manipulação de strings e datas
+                .OrderBy(dto =>
+                {
+                    // Extrai o nome do mês do GrupoNome
+                    var monthName = dto.GrupoNome.Split(' ')[2]; // Assumindo "Fatura de Janeiro 2024"
+                    // Usa o dicionário para encontrar a ordem do mês
+                    return monthOrder[monthName];
                 });
 
-            return await despesasPorGrupo.ToListAsync();
+            return await Task.FromResult(despesasPorGrupo.ToList());
         }
 
         public async Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync()

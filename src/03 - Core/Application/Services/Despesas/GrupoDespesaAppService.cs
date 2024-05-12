@@ -22,18 +22,10 @@ namespace Application.Services.Despesas
             if (Validator(grupoDto))
                 return null;
 
-            // Concatenar o nome do grupo com o ano atual
             grupoDto.Nome = $"{grupoDto.Nome} {DateTime.Now.Year}";
 
-            // Validar se o nome do grupo segue o padrão "Fatura de [mês] [ano]"
-            var regex = new Regex(
-                @"^Fatura de (Janeiro|Fevereiro|Março|Abril|Maio|Junho|Julho|Agosto|Setembro|Outubro|Novembro|Dezembro) \d{4}$"
-            );
-            if (!regex.IsMatch(grupoDto.Nome))
-            {
-                Notificar(EnumTipoNotificacao.Informacao, Message.NomeGrupoForaDoPadrao);
+            if (!NomeGrupoIsCorretFormat(grupoDto.Nome))
                 return null;
-            }
 
             var existingGrupo = await _repository
                 .Get(grupo => grupo.Nome == grupoDto.Nome)
@@ -63,9 +55,14 @@ namespace Application.Services.Despesas
             return grupoDespesa;
         }
 
-        public async Task<GrupoDespesa> UpdateAsync(int id, GrupoDespesaDto grupoDespesaDto)
+        public async Task<GrupoDespesa> UpdateAsync(int id, GrupoDespesaDto grupoDto)
         {
-            if (Validator(grupoDespesaDto))
+            if (Validator(grupoDto))
+                return null;
+
+            grupoDto.Nome = $"{grupoDto.Nome} {DateTime.Now.Year}";
+
+            if (!NomeGrupoIsCorretFormat(grupoDto.Nome))
                 return null;
 
             var grupoDespesa = await _repository.GetByIdAsync(id);
@@ -79,11 +76,11 @@ namespace Application.Services.Despesas
                 return null;
             }
 
-            if (grupoDespesa.Nome == grupoDespesaDto.Nome)
+            if (grupoDespesa.Nome == grupoDto.Nome)
                 return grupoDespesa;
 
             if (
-                await _repository.ExisteAsync(nome: grupoDespesaDto.Nome)
+                await _repository.ExisteAsync(nome: grupoDto.Nome)
                 is GrupoDespesa grupoDespesaExiste
             )
             {
@@ -94,14 +91,14 @@ namespace Application.Services.Despesas
                         string.Format(
                             Message.RegistroExistente,
                             "O Grupo de Despesa",
-                            grupoDespesaDto.Nome
+                            grupoDto.Nome
                         )
                     );
                     return null;
                 }
             }
 
-            _mapper.Map(grupoDespesaDto, grupoDespesa);
+            _mapper.Map(grupoDto, grupoDespesa);
 
             _repository.Update(grupoDespesa);
 
@@ -148,6 +145,21 @@ namespace Application.Services.Despesas
                     EnumTipoNotificacao.ServerError,
                     string.Format(Message.ErroAoSalvarNoBanco, "Deletar")
                 );
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool NomeGrupoIsCorretFormat(string nomeGrupo)
+        {
+            var regex = new Regex(
+                @"^Fatura de (Janeiro|Fevereiro|Março|Abril|Maio|Junho|Julho|Agosto|Setembro|Outubro|Novembro|Dezembro) \d{4}$"
+            );
+
+            if (!regex.IsMatch(nomeGrupo))
+            {
+                Notificar(EnumTipoNotificacao.Informacao, Message.NomeGrupoForaDoPadrao);
                 return false;
             }
 
