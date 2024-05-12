@@ -159,6 +159,9 @@
   <data name="NomeDominioNaoEncontrado" xml:space="preserve">
     <value>O nome de domínio '{0}' não existe.</value>
   </data>
+  <data name="NomeGrupoForaDoPadrao" xml:space="preserve">
+    <value>Por favor, use o padrão 'Fatura de [mês]' para o nome do grupo. Exemplo: 'Fatura de Abril'.</value>
+  </data>
   <data name="RegistroExistente" xml:space="preserve">
     <value>{0} {1} já existe.</value>
   </data>

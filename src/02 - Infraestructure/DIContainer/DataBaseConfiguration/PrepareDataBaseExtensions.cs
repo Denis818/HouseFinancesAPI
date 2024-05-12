@@ -122,7 +122,10 @@ namespace DIContainer.DataBaseConfiguration
                 .ToString("MMMM", new CultureInfo("pt-BR"));
             mesAtualName = char.ToUpper(mesAtualName[0]) + mesAtualName[1..].ToLower();
 
-            var grupoDespesa = new GrupoDespesa { Nome = $"Fatura de {mesAtualName}" };
+            var grupoDespesa = new GrupoDespesa
+            {
+                Nome = $"Fatura de {mesAtualName} {DateTime.Now.Year}"
+            };
 
             await categoriaRepository.InsertRangeAsync(listCategoria);
             await memberRepository.InsertRangeAsync(listMember);

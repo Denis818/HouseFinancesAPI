@@ -187,6 +187,15 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Por favor, use o padrão &apos;Fatura de [mês]&apos; para o nome do grupo. Exemplo: &apos;Fatura de Abril&apos;..
+        /// </summary>
+        public static string NomeGrupoForaDoPadrao {
+            get {
+                return ResourceManager.GetString("NomeGrupoForaDoPadrao", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} {1} já existe..
         /// </summary>
         public static string RegistroExistente {

@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Services.Despesas;
+﻿using System.Text.RegularExpressions;
+using Application.Interfaces.Services.Despesas;
 using Application.Resources.Messages;
 using Application.Services.Base;
 using Domain.Dtos.Despesas.Criacao;
@@ -20,6 +21,19 @@ namespace Application.Services.Despesas
         {
             if (Validator(grupoDto))
                 return null;
+
+            // Concatenar o nome do grupo com o ano atual
+            grupoDto.Nome = $"{grupoDto.Nome} {DateTime.Now.Year}";
+
+            // Validar se o nome do grupo segue o padrão "Fatura de [mês] [ano]"
+            var regex = new Regex(
+                @"^Fatura de (Janeiro|Fevereiro|Março|Abril|Maio|Junho|Julho|Agosto|Setembro|Outubro|Novembro|Dezembro) \d{4}$"
+            );
+            if (!regex.IsMatch(grupoDto.Nome))
+            {
+                Notificar(EnumTipoNotificacao.Informacao, Message.NomeGrupoForaDoPadrao);
+                return null;
+            }
 
             var existingGrupo = await _repository
                 .Get(grupo => grupo.Nome == grupoDto.Nome)

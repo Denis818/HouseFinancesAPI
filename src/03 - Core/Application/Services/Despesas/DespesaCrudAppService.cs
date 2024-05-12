@@ -335,7 +335,6 @@ namespace Application.Services.Despesas
                 || idCategoria == _categoriaIds.IdContaDeLuz
                 || idCategoria == _categoriaIds.IdInternet;
         }
-
         #endregion
     }
 }
