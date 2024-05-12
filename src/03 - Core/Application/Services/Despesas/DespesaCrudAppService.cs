@@ -240,6 +240,18 @@ namespace Application.Services.Despesas
                 return false;
             }
 
+            if (
+                despesaDto.CategoriaId == _categoriaIds.IdCondominio
+                && !despesaDto.Item.Contains(
+                    "condomínio ap ponto",
+                    StringComparison.CurrentCultureIgnoreCase
+                )
+            )
+            {
+                Notificar(EnumTipoNotificacao.Informacao, Message.CadastroCondominioIncorreto);
+                return false;
+            }
+
             if (await _grupoDespesaRepository.ExisteAsync(despesaDto.GrupoDespesaId) is null)
             {
                 Notificar(

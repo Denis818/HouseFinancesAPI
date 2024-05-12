@@ -97,6 +97,15 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Para cadastro de Condomínio o campo &apos;item&apos; deve ser &apos;Condomínio Ap Ponto&apos;..
+        /// </summary>
+        public static string CadastroCondominioIncorreto {
+            get {
+                return ResourceManager.GetString("CadastroCondominioIncorreto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Campo {0} não está em um formato válido..
         /// </summary>
         public static string CampoFormatoInvalido {
@@ -165,6 +174,15 @@ namespace Application.Resources.Messages {
         public static string ModeloInvalido {
             get {
                 return ResourceManager.GetString("ModeloInvalido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to O nome de domínio &apos;{0}&apos; não existe..
+        /// </summary>
+        public static string NomeDominioNaoEncontrado {
+            get {
+                return ResourceManager.GetString("NomeDominioNaoEncontrado", resourceCulture);
             }
         }
         

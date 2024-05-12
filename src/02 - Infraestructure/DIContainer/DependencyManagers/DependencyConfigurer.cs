@@ -1,4 +1,6 @@
-﻿using Application.Validators.Despesas;
+﻿using System.Reflection;
+using System.Text;
+using Application.Validators.Despesas;
 using DIContainer.DataBaseConfiguration;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -6,8 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System.Reflection;
-using System.Text;
 
 namespace DIContainer.DependencyManagers
 {
@@ -65,7 +65,13 @@ namespace DIContainer.DependencyManagers
 
         public static void UseCorsPolicy(this IApplicationBuilder app)
         {
-            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(builder =>
+                builder
+                    .WithOrigins("https://casa-financeiro-app.netlify.app")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials() //suportar cookies nas requisições CORS
+            );
         }
     }
 }
