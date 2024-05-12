@@ -67,7 +67,11 @@ namespace DIContainer.DependencyManagers
         {
             app.UseCors(builder =>
                 builder
-                    .WithOrigins("https://casa-financeiro-app.netlify.app")
+                    .WithOrigins(
+                        "https://casa-financeiro-dev.netlify.app",
+                        "https://casa-financeiro-app.netlify.app",
+                        "http://192.168.18.52:4200"
+                    )
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials() //suportar cookies nas requisições CORS
