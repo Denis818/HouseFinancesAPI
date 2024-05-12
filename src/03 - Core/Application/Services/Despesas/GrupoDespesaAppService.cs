@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
 using Application.Interfaces.Services.Despesas;
 using Application.Resources.Messages;
 using Application.Services.Base;
@@ -22,7 +23,7 @@ namespace Application.Services.Despesas
             if (Validator(grupoDto))
                 return null;
 
-            grupoDto.Nome = $"{grupoDto.Nome} {DateTime.Now.Year}";
+            grupoDto.Nome = FormatNomeGrupo(grupoDto.Nome);
 
             if (!NomeGrupoIsCorretFormat(grupoDto.Nome))
                 return null;
@@ -60,7 +61,7 @@ namespace Application.Services.Despesas
             if (Validator(grupoDto))
                 return null;
 
-            grupoDto.Nome = $"{grupoDto.Nome} {DateTime.Now.Year}";
+            grupoDto.Nome = FormatNomeGrupo(grupoDto.Nome);
 
             if (!NomeGrupoIsCorretFormat(grupoDto.Nome))
                 return null;
@@ -151,10 +152,18 @@ namespace Application.Services.Despesas
             return true;
         }
 
+        public string FormatNomeGrupo(string nomeGrupo)
+        {
+            nomeGrupo = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(nomeGrupo.ToLower());
+
+            return $"Fatura de {nomeGrupo} {DateTime.Now.Year}";
+        }
+
         public bool NomeGrupoIsCorretFormat(string nomeGrupo)
         {
             var regex = new Regex(
-                @"^Fatura de (Janeiro|Fevereiro|Março|Abril|Maio|Junho|Julho|Agosto|Setembro|Outubro|Novembro|Dezembro) \d{4}$"
+                @"^Fatura de (Janeiro|Fevereiro|Março|Abril|Maio|Junho|Julho|Agosto|Setembro|Outubro|Novembro|Dezembro) \d{4}$",
+                RegexOptions.IgnoreCase
             );
 
             if (!regex.IsMatch(nomeGrupo))
