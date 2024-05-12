@@ -32,7 +32,7 @@ namespace Data.Migrations
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasColumnType("varchar(30)");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 

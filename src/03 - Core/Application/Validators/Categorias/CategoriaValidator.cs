@@ -10,7 +10,7 @@ namespace Application.Validators.Categorias
             RuleFor(x => x.Descricao)
                 .NotEmpty()
                 .WithMessage("A {PropertyName} é obrigatória.")
-                .Length(3, 25)
+                .Length(3, 50)
                 .WithMessage(
                     "A {PropertyName} deve ter entre {MinLength} a {MaxLength} caracteres."
                 );

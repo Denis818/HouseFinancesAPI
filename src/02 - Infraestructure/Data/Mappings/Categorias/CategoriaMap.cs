@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Data.Mappings.Finance
+namespace Data.Mappings.Categorias
 {
     internal class CategoriaMap : IEntityTypeConfiguration<Categoria>
     {
@@ -11,7 +11,7 @@ namespace Data.Mappings.Finance
             builder.ToTable("Categorias");
             builder.Property(c => c.Id).IsRequired().HasColumnType("int").ValueGeneratedOnAdd();
 
-            builder.Property(c => c.Descricao).HasColumnType("varchar(30)").IsRequired();
+            builder.Property(c => c.Descricao).HasColumnType("varchar(50)").IsRequired();
 
             builder.HasIndex(c => c.Descricao).HasDatabaseName("IX_Categorias_Descricao");
         }
