@@ -33,7 +33,7 @@ namespace Application.Services.Despesas
         public async Task<List<Despesa>> FiltrarDespesaPorItem(string filterItem)
         {
             if (filterItem.IsNullOrEmpty())
-                return await ListDespesasPorGrupo.ToListAsync();
+                return [];
 
             var lowerfilterItem = filterItem.ToLower();
 
