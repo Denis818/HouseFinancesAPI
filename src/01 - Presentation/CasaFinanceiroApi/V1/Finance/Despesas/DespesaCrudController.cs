@@ -8,7 +8,6 @@ using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
 using Domain.Models.Despesas;
 using Microsoft.AspNetCore.Mvc;
-using Save.Cache.Memory;
 
 namespace CasaFinanceiroApi.V1.Finance.Despesas
 {
@@ -28,6 +27,11 @@ namespace CasaFinanceiroApi.V1.Finance.Despesas
             int paginaAtual = 1,
             int itensPorPagina = 10
         ) => await _despesaCrudServices.GetAllAsync(paginaAtual, itensPorPagina);
+
+        [HttpGet("filter-by-item")]
+        [GetIdGroupInHeaderFilter]
+        public async Task<List<Despesa>> FiltrarDespesaPorItem(string filterItem = "") =>
+            await _despesaCrudServices.FiltrarDespesaPorItem(filterItem);
 
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]

@@ -133,7 +133,7 @@ namespace Application.Resources.Messages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Não há despesas {0} nesse mês..
+        ///   Looks up a localized string similar to Não há despesas {0} neste grupo..
         /// </summary>
         public static string DespesasNaoEncontradas {
             get {

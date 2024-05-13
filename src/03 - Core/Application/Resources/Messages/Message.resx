@@ -142,7 +142,7 @@
     <value>{0}  já adicionada ao grupo.</value>
   </data>
   <data name="DespesasNaoEncontradas" xml:space="preserve">
-    <value>Não há despesas {0} nesse mês.</value>
+    <value>Não há despesas {0} neste grupo.</value>
   </data>
   <data name="EmailNaoEncontrado" xml:space="preserve">
     <value>Email não encontrado.</value>
