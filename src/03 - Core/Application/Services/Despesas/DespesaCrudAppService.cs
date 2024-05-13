@@ -36,16 +36,13 @@ namespace Application.Services.Despesas
         )
         {
             if (string.IsNullOrEmpty(filterItem))
-                return await Pagination.PaginateResultAsync(
-                    ListDespesasPorGrupo,
-                    paginaAtual,
-                    itensPorPagina
-                );
+            {
+                return await GetAllDespesas(paginaAtual, itensPorPagina);
+            }
 
-            var lowerFilterItem = filterItem.ToLower();
-            var query = ListDespesasPorGrupo.Where(despesa =>
-                despesa.Item.ToLower().Contains(lowerFilterItem)
-            );
+            var query = ListDespesasPorGrupo
+                .Where(despesa => despesa.Item.ToLower().Contains(filterItem.ToLower()))
+                .OrderByDescending(d => d.DataCompra);
 
             var listaPaginada = await Pagination.PaginateResultAsync(
                 query,
@@ -56,14 +53,18 @@ namespace Application.Services.Despesas
             return listaPaginada;
         }
 
-        public async Task<PagedResult<Despesa>> GetAllAsync(int paginaAtual, int itensPorPagina)
+        private async Task<PagedResult<Despesa>> GetAllDespesas(int paginaAtual, int itensPorPagina)
         {
-            var query = ListDespesasPorGrupo
+            var queryAll = ListDespesasPorGrupo
                 .Include(c => c.Categoria)
                 .Include(c => c.GrupoDespesa)
                 .OrderByDescending(d => d.DataCompra);
 
-            var despesas = await Pagination.PaginateResultAsync(query, paginaAtual, itensPorPagina);
+            var despesas = await Pagination.PaginateResultAsync(
+                queryAll,
+                paginaAtual,
+                itensPorPagina
+            );
 
             if (despesas.TotalItens == 0)
             {

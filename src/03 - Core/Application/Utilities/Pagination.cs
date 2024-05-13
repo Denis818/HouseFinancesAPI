@@ -11,11 +11,21 @@ namespace Application.Utilities
 
     public class Pagination
     {
-        public static async Task<PagedResult<T>> PaginateResultAsync<T>(IQueryable<T> consulta, int numeroPagina, int tamanhoPagina)
+        public static async Task<PagedResult<T>> PaginateResultAsync<T>(
+            IQueryable<T> consulta,
+            int numeroPagina = 1,
+            int tamanhoPagina = 10
+        )
             where T : class
         {
-            var totalItens = await consulta.CountAsync();
-            var quantidadePular = (numeroPagina - 1) * tamanhoPagina;
+            int totalItens = await consulta.CountAsync();
+            int quantidadePular = 0;
+
+            if (totalItens > tamanhoPagina)
+            {
+                quantidadePular = (numeroPagina - 1) * tamanhoPagina;
+            }
+
             var itens = await consulta.Skip(quantidadePular).Take(tamanhoPagina).ToListAsync();
 
             return new PagedResult<T>

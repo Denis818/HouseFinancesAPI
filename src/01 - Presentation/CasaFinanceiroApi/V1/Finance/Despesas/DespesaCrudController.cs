@@ -23,13 +23,6 @@ namespace CasaFinanceiroApi.V1.Finance.Despesas
         #region CRUD
         [HttpGet]
         [GetIdGroupInHeaderFilter]
-        public async Task<PagedResult<Despesa>> GetAllAsync(
-            int paginaAtual = 1,
-            int itensPorPagina = 10
-        ) => await _despesaCrudServices.GetAllAsync(paginaAtual, itensPorPagina);
-
-        [HttpGet("filter-by-item")]
-        [GetIdGroupInHeaderFilter]
         public async Task<PagedResult<Despesa>> FiltrarDespesaPorItem(
             string filterItem = "",
             int paginaAtual = 1,
