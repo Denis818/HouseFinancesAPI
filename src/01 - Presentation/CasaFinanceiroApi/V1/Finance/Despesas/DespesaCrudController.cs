@@ -30,8 +30,18 @@ namespace CasaFinanceiroApi.V1.Finance.Despesas
 
         [HttpGet("filter-by-item")]
         [GetIdGroupInHeaderFilter]
-        public async Task<List<Despesa>> FiltrarDespesaPorItem(string filterItem = "") =>
-            await _despesaCrudServices.FiltrarDespesaPorItem(filterItem);
+        public async Task<PagedResult<Despesa>> FiltrarDespesaPorItem(
+            string filterItem = "",
+            int paginaAtual = 1,
+            int itensPorPagina = 10
+        )
+        {
+            return await _despesaCrudServices.FiltrarDespesaPorItem(
+                filterItem,
+                paginaAtual,
+                itensPorPagina
+            );
+        }
 
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]

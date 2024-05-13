@@ -9,7 +9,6 @@ using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Services.Despesas
 {
@@ -30,18 +29,31 @@ namespace Application.Services.Despesas
             return despesa;
         }
 
-        public async Task<List<Despesa>> FiltrarDespesaPorItem(string filterItem)
+        public async Task<PagedResult<Despesa>> FiltrarDespesaPorItem(
+            string filterItem,
+            int paginaAtual,
+            int itensPorPagina
+        )
         {
-            if (filterItem.IsNullOrEmpty())
-                return [];
+            if (string.IsNullOrEmpty(filterItem))
+                return await Pagination.PaginateResultAsync(
+                    ListDespesasPorGrupo,
+                    paginaAtual,
+                    itensPorPagina
+                );
 
-            var lowerfilterItem = filterItem.ToLower();
+            var lowerFilterItem = filterItem.ToLower();
+            var query = ListDespesasPorGrupo.Where(despesa =>
+                despesa.Item.ToLower().Contains(lowerFilterItem)
+            );
 
-            var listDespesaFiltrada = await ListDespesasPorGrupo
-                .Where(despesa => despesa.Item.ToLower().Contains(lowerfilterItem))
-                .ToListAsync();
+            var listaPaginada = await Pagination.PaginateResultAsync(
+                query,
+                paginaAtual,
+                itensPorPagina
+            );
 
-            return listDespesaFiltrada;
+            return listaPaginada;
         }
 
         public async Task<PagedResult<Despesa>> GetAllAsync(int paginaAtual, int itensPorPagina)

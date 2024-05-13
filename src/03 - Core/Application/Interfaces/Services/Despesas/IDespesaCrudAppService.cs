@@ -8,7 +8,11 @@ namespace Application.Interfaces.Services.Despesas
     {
         Task<bool> DeleteAsync(int id);
         Task<PagedResult<Despesa>> GetAllAsync(int paginaAtual, int itensPorPagina);
-        Task<List<Despesa>> FiltrarDespesaPorItem(string filterItem);
+        Task<PagedResult<Despesa>> FiltrarDespesaPorItem(
+            string filterItem,
+            int paginaAtual,
+            int itensPorPagina
+        );
         Task<Despesa> GetByIdAsync(int id);
         Task<Despesa> InsertAsync(DespesaDto despesaDto);
         Task<Despesa> UpdateAsync(int id, DespesaDto despesaDto);
