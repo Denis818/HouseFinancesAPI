@@ -1,38 +1,25 @@
 ﻿using Application.Interfaces.Utilities;
-using Application.Resources.Messages;
-using Data.DataContext;
 using Domain.Enumeradores;
 using Domain.Utilities;
-using Infraestructure.Data.Configurations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
-using Presentation.ModelState;
+using Presentation.ModelState.Interface;
 
-namespace Presentation.Base
+namespace Presentation.Api.Base
 {
     public abstract class MainController(IServiceProvider service) : Controller
     {
-        private readonly CompanyConnectionStrings _companyConnections =
-            service.GetRequiredService<CompanyConnectionStrings>();
-
         private readonly INotifier _notifier = service.GetRequiredService<INotifier>();
-        private readonly ModelStateValidator _modelState = new();
 
-        private readonly FinanceDbContext _context = service.GetRequiredService<FinanceDbContext>();
+        private readonly IModelStateValidator _modelState =
+            service.GetRequiredService<IModelStateValidator>();
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if(!_modelState.ValidarModelState(context))
                 return;
-
-            var connectionString = IdentificarStringConexao(context);
-
-            if(string.IsNullOrEmpty(connectionString))
-                return;
-
-            _context.SetConnectionString(connectionString);
         }
 
         public override void OnActionExecuted(ActionExecutedContext context)
@@ -70,46 +57,6 @@ namespace Presentation.Base
 
         protected void Notificar(EnumTipoNotificacao tipo, string message) =>
             _notifier.Notify(tipo, message);
-
-        private string IdentificarStringConexao(ActionExecutingContext context)
-        {
-            var originHeader = context.HttpContext.Request.Headers.Origin.FirstOrDefault();
-
-            string domain = null;
-
-            if(!string.IsNullOrEmpty(originHeader))
-            {
-                var originUri = new Uri(originHeader);
-                domain = originUri.Host;
-            }
-
-            if(string.IsNullOrEmpty(domain))
-            {
-                domain = "localhost";
-            }
-
-            var empresaLocalizada = _companyConnections.List.FirstOrDefault(empresa =>
-                empresa.NomeDominio == domain
-            );
-
-            if(empresaLocalizada == null)
-            {
-                context.Result = new BadRequestObjectResult(
-                    new ResponseDTO<string>(
-                        null,
-                        [
-                            new Notificacao(
-                                string.Format(Message.NomeDominioNaoEncontrado, domain),
-                                EnumTipoNotificacao.ClientError
-                            )
-                        ]
-                    )
-                );
-                return null;
-            }
-
-            return empresaLocalizada.ConnectionString;
-        }
     }
 
     public class ResponseDTO<T>
@@ -127,7 +74,7 @@ namespace Presentation.Base
 
         public void ContentTypeInvalido()
         {
-            Mensagens = [new("Content-Type inválido.", EnumTipoNotificacao.ClientError)];
+            Mensagens = [ new("Content-Type inválido.", EnumTipoNotificacao.ClientError) ];
         }
     }
 }

@@ -1,20 +1,19 @@
 ﻿using Application.Interfaces.Services.Despesas;
 using Application.Utilities;
 using Asp.Versioning;
-using CasaFinanceiroApi.Attributes.Auth;
 using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
 using Domain.Models.Despesas;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
 using Presentation.Attributes.Util;
-using Presentation.Base;
-using Presentation.Configurations.Extensions;
+using Presentation.Version;
 
-namespace Presentation.V1.Finance.Despesas
+namespace Presentation.Api.V1.Finance.Despesas
 {
     [ApiController]
-    [ApiVersion(ApiConfig.V1)]
+    [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
     [Route("api/v1/despesa")]
     public class DespesaCrudController(

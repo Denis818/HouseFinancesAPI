@@ -5,14 +5,14 @@ using Domain.Dtos.User.Auth;
 using Domain.Enumeradores;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
-using Presentation.Base;
-using Presentation.Configurations.Extensions;
+using Presentation.Version;
 
-namespace Presentation.V1.User
+namespace Presentation.Api.V1.User
 {
     [ApiController]
-    [ApiVersion(ApiConfig.V1)]
+    [ApiVersion(ApiVersioning.V1)]
     [Route("api/v1/user")]
     public class UsersController(IAuthAppService _authService, IServiceProvider service)
         : MainController(service)
@@ -20,7 +20,7 @@ namespace Presentation.V1.User
         [HttpPost("login")]
         public async Task<UserTokenDto> Login(UserDto userDto)
         {
-            if(userDto.Email.IsNullOrEmpty() || userDto.Password.IsNullOrEmpty())
+            if (userDto.Email.IsNullOrEmpty() || userDto.Password.IsNullOrEmpty())
             {
                 Notificar(EnumTipoNotificacao.ClientError, "Email ou Senha incorretos.");
                 return null;

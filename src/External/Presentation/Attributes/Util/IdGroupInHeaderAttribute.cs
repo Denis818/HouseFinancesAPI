@@ -2,7 +2,7 @@
 using Domain.Enumeradores;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Presentation.Base;
+using Presentation.Api.Base;
 
 namespace Presentation.Attributes.Util
 {
@@ -12,11 +12,11 @@ namespace Presentation.Attributes.Util
         public void OnResourceExecuting(ResourceExecutingContext context)
         {
             var httpContext = context.HttpContext;
-            string grupoId = httpContext.Request.Headers["Grupo-Despesas-Id"];
+            string grupoId = httpContext.Request.Headers[ "Grupo-Despesas-Id" ];
 
             if(int.TryParse(grupoId, out int grupoDespesasId))
             {
-                httpContext.Items["GrupoDespesaId"] = grupoDespesasId;
+                httpContext.Items[ "GrupoDespesaId" ] = grupoDespesasId;
             }
             else if(httpContext.Request.Method == "GET")
             {

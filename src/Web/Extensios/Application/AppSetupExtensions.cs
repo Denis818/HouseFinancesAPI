@@ -1,14 +1,14 @@
-﻿using Infraestructure.DIContainer.DependencyManagers;
-using Presentation.Configurations.Extensions;
+﻿using Presentation.Version;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
+using Web.Extensios.DependencyManagers;
 using Web.Extensios.Swagger;
 
 namespace Web.Extensios.Application
 {
     public static class AppSetupExtensions
     {
-        public static void SetupApplication(this WebApplicationBuilder builder)
+        public static void ConfigureApplication(this WebApplicationBuilder builder)
         {
             string env = builder.Environment.EnvironmentName;
             string port = Environment.GetEnvironmentVariable("PORT") ?? "3000";

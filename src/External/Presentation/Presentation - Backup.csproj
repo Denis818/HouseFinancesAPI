@@ -13,5 +13,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Application\Application.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Version\Extensions\" />
+    <Folder Include="Version\Filters\" />
+  </ItemGroup>
 
 </Project>

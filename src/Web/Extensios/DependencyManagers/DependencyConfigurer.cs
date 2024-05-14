@@ -1,16 +1,12 @@
 ﻿using Application.Validators.Despesas;
-using DIContainer.DependencyManagers;
 using FluentValidation;
 using Infraestructure.Data.Configurations.DataBaseConfiguration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
 
-namespace Infraestructure.DIContainer.DependencyManagers
+namespace Web.Extensios.DependencyManagers
 {
     public static class DependencyConfigurer
     {
@@ -29,6 +25,8 @@ namespace Infraestructure.DIContainer.DependencyManagers
 
             services.AddCompanyConnectionStrings(config);
             services.AddDbContext(config);
+
+            services.AddDependecyMiddlewares();
         }
 
         public static void AddAuthenticationJwt(

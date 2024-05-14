@@ -1,19 +1,16 @@
 ﻿using Domain.Enumeradores;
-using Presentation.Base;
+using Presentation.Api.Base;
 using System.Text.Json;
 
 namespace Web.Middleware
 {
-    public class ExceptionMiddleware(RequestDelegate next, IWebHostEnvironment environmentHost)
+    public class ExceptionMiddleware(IWebHostEnvironment _environmentHost) : IMiddleware
     {
-        private readonly RequestDelegate _next = next;
-        private readonly IWebHostEnvironment _environmentHost = environmentHost;
-
-        public async Task Invoke(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
             {
-                await _next(context);
+                await next(context);
             }
             catch(Exception ex)
             {
@@ -22,7 +19,7 @@ namespace Web.Middleware
 
                 var response = new ResponseDTO<string>()
                 {
-                    Mensagens = [new(message, EnumTipoNotificacao.ServerError)]
+                    Mensagens = [ new(message, EnumTipoNotificacao.ServerError) ]
                 };
 
                 context.Response.Headers.Append("content-type", "application/json; charset=utf-8");

@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Application.Helpers;
+﻿using Application.Helpers;
 using Application.Interfaces.Services.User;
 using Domain.Converters.DatesTimes;
 using Domain.Dtos.User.Auth;
@@ -10,8 +9,9 @@ using Domain.Models.Despesas;
 using Domain.Models.Membros;
 using Domain.Models.Users;
 using Microsoft.Extensions.DependencyInjection;
+using System.Globalization;
 
-namespace Infraestructure.Data.DataBaseConfiguration
+namespace Infraestructure.Data.Configurations.DataBaseConfiguration
 {
     public class PrepareDataBaseExtensions
     {
@@ -30,13 +30,13 @@ namespace Infraestructure.Data.DataBaseConfiguration
             string email = "master@gmail.com";
             string senha = "Master@123456";
 
-            if (nomeDominio.Contains("dev") || nomeDominio.Contains("railway"))
+            if(nomeDominio.Contains("dev") || nomeDominio.Contains("railway"))
             {
                 email = "dev@gmail.com";
                 senha = "dev@123";
             }
 
-            if (usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
+            if(usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
                 return;
 
             var (Salt, PasswordHash) = new PasswordHasherHelper().CriarHashSenha(senha);
@@ -70,7 +70,7 @@ namespace Infraestructure.Data.DataBaseConfiguration
             string email = "visitante";
             string senha = "123456";
 
-            if (usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
+            if(usuarioRepository.Get(u => u.Email == email).FirstOrDefault() != null)
                 return;
 
             var (Salt, PasswordHash) = new PasswordHasherHelper().CriarHashSenha(senha);
@@ -93,7 +93,7 @@ namespace Infraestructure.Data.DataBaseConfiguration
             var memberRepository = service.GetRequiredService<IMembroRepository>();
             var grupoDespesaRepository = service.GetRequiredService<IGrupoDespesaRepository>();
 
-            if (categoriaRepository.Get().ToList().Count > 0)
+            if(categoriaRepository.Get().ToList().Count > 0)
                 return;
 
             var listCategoria = new List<Categoria>
@@ -120,7 +120,7 @@ namespace Infraestructure.Data.DataBaseConfiguration
             string mesAtualName = DateTimeZoneProvider
                 .GetBrasiliaTimeZone(DateTime.UtcNow)
                 .ToString("MMMM", new CultureInfo("pt-BR"));
-            mesAtualName = char.ToUpper(mesAtualName[0]) + mesAtualName[1..].ToLower();
+            mesAtualName = char.ToUpper(mesAtualName[ 0 ]) + mesAtualName[ 1.. ].ToLower();
 
             var grupoDespesa = new GrupoDespesa
             {

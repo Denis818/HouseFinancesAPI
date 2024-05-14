@@ -17,10 +17,11 @@ using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services.Despesa;
 using Domain.Services;
 using Infraestructure.Data.Configurations;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Presentation.ModelState;
+using Presentation.ModelState.Interface;
+using Web.Middleware;
 
-namespace DIContainer.DependencyManagers
+namespace Web.Extensios.DependencyManagers
 {
     public static class DependencyInjectionExtensions
     {
@@ -29,6 +30,7 @@ namespace DIContainer.DependencyManagers
             services.AddHttpContextAccessor();
             services.AddSingleton<IMapper, Mapper>();
             services.AddScoped<INotifier, Notifier>();
+            services.AddScoped<IModelStateValidator, ModelStateValidator>();
         }
 
         public static void AddDependecyRepositories(this IServiceCollection services)
@@ -65,6 +67,13 @@ namespace DIContainer.DependencyManagers
             var appSettingsSection = configuration.GetSection(nameof(CompanyConnectionStrings));
             var appSettings = appSettingsSection.Get<CompanyConnectionStrings>();
             services.AddSingleton(appSettings);
+        }
+
+        public static void AddDependecyMiddlewares(this IServiceCollection services)
+        {
+
+            services.AddTransient<ExceptionMiddleware>();
+            services.AddTransient<IdentificadorDataBaseMiddleware>();
         }
 
     }

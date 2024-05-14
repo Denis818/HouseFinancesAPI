@@ -2,7 +2,7 @@
 using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Presentation.Base;
+using Presentation.Api.Base;
 
 namespace Presentation.Attributes.Auth
 {

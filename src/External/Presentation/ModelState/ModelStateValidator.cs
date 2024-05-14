@@ -4,11 +4,12 @@ using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Presentation.Base;
+using Presentation.Api.Base;
+using Presentation.ModelState.Interface;
 
 namespace Presentation.ModelState
 {
-    public class ModelStateValidator
+    public class ModelStateValidator : IModelStateValidator
     {
         public bool ValidarModelState(ActionExecutingContext context)
         {

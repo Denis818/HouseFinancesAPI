@@ -1,12 +1,12 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
-using Presentation.Base;
-using Presentation.Configurations.Extensions;
+using Presentation.Api.Base;
+using Presentation.Version;
 
-namespace Presentation.V2
+namespace Presentation.Api.V2
 {
     [ApiController]
-    [ApiVersion(ApiConfig.V2)]
+    [ApiVersion(ApiVersioning.V2)]
     [Route("api/v2/categoria")]
     public class ProdutoController : MainController
     {

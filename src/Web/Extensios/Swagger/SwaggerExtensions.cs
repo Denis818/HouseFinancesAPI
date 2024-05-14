@@ -1,7 +1,7 @@
 ﻿using CasaFinanceiroApi.Extensios.Swagger.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
-using Presentation.Configurations.Extensions;
+using Presentation.Version;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Web.Extensios.Swagger.Filters;
 
@@ -13,7 +13,13 @@ namespace Web.Extensios.Swagger
         {
             services.AddSwaggerGen(options =>
             {
-                options.VersioningApiGenSwagger();
+                foreach(var version in ApiVersioning.ListVersions)
+                {
+                    options.SwaggerDoc(
+                        $"v{version}",
+                        new OpenApiInfo { Title = $"API v{version}", Version = version }
+                    );
+                }
 
                 options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 
@@ -69,7 +75,10 @@ namespace Web.Extensios.Swagger
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                options.VersioningApiUISwagger();
+                foreach(var version in ApiVersioning.ListVersions)
+                {
+                    options.SwaggerEndpoint($"/swagger/v{version}/swagger.json", $"API v{version}");
+                }
 
                 options.RoutePrefix = "doc";
                 options.DocumentTitle = "Casa Financeiro API";

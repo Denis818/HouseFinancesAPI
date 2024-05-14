@@ -1,11 +1,11 @@
-using Infraestructure.DIContainer.DependencyManagers;
 using Web.Extensios.Application;
+using Web.Extensios.DependencyManagers;
 using Web.Extensios.Swagger;
 using Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.SetupApplication();
+builder.ConfigureApplication();
 
 var app = builder.Build();
 
@@ -18,6 +18,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<IdentificadorDataBaseMiddleware>();
 
 app.UseAuthentication();
 

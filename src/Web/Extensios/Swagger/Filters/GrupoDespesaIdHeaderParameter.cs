@@ -31,7 +31,7 @@ namespace Web.Extensios.Swagger.Filters
                         Name = "Grupo-Despesas-Id",
                         In = ParameterLocation.Header,
                         Description =
-                            "Adiciona um Id de um grupo de despesas no cabeçalho da requisição",
+                            "Adicionar o Id de um grupo de despesas no cabeçalho da requisição",
                         Required = false,
                         Schema = new OpenApiSchema { Type = "int" }
                     }

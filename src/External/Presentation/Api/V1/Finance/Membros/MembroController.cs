@@ -1,19 +1,18 @@
 ﻿using Application.Interfaces.Services.Membros;
 using Asp.Versioning;
-using CasaFinanceiroApi.Attributes.Auth;
 using Domain.Dtos.Membros;
 using Domain.Enumeradores;
 using Domain.Models.Membros;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
 using Presentation.Attributes.Util;
-using Presentation.Base;
-using Presentation.Configurations.Extensions;
+using Presentation.Version;
 
-namespace Presentation.V1.Finance.Membros
+namespace Presentation.Api.V1.Finance.Membros
 {
     [ApiController]
-    [ApiVersion(ApiConfig.V1)]
+    [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
     [Route("api/v1/membro")]
     public class MembroController(IServiceProvider service, IMembroAppServices _membroServices)

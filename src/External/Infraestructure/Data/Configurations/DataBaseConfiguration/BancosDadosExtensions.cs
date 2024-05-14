@@ -26,13 +26,13 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
 
                 var dbContext = scope.ServiceProvider.GetRequiredService<FinanceDbContext>();
 
-                //dbContext.Database.SetConnectionString(company.ConnectionString);
-                //dbContext.Database.Migrate();
+                dbContext.Database.SetConnectionString(company.ConnectionString);
+                dbContext.Database.Migrate();
 
-                //PrepareDataBaseExtensions.PrepareDataBase(
-                //    scope.ServiceProvider,
-                //    company.NomeDominio
-                //);
+                PrepareDataBaseExtensions.PrepareDataBase(
+                    scope.ServiceProvider,
+                    company.NomeDominio
+                );
             }
         }
     }

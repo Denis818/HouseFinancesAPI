@@ -2,16 +2,16 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
 using Presentation.Attributes.Util;
-using Presentation.Base;
-using Presentation.Configurations.Extensions;
+using Presentation.Version;
 using System.Net.Mime;
 
-namespace Presentation.V1.Finance.Despesas
+namespace Presentation.Api.V1.Finance.Despesas
 {
     [ApiController]
-    [ApiVersion(ApiConfig.V1)]
+    [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
     [GetIdGroupInHeaderFilter]
     [Route("api/v1/despesa")]

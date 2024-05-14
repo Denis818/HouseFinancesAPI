@@ -1,10 +1,10 @@
-﻿using Presentation.Base;
-using Domain.Enumeradores;
+﻿using Domain.Enumeradores;
 using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Presentation.Api.Base;
 
-namespace CasaFinanceiroApi.Attributes.Auth
+namespace Presentation.Attributes.Auth
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class PermissoesFinanceAttribute(params EnumPermissoes[] enumPermissoes)

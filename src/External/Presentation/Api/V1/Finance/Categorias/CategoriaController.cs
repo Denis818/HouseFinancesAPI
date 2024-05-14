@@ -1,18 +1,17 @@
 ﻿using Application.Interfaces.Services.Categorias;
 using Asp.Versioning;
-using CasaFinanceiroApi.Attributes.Auth;
 using Domain.Dtos.Categorias;
 using Domain.Enumeradores;
 using Domain.Models.Categorias;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
-using Presentation.Base;
-using Presentation.Configurations.Extensions;
+using Presentation.Version;
 
-namespace Presentation.V1.Finance.Categorias
+namespace Presentation.Api.V1.Finance.Categorias
 {
     [ApiController]
-    [ApiVersion(ApiConfig.V1)]
+    [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
     [Route("api/v1/categoria")]
     public class CategoriaController(
