@@ -29,7 +29,7 @@ namespace Application.Services.Despesas
             return despesa;
         }
 
-        public async Task<PagedResult<Despesa>> FiltrarDespesaPorItem(
+        public async Task<PagedResult<Despesa>> GetListDespesas(
             string filterItem,
             int paginaAtual,
             int itensPorPagina

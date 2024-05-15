@@ -24,13 +24,13 @@ namespace Presentation.Api.V1.Finance.Despesas
         #region CRUD
         [HttpGet]
         [GetIdGroupInHeaderFilter]
-        public async Task<PagedResult<Despesa>> FiltrarDespesaPorItem(
+        public async Task<PagedResult<Despesa>> GetListDespesas(
             string filterItem = "",
             int paginaAtual = 1,
             int itensPorPagina = 10
         )
         {
-            return await _despesaCrudServices.FiltrarDespesaPorItem(
+            return await _despesaCrudServices.GetListDespesas(
                 filterItem,
                 paginaAtual,
                 itensPorPagina

@@ -7,7 +7,7 @@ namespace Application.Interfaces.Services.Despesas
     public interface IDespesaCrudAppService
     {
         Task<bool> DeleteAsync(int id);
-        Task<PagedResult<Despesa>> FiltrarDespesaPorItem(
+        Task<PagedResult<Despesa>> GetListDespesas(
             string filterItem,
             int paginaAtual,
             int itensPorPagina
