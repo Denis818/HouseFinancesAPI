@@ -36,9 +36,11 @@ namespace Web.Extensios.Application
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddApiDependencyServices(builder.Configuration);
             builder.Services.AddSwaggerConfiguration();
-#if(PRD)
-            builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
-#endif
+
+            if (builder.Environment.IsProduction())
+            {
+                builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+            }
         }
     }
 }

@@ -19,11 +19,11 @@ COPY . .
 
 WORKDIR "/CasaFinanceiroApi/src/Web"
 
-RUN dotnet build "./Web.csproj" -c PRD -o /app/build
+RUN dotnet build "./Web.csproj" -c Release -o /app/build
 
 FROM build AS publish
 
-RUN dotnet publish "./Web.csproj" -c PRD -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Web.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
