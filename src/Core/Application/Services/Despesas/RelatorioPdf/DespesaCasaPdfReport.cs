@@ -76,16 +76,16 @@ namespace Application.Services.Despesas.RelatorioPdf
         )
         {
             Dictionary<string, string> columnsTotalParaCada = [];
-            foreach(var membro in membros)
+            foreach (var membro in membros)
             {
                 double valorParaCada = despesaGeraisMaisAlmocoDividioPorMembro;
 
-                if(membro.Nome.Contains("Jhon", StringComparison.CurrentCultureIgnoreCase))
+                if (membro.Nome.Contains("Jhon", StringComparison.CurrentCultureIgnoreCase))
                 {
                     valorParaCada = totalAlmocoParteDoJhon;
                 }
 
-                columnsTotalParaCada.Add(membro.Nome, $"{valorParaCada:F2}");
+                columnsTotalParaCada.Add(membro.Nome, $"R$ {valorParaCada:F2}");
             }
 
             _pdfTable.CreateTable(doc, "Valor que cada um deve pagar", columnsTotalParaCada);
