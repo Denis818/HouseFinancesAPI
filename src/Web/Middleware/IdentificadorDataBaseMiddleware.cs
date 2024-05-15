@@ -22,11 +22,20 @@ namespace Web.Middleware
 
         private string IdentificarStringConexao(HttpContext context)
         {
-            var origin = context.Request.Headers["Origin"].ToString();
+            string origin = context.Request.Headers["Origin"].ToString();
 
-            var hostName = string.IsNullOrEmpty(origin)
-                ? context.Request.Host.Host
-                : origin.Split("//")[1].Split('/')[0];
+            string hostName = null;
+
+            if (string.IsNullOrEmpty(origin))
+            {
+                origin = $"https://{context.Request.Host}";
+            }
+
+            if (!string.IsNullOrEmpty(origin))
+            {
+                var originUri = new Uri(origin);
+                hostName = originUri.Host;
+            }
 
             var empresaLocalizada = _companyConnections.List.FirstOrDefault(empresa =>
                 empresa.NomeDominio == hostName
