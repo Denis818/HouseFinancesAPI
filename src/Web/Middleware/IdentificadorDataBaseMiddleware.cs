@@ -26,22 +26,17 @@ namespace Web.Middleware
 
             string hostName = null;
 
-            if(!string.IsNullOrEmpty(origin))
+            if (!string.IsNullOrEmpty(origin))
             {
                 var originUri = new Uri(origin);
                 hostName = originUri.Host;
-            }
-
-            if(string.IsNullOrEmpty(hostName))
-            {
-                throw new Exception($"Host não reconhecido: '{hostName}'.");
             }
 
             var empresaLocalizada = _companyConnections.List.FirstOrDefault(empresa =>
                 empresa.NomeDominio == hostName
             );
 
-            if(empresaLocalizada == null)
+            if (empresaLocalizada == null)
             {
                 throw new Exception($"A empresa com nome de domínio '{hostName}' não existe");
             }
