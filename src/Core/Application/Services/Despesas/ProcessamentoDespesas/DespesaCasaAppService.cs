@@ -25,11 +25,12 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
             var (totalAlmocoDividioComJhon, totalAlmocoParteDoJhon) =
                 await CalculaTotalAlmocoDivididoComJhonAsync();
 
-            //Despesa gerais Limpesa, Higiêne etc... somado com Almoço divido com Jhon
-            double despesaGeraisMaisAlmoco = totalDespesaGerais + totalAlmocoDividioComJhon;
+            double despesaGeraisMaisAlmoco =
+                totalDespesaGerais + totalAlmocoDividioComJhon + totalAlmocoDividioComJhon;
 
+            //Despesa gerais Limpesa, Higiêne etc... somado com Almoço divido com Jhon
             double despesaGeraisMaisAlmocoDividioPorMembro =
-                despesaGeraisMaisAlmoco / listMembersForaJhon.Count;
+                (totalDespesaGerais + totalAlmocoDividioComJhon) / listMembersForaJhon.Count;
 
             return new DistribuicaoCustosCasaDto()
             {

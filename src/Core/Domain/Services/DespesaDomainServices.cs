@@ -17,10 +17,11 @@ namespace Domain.Services
             double totalAptoMaisCaixa = parcelaApartamento + parcelaCaixa;
             double totalLuzMaisCondominio = contaDeLuzValue + condominioValue;
 
-            double totalAptoMaisCaixaAbate300Peu100Estacionamento = totalAptoMaisCaixa - 300; //300 aluguel cobrado do peu
+            double totalAptoMaisCaixaAbate300Peu100Estacionamento =
+                (totalAptoMaisCaixa - 300) - 100; //300 aluguel cobrado do peu. 100 reais do estacionamento alugado.
 
             double valorAptoMaisCaixaParaCadaMembro =
-                (totalAptoMaisCaixaAbate300Peu100Estacionamento - 100) / listMembroForaJhonPeuCount; // 100 reais do estacionamento alugado.
+                totalAptoMaisCaixaAbate300Peu100Estacionamento / listMembroForaJhonPeuCount;
 
             double valorLuzMaisCondominioParaCadaMembro =
                 totalLuzMaisCondominio / listMembroForaJhonCount;
