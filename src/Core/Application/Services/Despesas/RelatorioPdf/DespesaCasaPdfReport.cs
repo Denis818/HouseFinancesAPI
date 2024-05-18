@@ -58,7 +58,7 @@ namespace Application.Services.Despesas.RelatorioPdf
                 { "Despesas somente almoço", $"R$ {totalAlmoco:F2}" },
                 { "Almoço fora parte do Jhon", $"R$ {totalAlmocoDividioComJhon:F2}" },
                 { "Almoço parte do Jhon", $"R$ {totalAlmocoParteDoJhon:F2}" },
-                { "Total das despesas com almoço", $"R$ {despesaGeraisMaisAlmoco:F2}" },
+                { "Total das despesas de casa", $"R$ {despesaGeraisMaisAlmoco:F2}" },
             };
 
             _pdfTable.CreateTable(
