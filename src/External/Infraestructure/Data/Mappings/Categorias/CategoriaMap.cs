@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Data.Mappings.Categorias
+namespace Infraestructure.Data.Mappings.Categorias
 {
     internal class CategoriaMap : IEntityTypeConfiguration<Categoria>
     {
@@ -14,6 +14,7 @@ namespace Data.Mappings.Categorias
             builder.Property(c => c.Descricao).HasColumnType("varchar(50)").IsRequired();
 
             builder.HasIndex(c => c.Descricao).HasDatabaseName("IX_Categorias_Descricao");
+            builder.HasIndex(c => c.Id).HasDatabaseName("IX_Categorias_Id");
         }
     }
 }

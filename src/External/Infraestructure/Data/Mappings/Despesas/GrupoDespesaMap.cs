@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Data.Mappings.Despesas
+namespace Infraestructure.Data.Mappings.Despesas
 {
     internal class GrupoDespesaMap : IEntityTypeConfiguration<GrupoDespesa>
     {
@@ -14,6 +14,7 @@ namespace Data.Mappings.Despesas
             builder.Property(c => c.Nome).HasColumnType("varchar(30)").IsRequired();
 
             builder.HasIndex(c => c.Nome).HasDatabaseName("IX_Grupo_Despesa_Nome");
+            builder.HasIndex(c => c.Id).HasDatabaseName("IX_Grupo_Despesa_Id");
         }
     }
 }

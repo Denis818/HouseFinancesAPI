@@ -16,32 +16,48 @@ namespace Data.Migrations
                 table: "Despesas",
                 type: "int",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0
+            );
 
-            migrationBuilder.CreateTable(
-                name: "Grupo_Despesa",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Nome = table.Column<string>(type: "varchar(30)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Grupo_Despesa", x => x.Id);
-                })
+            migrationBuilder
+                .CreateTable(
+                    name: "Grupo_Despesa",
+                    columns: table => new
+                    {
+                        Id = table
+                            .Column<int>(type: "int", nullable: false)
+                            .Annotation(
+                                "MySql:ValueGenerationStrategy",
+                                MySqlValueGenerationStrategy.IdentityColumn
+                            ),
+                        Nome = table
+                            .Column<string>(type: "varchar(30)", nullable: false)
+                            .Annotation("MySql:CharSet", "utf8mb4")
+                    },
+                    constraints: table =>
+                    {
+                        table.PrimaryKey("PK_Grupo_Despesa", x => x.Id);
+                    }
+                )
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Despesas_GrupoDespesaId",
                 table: "Despesas",
-                column: "GrupoDespesaId");
+                column: "GrupoDespesaId"
+            );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Grupo_Despesa_Id",
+                table: "Grupo_Despesa",
+                column: "Id"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_Grupo_Despesa_Nome",
                 table: "Grupo_Despesa",
-                column: "Nome");
+                column: "Nome"
+            );
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Despesas_Grupo_Despesa_GrupoDespesaId",
@@ -49,7 +65,8 @@ namespace Data.Migrations
                 column: "GrupoDespesaId",
                 principalTable: "Grupo_Despesa",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Cascade
+            );
         }
 
         /// <inheritdoc />
@@ -57,18 +74,14 @@ namespace Data.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_Despesas_Grupo_Despesa_GrupoDespesaId",
-                table: "Despesas");
+                table: "Despesas"
+            );
 
-            migrationBuilder.DropTable(
-                name: "Grupo_Despesa");
+            migrationBuilder.DropTable(name: "Grupo_Despesa");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Despesas_GrupoDespesaId",
-                table: "Despesas");
+            migrationBuilder.DropIndex(name: "IX_Despesas_GrupoDespesaId", table: "Despesas");
 
-            migrationBuilder.DropColumn(
-                name: "GrupoDespesaId",
-                table: "Despesas");
+            migrationBuilder.DropColumn(name: "GrupoDespesaId", table: "Despesas");
         }
     }
 }
