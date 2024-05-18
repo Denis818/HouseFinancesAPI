@@ -40,12 +40,11 @@ namespace Application.Services.Despesas
                 return await GetAllDespesas(paginaAtual, itensPorPagina);
             }
 
-            var query = ListDespesasPorGrupo
-                .Where(despesa => despesa.Item.ToLower().Contains(filterItem.ToLower()))
-                .OrderByDescending(d => d.DataCompra);
+            var query = QueryDespesas()
+                .Where(despesa => despesa.Item.ToLower().Contains(filterItem.ToLower()));
 
             var listaPaginada = await Pagination.PaginateResultAsync(
-                query.AsQueryable(),
+                QueryDespesas(),
                 paginaAtual,
                 itensPorPagina
             );
@@ -53,12 +52,21 @@ namespace Application.Services.Despesas
             return listaPaginada;
         }
 
+        public IQueryable<Despesa> QueryDespesas()
+        {
+            return _repository
+                .Get()
+                .Include(c => c.Categoria)
+                .Include(g => g.GrupoDespesa)
+                .OrderByDescending(d => d.DataCompra);
+        }
+
         private async Task<PagedResult<Despesa>> GetAllDespesas(int paginaAtual, int itensPorPagina)
         {
-            var queryAll = ListDespesasPorGrupo.OrderByDescending(d => d.DataCompra);
+            // var queryAll = ListDespesasPorGrupo.OrderByDescending(d => d.DataCompra);
 
             var despesas = await Pagination.PaginateResultAsync(
-                queryAll.AsQueryable(),
+                QueryDespesas(),
                 paginaAtual,
                 itensPorPagina
             );
