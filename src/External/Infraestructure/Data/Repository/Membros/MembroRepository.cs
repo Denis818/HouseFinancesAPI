@@ -1,7 +1,7 @@
 ﻿using Data.DataContext;
-using Data.Repository.Base;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Membros;
+using Infraestructure.Data.Repository.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infraestructure.Data.Repository.Membros

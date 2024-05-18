@@ -1,8 +1,8 @@
 ﻿using Data.DataContext;
-using Data.Repository.Base;
 using Domain.Dtos.Categorias.Consultas;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Categorias;
+using Infraestructure.Data.Repository.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository.Categorias
@@ -13,7 +13,7 @@ namespace Data.Repository.Categorias
     {
         public async Task<Categoria> ExisteAsync(int id, string nome)
         {
-            if(nome != null)
+            if (nome != null)
             {
                 return await Get(c => c.Descricao == nome).FirstOrDefaultAsync();
             }

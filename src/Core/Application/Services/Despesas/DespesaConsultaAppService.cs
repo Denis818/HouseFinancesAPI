@@ -21,11 +21,9 @@ namespace Application.Services.Despesas
     ) : BaseDespesaService(service), IDespesaConsultaAppService
     {
         #region Consultas
-        public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync()
+        public IEnumerable<DespesasTotalPorCategoria> GetTotalPorCategoria()
         {
-            var listDespesas = await ListDespesasPorGrupo.ToListAsync();
-
-            if (listDespesas.Count <= 0)
+            if (ListDespesasPorGrupo.Count <= 0)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -34,7 +32,7 @@ namespace Application.Services.Despesas
                 return [];
             }
 
-            var listAgrupada = listDespesas.GroupBy(despesa => despesa.Categoria.Descricao);
+            var listAgrupada = ListDespesasPorGrupo.GroupBy(despesa => despesa.Categoria.Descricao);
 
             return listAgrupada.Select(list => new DespesasTotalPorCategoria(
                 list.Key,
@@ -98,7 +96,7 @@ namespace Application.Services.Despesas
                 distribuicaoCustosMoradia.DistribuicaoCustos.ValorParaDoPeu
             );
 
-            var relatorioGastosDoGrupo = await GetRelatorioDeGastosDoMesAsync();
+            var relatorioGastosDoGrupo = GetRelatorioDeGastosDoMes();
 
             return new DespesasDivididasMensalDto
             {
@@ -111,7 +109,7 @@ namespace Application.Services.Despesas
         #endregion
 
         #region Metodos de Suporte
-        private async Task<RelatorioGastosDoGrupoDto> GetRelatorioDeGastosDoMesAsync()
+        private RelatorioGastosDoGrupoDto GetRelatorioDeGastosDoMes()
         {
             string grupoNome = _grupoDespesaRepository
                 .Get(g => g.Id == _grupoDespesaId)
@@ -124,21 +122,21 @@ namespace Application.Services.Despesas
                 return new();
             }
 
-            double totalGastoMoradia = await ListDespesasPorGrupo
+            double totalGastoMoradia = ListDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Id == _categoriaIds.IdAluguel
                     || d.Categoria.Id == _categoriaIds.IdCondominio
                     || d.Categoria.Id == _categoriaIds.IdContaDeLuz
                 )
-                .SumAsync(d => d.Total);
+                .Sum(d => d.Total);
 
-            double totalGastosCasa = await ListDespesasPorGrupo
+            double totalGastosCasa = ListDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Id != _categoriaIds.IdAluguel
                     && d.Categoria.Id != _categoriaIds.IdCondominio
                     && d.Categoria.Id != _categoriaIds.IdContaDeLuz
                 )
-                .SumAsync(d => d.Total);
+                .Sum(d => d.Total);
 
             var totalGeral = totalGastoMoradia + totalGastosCasa;
 

@@ -25,8 +25,8 @@ namespace Presentation.Api.V1.Finance.Despesas
             await _despesaConsultaApp.GetAnaliseDesesasPorGrupoAsync();
 
         [HttpGet("total-por-categoria")]
-        public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync() =>
-            await _despesaConsultaApp.GetTotalPorCategoriaAsync();
+        public IEnumerable<DespesasTotalPorCategoria> GetTotalPorCategoriaAsync() =>
+            _despesaConsultaApp.GetTotalPorCategoria();
 
         [HttpGet("total-por-grupo")]
         public async Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync() =>

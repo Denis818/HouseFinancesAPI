@@ -16,6 +16,7 @@ using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services.Despesa;
 using Domain.Services;
 using Infraestructure.Data.Configurations;
+using Infraestructure.Data.Repository.Despesas;
 using Infraestructure.Data.Repository.Membros;
 using Presentation.ModelState;
 using Presentation.ModelState.Interface;

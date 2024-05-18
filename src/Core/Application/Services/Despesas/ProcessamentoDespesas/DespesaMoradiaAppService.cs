@@ -19,9 +19,9 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
         {
             var grupoListMembrosDespesa = await GetGrupoListMembrosDespesa();
 
-            var custosDespesasMoradiaDto = await GetCustosDespesasMoradiaAsync();
+            var custosDespesasMoradiaDto = GetCustosDespesasMoradia();
 
-            if(
+            if (
                 custosDespesasMoradiaDto.ContaDeLuz == 0
                 && custosDespesasMoradiaDto.ParcelaApartamento == 0
                 && grupoListMembrosDespesa.ListAluguel.Count <= 0
@@ -61,27 +61,27 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
         }
 
         #region Metodos de Suporte
-        private async Task<CustosDespesasMoradiaDto> GetCustosDespesasMoradiaAsync()
+        private CustosDespesasMoradiaDto GetCustosDespesasMoradia()
         {
             var listAluguel = ListDespesasPorGrupo.Where(d =>
                 d.CategoriaId == _categoriaIds.IdAluguel
             );
 
-            Despesa parcelaApartamento = await listAluguel
+            Despesa parcelaApartamento = listAluguel
                 .Where(aluguel => aluguel.Item.ToLower().Contains("ap ponto"))
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
-            Despesa parcelaCaixa = await listAluguel
+            Despesa parcelaCaixa = listAluguel
                 .Where(aluguel => aluguel.Item.ToLower().Contains("caixa"))
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
-            Despesa contaDeLuz = await ListDespesasPorGrupo
+            Despesa contaDeLuz = ListDespesasPorGrupo
                 .Where(despesa => despesa.CategoriaId == _categoriaIds.IdContaDeLuz)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
-            Despesa condominio = await ListDespesasPorGrupo
+            Despesa condominio = ListDespesasPorGrupo
                 .Where(despesa => despesa.CategoriaId == _categoriaIds.IdCondominio)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
             return new CustosDespesasMoradiaDto()
             {
@@ -102,9 +102,9 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
                 .Where(m => m.Id != _membroId.IdPeu)
                 .ToList();
 
-            List<Despesa> listAluguel = await ListDespesasPorGrupo
+            List<Despesa> listAluguel = ListDespesasPorGrupo
                 .Where(d => d.CategoriaId == _categoriaIds.IdAluguel)
-                .ToListAsync();
+                .ToList();
 
             return new GrupoListMembrosDespesaDto()
             {

@@ -45,7 +45,7 @@ namespace Application.Services.Despesas
                 .OrderByDescending(d => d.DataCompra);
 
             var listaPaginada = await Pagination.PaginateResultAsync(
-                query,
+                query.AsQueryable(),
                 paginaAtual,
                 itensPorPagina
             );
@@ -55,13 +55,10 @@ namespace Application.Services.Despesas
 
         private async Task<PagedResult<Despesa>> GetAllDespesas(int paginaAtual, int itensPorPagina)
         {
-            var queryAll = ListDespesasPorGrupo
-                .Include(c => c.Categoria)
-                .Include(c => c.GrupoDespesa)
-                .OrderByDescending(d => d.DataCompra);
+            var queryAll = ListDespesasPorGrupo.OrderByDescending(d => d.DataCompra);
 
             var despesas = await Pagination.PaginateResultAsync(
-                queryAll,
+                queryAll.AsQueryable(),
                 paginaAtual,
                 itensPorPagina
             );

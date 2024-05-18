@@ -2,7 +2,6 @@
 using Application.Services.Despesas.Base;
 using Application.Services.Despesas.RelatorioPdf;
 using Domain.Dtos.Despesas.Relatorios;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Despesas
 {
@@ -27,15 +26,15 @@ namespace Application.Services.Despesas
             return new DespesaMoradiaPdfReport().GerarRelatorioDespesaMoradiaPdf(custosMoradiaDto);
         }
 
-        public async Task<(double, double)> CompararFaturaComTotalDeDespesas(double faturaCartao)
+        public (double, double) CompararFaturaComTotalDeDespesas(double faturaCartao)
         {
-            double totalDespesas = await ListDespesasPorGrupo
+            double totalDespesas = ListDespesasPorGrupo
                 .Where(despesa =>
                     despesa.CategoriaId != _categoriaIds.IdAluguel
                     && despesa.CategoriaId != _categoriaIds.IdContaDeLuz
                     && despesa.CategoriaId != _categoriaIds.IdCondominio
                 )
-                .SumAsync(despesa => despesa.Total);
+                .Sum(despesa => despesa.Total);
 
             double valorSubtraido = totalDespesas - faturaCartao;
 

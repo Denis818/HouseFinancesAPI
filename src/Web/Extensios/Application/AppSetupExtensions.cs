@@ -33,6 +33,7 @@ namespace Web.Extensios.Application
             );
 
             builder.Services.ConfigureWebApi();
+            builder.Services.AddDistributedMemoryCache();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddApiDependencyServices(builder.Configuration);
             builder.Services.AddSwaggerConfiguration();

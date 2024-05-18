@@ -5,7 +5,7 @@ namespace Application.Interfaces.Services.Despesas
     public interface IDespesaConsultaAppService
     {
         Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync();
-        Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync();
+        IEnumerable<DespesasTotalPorCategoria> GetTotalPorCategoria();
         Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync();
     }
 }

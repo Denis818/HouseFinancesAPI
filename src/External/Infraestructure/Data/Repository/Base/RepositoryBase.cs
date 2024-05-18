@@ -1,11 +1,12 @@
-﻿using Domain.Interfaces.Repositories.Base;
+﻿using System.Linq.Expressions;
+using Domain.Interfaces.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq.Expressions;
 
-namespace Data.Repository.Base
+namespace Infraestructure.Data.Repository.Base
 {
-    public abstract class RepositoryBase<TEntity, TContext> : IRepositoryBase<TEntity> where TEntity : class, new()
+    public abstract class RepositoryBase<TEntity, TContext> : IRepositoryBase<TEntity>
+        where TEntity : class, new()
         where TContext : DbContext
     {
         private readonly TContext _context;
@@ -19,7 +20,7 @@ namespace Data.Repository.Base
 
         public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> expression = null)
         {
-            if(expression != null)
+            if (expression != null)
                 return DbSet.Where(expression);
 
             return DbSet.AsNoTracking();
@@ -39,5 +40,7 @@ namespace Data.Repository.Base
         public void DeleteRange(TEntity[] entityArray) => DbSet.RemoveRange(entityArray);
 
         public async Task<bool> SaveChangesAsync() => await _context.SaveChangesAsync() > 0;
+
+        public IQueryable<TEntity> ExecuteRawSqlQuery(string query) => DbSet.FromSqlRaw(query);
     }
 }

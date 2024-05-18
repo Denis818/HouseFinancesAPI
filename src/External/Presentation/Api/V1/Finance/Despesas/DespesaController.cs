@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Services.Despesas;
+﻿using System.Net.Mime;
+using Application.Interfaces.Services.Despesas;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,6 @@ using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
 using Presentation.Attributes.Util;
 using Presentation.Version;
-using System.Net.Mime;
 
 namespace Presentation.Api.V1.Finance.Despesas
 {
@@ -51,10 +51,10 @@ namespace Presentation.Api.V1.Finance.Despesas
         }
 
         [HttpGet("calcular-fatura")]
-        public async Task<object> ConferirFaturaDoCartao(double faturaCartao)
+        public object ConferirFaturaDoCartao(double faturaCartao)
         {
             (double totalDespesas, double valorSubtraido) =
-                await _despesaServices.CompararFaturaComTotalDeDespesas(faturaCartao);
+                _despesaServices.CompararFaturaComTotalDeDespesas(faturaCartao);
 
             return new { TotalDespesa = totalDespesas, ValorSubtraido = valorSubtraido };
         }
