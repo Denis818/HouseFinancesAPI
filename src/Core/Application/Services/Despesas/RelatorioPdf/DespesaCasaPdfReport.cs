@@ -61,11 +61,7 @@ namespace Application.Services.Despesas.RelatorioPdf
                 { "Total das despesas de casa", $"R$ {despesaGeraisMaisAlmoco:F2}" },
             };
 
-            _pdfTable.CreateTable(
-                doc,
-                "Despesas da casa (Fora despesa Moradia como aluguel, luz etc...)",
-                columnsValoresCalculados
-            );
+            _pdfTable.CreateTable(doc, "Despesas somente da Casa", columnsValoresCalculados);
         }
 
         public void CreateTableValoresParaCada(
