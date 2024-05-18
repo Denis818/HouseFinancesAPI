@@ -22,11 +22,10 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
             double totalDespesaGerais = await CalculaTotalDespesaForaAlmocoDespesaMoradiaAsync();
 
             //  Almoço divido com Jhon
-            var (totalAlmocoDividioComJhon, totalAlmocoParteDoJhon) =
+            var (totalAlmocoDividioComJhon, totalAlmocoParteDoJhon, totalAlmoco) =
                 await CalculaTotalAlmocoDivididoComJhonAsync();
 
-            double despesaGeraisMaisAlmoco =
-                totalDespesaGerais + totalAlmocoDividioComJhon + totalAlmocoDividioComJhon;
+            double despesaGeraisMaisAlmoco = totalDespesaGerais + totalAlmoco;
 
             //Despesa gerais Limpesa, Higiêne etc... somado com Almoço divido com Jhon
             double despesaGeraisMaisAlmocoDividioPorMembro =
@@ -58,19 +57,23 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
             return total;
         }
 
-        private async Task<(double, double)> CalculaTotalAlmocoDivididoComJhonAsync()
+        private async Task<(double, double, double)> CalculaTotalAlmocoDivididoComJhonAsync()
         {
             int todosMembros = await _membroRepository.Get().CountAsync();
 
-            double almoco = await ListDespesasPorGrupo
+            double totalAlmoco = await ListDespesasPorGrupo
                 .Where(despesa => despesa.CategoriaId == _categoriaIds.IdAlmoco)
                 .SumAsync(despesa => despesa.Total);
 
-            double almocoParteDoJhon = almoco / todosMembros;
+            double almocoParteDoJhon = totalAlmoco / todosMembros;
 
-            double almocoAbatido = almoco - almocoParteDoJhon;
+            double almocoAbatido = totalAlmoco - almocoParteDoJhon;
 
-            return (Math.Max(almocoAbatido, 0), Math.Max(almocoParteDoJhon, 0));
+            return (
+                Math.Max(almocoAbatido, 0),
+                Math.Max(almocoParteDoJhon, 0),
+                Math.Max(totalAlmoco, 0)
+            );
         }
         #endregion
     }
