@@ -44,7 +44,7 @@ namespace Application.Services.Despesas
                 .Where(despesa => despesa.Item.ToLower().Contains(filterItem.ToLower()));
 
             var listaPaginada = await Pagination.PaginateResultAsync(
-                QueryDespesas(),
+                query,
                 paginaAtual,
                 itensPorPagina
             );
