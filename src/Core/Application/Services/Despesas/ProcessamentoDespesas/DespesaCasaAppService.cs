@@ -27,7 +27,8 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
 
             //Despesa gerais Limpesa, Higiêne etc... somado com Almoço divido com Jhon
             double valorTotalDoAlmoco = totalAlmocoDividioComJhon + totalAlmocoParteDoJhon;
-            double despesaGeraisMaisAlmoco = totalDespesaGerais + valorTotalDoAlmoco;
+
+            double despesaGeraisMaisAlmoco = totalDespesaGerais + totalAlmocoDividioComJhon;
 
             double despesaGeraisMaisAlmocoDividioPorMembro =
                 despesaGeraisMaisAlmoco / listMembersForaJhon.Count;
