@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Data.Mappings.Despesas
+namespace Infraestructure.Data.Mappings.Despesas
 {
     internal class DespesaMap : IEntityTypeConfiguration<Despesa>
     {
@@ -32,13 +32,11 @@ namespace Data.Mappings.Despesas
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasIndex(d => d.Id).HasDatabaseName("IX_Despesas_Id");
-
             builder.HasIndex(d => d.Item).HasDatabaseName("IX_Despesas_Item");
+            builder.HasIndex(d => d.DataCompra).HasDatabaseName("IX_Despesas_DataCompra");
 
             builder.HasIndex(d => d.CategoriaId).HasDatabaseName("IX_Despesas_CategoriaId");
             builder.HasIndex(d => d.GrupoDespesaId).HasDatabaseName("IX_Despesas_GrupoDespesaId");
-
-            builder.HasIndex(d => d.DataCompra).HasDatabaseName("IX_Despesas_DataCompra");
         }
     }
 }
