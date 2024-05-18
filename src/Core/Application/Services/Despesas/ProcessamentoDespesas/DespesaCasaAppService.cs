@@ -19,11 +19,11 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
                 .ToList();
 
             // Despesas gerais Limpesa, Higiêne etc... (Fora Almoço, e despesa Moradia aluguel, luz etc..) :
-            double totalDespesaGerais = CalculaTotalDespesaForaAlmocoDespesaMoradia();
+            double totalDespesaGerais = await CalculaTotalDespesaForaAlmocoDespesaMoradiaAsync();
 
             //  Almoço divido com Jhon
             var (totalAlmocoDividioComJhon, totalAlmocoParteDoJhon) =
-                await CalculaTotalAlmocoDivididoComJhon();
+                await CalculaTotalAlmocoDivididoComJhonAsync();
 
             //Despesa gerais Limpesa, Higiêne etc... somado com Almoço divido com Jhon
             double valorTotalDoAlmoco = totalAlmocoDividioComJhon + totalAlmocoParteDoJhon;
@@ -44,27 +44,27 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
         }
 
         #region Metodos de Suporte
-        private double CalculaTotalDespesaForaAlmocoDespesaMoradia()
+        private async Task<double> CalculaTotalDespesaForaAlmocoDespesaMoradiaAsync()
         {
-            double total = ListDespesasPorGrupo
+            double total = await ListDespesasPorGrupo
                 .Where(d =>
                     d.CategoriaId != _categoriaIds.IdAluguel
                     && d.CategoriaId != _categoriaIds.IdCondominio
                     && d.CategoriaId != _categoriaIds.IdContaDeLuz
                     && d.CategoriaId != _categoriaIds.IdAlmoco
                 )
-                .Sum(d => d.Total);
+                .SumAsync(d => d.Total);
 
             return total;
         }
 
-        private async Task<(double, double)> CalculaTotalAlmocoDivididoComJhon()
+        private async Task<(double, double)> CalculaTotalAlmocoDivididoComJhonAsync()
         {
             int todosMembros = await _membroRepository.Get().CountAsync();
 
-            double almoco = ListDespesasPorGrupo
-                .Where(d => d.CategoriaId == _categoriaIds.IdAlmoco)
-                .Sum(d => d.Total);
+            double almoco = await ListDespesasPorGrupo
+                .Where(despesa => despesa.CategoriaId == _categoriaIds.IdAlmoco)
+                .SumAsync(despesa => despesa.Total);
 
             double almocoParteDoJhon = almoco / todosMembros;
 

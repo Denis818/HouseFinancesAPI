@@ -4,7 +4,7 @@ using Domain.Interfaces.Repositories;
 using Domain.Models.Membros;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.Repository.Base.Membros
+namespace Infraestructure.Data.Repository.Membros
 {
     public class MembroRepository(IServiceProvider service)
         : RepositoryBase<Membro, FinanceDbContext>(service),

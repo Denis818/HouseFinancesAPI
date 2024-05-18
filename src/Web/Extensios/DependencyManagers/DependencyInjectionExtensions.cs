@@ -9,7 +9,6 @@ using Application.Services.Despesas.ProcessamentoDespesas;
 using Application.Services.Membros;
 using Application.Services.User;
 using Application.Utilities;
-using Data.Repository.Base.Membros;
 using Data.Repository.Categorias;
 using Data.Repository.Despesas;
 using Data.Repository.User;
@@ -17,6 +16,7 @@ using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services.Despesa;
 using Domain.Services;
 using Infraestructure.Data.Configurations;
+using Infraestructure.Data.Repository.Membros;
 using Presentation.ModelState;
 using Presentation.ModelState.Interface;
 using Web.Middleware;
@@ -40,7 +40,6 @@ namespace Web.Extensios.DependencyManagers
             services.AddScoped<IMembroRepository, MembroRepository>();
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
             services.AddScoped<IGrupoDespesaRepository, GrupoDespesaRepository>();
-
         }
 
         public static void AddDependecyDomainServices(this IServiceCollection services)
@@ -62,7 +61,10 @@ namespace Web.Extensios.DependencyManagers
             services.AddScoped<IGrupoDespesaAppService, GrupoDespesaAppService>();
         }
 
-        public static void AddCompanyConnectionStrings(this IServiceCollection services, IConfiguration configuration)
+        public static void AddCompanyConnectionStrings(
+            this IServiceCollection services,
+            IConfiguration configuration
+        )
         {
             var appSettingsSection = configuration.GetSection(nameof(CompanyConnectionStrings));
             var appSettings = appSettingsSection.Get<CompanyConnectionStrings>();
@@ -71,10 +73,8 @@ namespace Web.Extensios.DependencyManagers
 
         public static void AddDependecyMiddlewares(this IServiceCollection services)
         {
-
             services.AddTransient<ExceptionMiddleware>();
             services.AddTransient<IdentificadorDataBaseMiddleware>();
         }
-
     }
 }

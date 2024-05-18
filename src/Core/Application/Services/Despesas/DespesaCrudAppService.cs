@@ -306,9 +306,15 @@ namespace Application.Services.Despesas
             int idDespesaInEdicao
         )
         {
-            if (!IdentificarCategoria(despesaDto.CategoriaId))
+            if (!ehDespesaMensal(despesaDto.CategoriaId))
             {
                 return true;
+            }
+
+            if (despesaDto.Quantidade != 1)
+            {
+                Notificar(EnumTipoNotificacao.Informacao, Message.DespesaMensalQuantidadeDeveSerUm);
+                return false;
             }
 
             var despesasExistentes = _repository.Get(d =>
@@ -356,7 +362,7 @@ namespace Application.Services.Despesas
             return true;
         }
 
-        private bool IdentificarCategoria(int idCategoria)
+        private bool ehDespesaMensal(int idCategoria)
         {
             return idCategoria == _categoriaIds.IdAluguel
                 || idCategoria == _categoriaIds.IdCondominio

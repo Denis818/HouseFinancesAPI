@@ -141,6 +141,9 @@
   <data name="DespesaExistente" xml:space="preserve">
     <value>{0}  já adicionada ao grupo.</value>
   </data>
+  <data name="DespesaMensalQuantidadeDeveSerUm" xml:space="preserve">
+    <value>Esta despesa e mensal então deve ter a quantidade igual a 1.</value>
+  </data>
   <data name="DespesasNaoEncontradas" xml:space="preserve">
     <value>Não há despesas {0} neste grupo.</value>
   </data>
