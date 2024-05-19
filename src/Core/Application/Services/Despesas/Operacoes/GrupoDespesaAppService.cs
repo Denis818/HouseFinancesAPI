@@ -9,7 +9,7 @@ using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Services.Despesas
+namespace Application.Services.Despesas.Operacoes
 {
     public class GrupoDespesaAppService(IServiceProvider service)
         : BaseAppService<GrupoDespesa, IGrupoDespesaRepository>(service),

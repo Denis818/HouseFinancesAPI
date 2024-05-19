@@ -4,13 +4,12 @@ namespace Domain.Interfaces.Services.Despesa
 {
     public interface IDespesaDomainServices
     {
-        DistribuicaoCustosMoradiaDto CalcularDistribuicaoCustosMoradiaAsync(
-            double parcelaApartamento,
-            double parcelaCaixa,
-            double contaDeLuzValue,
-            double condominioValue,
-            int listMembroForaJhonPeuCount,
-            int listMembroForaJhonCount
+        DistribuicaoCustosMoradiaDto CalcularDistribuicaoCustosMoradia(
+            CustosDespesasMoradiaDto custosDespesasMoradia
+        );
+
+        DistribuicaoCustosCasaDto CalcularDistribuicaoCustosCasa(
+            CustosDespesasCasaDto custosDespesasCasa
         );
     }
 }

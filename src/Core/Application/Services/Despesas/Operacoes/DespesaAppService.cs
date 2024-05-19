@@ -2,23 +2,22 @@
 using Application.Interfaces.Services.Despesas;
 using Application.Resources.Messages;
 using Application.Services.Despesas.Base;
+using Application.Services.Despesas.RelatorioPdf;
 using Domain.Dtos.Despesas.Consultas;
 using Domain.Dtos.Despesas.Relatorios;
 using Domain.Dtos.Despesas.Resumos;
 using Domain.Enumeradores;
-using Domain.Interfaces.Repositories;
 using Domain.Models.Membros;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Application.Services.Despesas
+namespace Application.Services.Despesas.Operacoes
 {
-    public class DespesaConsultaAppService(
-        IServiceProvider service,
+    public class DespesaAppService(
         IDespesaCasaAppService _despesaCasaApp,
         IDespesaMoradiaAppService _despesaMoradiaApp,
-        IGrupoDespesaRepository _grupoDespesaRepository
-    ) : BaseDespesaService(service), IDespesaConsultaAppService
+        IServiceProvider service
+    ) : BaseDespesaService(service), IDespesaAppService
     {
         #region Consultas
         public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync()
@@ -107,7 +106,40 @@ namespace Application.Services.Despesas
                 DespesasPorMembro = despesasPorMembro
             };
         }
+        #endregion
 
+        #region Downloads
+        public async Task<byte[]> DownloadPdfRelatorioDeDespesaCasa()
+        {
+            var custosCasaDto = await _despesaCasaApp.CalcularDistribuicaoCustosCasaAsync();
+
+            return new DespesaCasaPdfReport().GerarRelatorioDespesaCasaPdf(custosCasaDto);
+        }
+
+        public async Task<byte[]> DownloadPdfRelatorioDeDespesaMoradia()
+        {
+            var custosMoradiaDto =
+                await _despesaMoradiaApp.CalcularDistribuicaoCustosMoradiaAsync();
+
+            return new DespesaMoradiaPdfReport().GerarRelatorioDespesaMoradiaPdf(custosMoradiaDto);
+        }
+        #endregion
+
+        #region Utilitários
+        public async Task<(double, double)> CompararFaturaComTotalDeDespesas(double faturaCartao)
+        {
+            double totalDespesas = await ListDespesasPorGrupo
+                .Where(despesa =>
+                    despesa.CategoriaId != _categoriaIds.IdAluguel
+                    && despesa.CategoriaId != _categoriaIds.IdContaDeLuz
+                    && despesa.CategoriaId != _categoriaIds.IdCondominio
+                )
+                .SumAsync(despesa => despesa.Total);
+
+            double valorSubtraido = totalDespesas - faturaCartao;
+
+            return (totalDespesas, valorSubtraido);
+        }
         #endregion
 
         #region Metodos de Suporte
@@ -158,7 +190,7 @@ namespace Application.Services.Despesas
             double aluguelCondominioContaLuzParaPeu
         )
         {
-            var todosMembers = await _membroRepository.Get().ToListAsync();
+            var todosMembros = await _membroRepository.Get().ToListAsync();
 
             double ValorMoradia(Membro membro)
             {
@@ -172,7 +204,7 @@ namespace Application.Services.Despesas
                 }
             }
 
-            var valoresPorMembro = todosMembers.Select(member => new DespesaPorMembroDto
+            var valoresPorMembro = todosMembros.Select(member => new DespesaPorMembroDto
             {
                 Nome = member.Nome,
 

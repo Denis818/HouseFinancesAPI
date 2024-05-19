@@ -11,6 +11,7 @@ namespace Application.Services.Despesas.Base
     {
         protected readonly ICategoriaRepository _categoriaRepository;
         protected readonly IMembroRepository _membroRepository;
+        protected readonly IGrupoDespesaRepository _grupoDespesaRepository;
 
         protected readonly CategoriaIdsDto _categoriaIds;
         protected (int IdJhon, int IdPeu) _membroId;
@@ -21,11 +22,12 @@ namespace Application.Services.Despesas.Base
         public BaseDespesaService(IServiceProvider service)
             : base(service)
         {
-            _categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
             _membroRepository = service.GetRequiredService<IMembroRepository>();
+            _categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
+            _grupoDespesaRepository = service.GetRequiredService<IGrupoDespesaRepository>();
 
-            _categoriaIds = _categoriaRepository.GetCategoriaIds();
             _membroId = _membroRepository.GetIdsJhonPeu();
+            _categoriaIds = _categoriaRepository.GetCategoriaIds();
 
             ListDespesasPorGrupo = GetDespesasByGroup();
         }

@@ -12,10 +12,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Services.Membros
 {
-    public class MembroAppServices(
-        IServiceProvider service,
-        IDespesaConsultaAppService _despesaConsultaApp
-    ) : BaseAppService<Membro, IMembroRepository>(service), IMembroAppServices
+    public class MembroAppServices(IDespesaAppService _despesaAppService, IServiceProvider service)
+        : BaseAppService<Membro, IMembroRepository>(service),
+            IMembroAppServices
     {
         #region CRUD
         public async Task<IEnumerable<Membro>> GetAllAsync() =>
@@ -189,7 +188,7 @@ namespace Application.Services.Membros
             string titleMessage
         )
         {
-            var resumoMensal = await _despesaConsultaApp.GetAnaliseDesesasPorGrupoAsync();
+            var resumoMensal = await _despesaAppService.GetAnaliseDesesasPorGrupoAsync();
 
             double valorPorMembro =
                 resumoMensal
@@ -215,7 +214,7 @@ namespace Application.Services.Membros
             string titleMessage
         )
         {
-            var resumoMensal = await _despesaConsultaApp.GetAnaliseDesesasPorGrupoAsync();
+            var resumoMensal = await _despesaAppService.GetAnaliseDesesasPorGrupoAsync();
 
             double valorPorMembro =
                 resumoMensal

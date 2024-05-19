@@ -5,26 +5,24 @@ namespace Domain.Services
 {
     public class DespesaDomainServices : IDespesaDomainServices
     {
-        public DistribuicaoCustosMoradiaDto CalcularDistribuicaoCustosMoradiaAsync(
-            double parcelaApartamento,
-            double parcelaCaixa,
-            double contaDeLuzValue,
-            double condominioValue,
-            int listMembroForaJhonPeuCount,
-            int listMembroForaJhonCount
+        public DistribuicaoCustosMoradiaDto CalcularDistribuicaoCustosMoradia(
+            CustosDespesasMoradiaDto custosDespesasMoradia
         )
         {
-            double totalAptoMaisCaixa = parcelaApartamento + parcelaCaixa;
-            double totalLuzMaisCondominio = contaDeLuzValue + condominioValue;
+            double totalAptoMaisCaixa =
+                custosDespesasMoradia.ParcelaApartamento + custosDespesasMoradia.ParcelaCaixa;
+            double totalLuzMaisCondominio =
+                custosDespesasMoradia.ContaDeLuz + custosDespesasMoradia.Condominio;
 
             double totalAptoMaisCaixaAbate300Peu100Estacionamento =
                 (totalAptoMaisCaixa - 300) - 100; //300 aluguel cobrado do peu. 100 reais do estacionamento alugado.
 
             double valorAptoMaisCaixaParaCadaMembro =
-                totalAptoMaisCaixaAbate300Peu100Estacionamento / listMembroForaJhonPeuCount;
+                totalAptoMaisCaixaAbate300Peu100Estacionamento
+                / custosDespesasMoradia.MembrosForaJhonPeuCount;
 
             double valorLuzMaisCondominioParaCadaMembro =
-                totalLuzMaisCondominio / listMembroForaJhonCount;
+                totalLuzMaisCondominio / custosDespesasMoradia.MembrosForaJhonCount;
 
             double valorParaMembrosForaPeu =
                 valorAptoMaisCaixaParaCadaMembro + valorLuzMaisCondominioParaCadaMembro;
@@ -46,6 +44,37 @@ namespace Domain.Services
                     valorLuzMaisCondominioParaCadaMembro,
                     0
                 ),
+            };
+        }
+
+        public DistribuicaoCustosCasaDto CalcularDistribuicaoCustosCasa(
+            CustosDespesasCasaDto custosDespesasCasa
+        )
+        {
+            //  Almoço divido com Jhon
+            double totalAlmocoParteDoJhon =
+                custosDespesasCasa.ValorTotalAlmoco / custosDespesasCasa.TodosMembros.Count;
+            double totalDoAlmocoComAbateParteDoJhon =
+                custosDespesasCasa.ValorTotalAlmoco - totalAlmocoParteDoJhon;
+
+            //Calcular todas as depesas da casa.
+            double despesaGeraisMaisAlmoco =
+                custosDespesasCasa.TotalDespesaGeraisForaAlmoco
+                + custosDespesasCasa.ValorTotalAlmoco;
+
+            //Dividindo as despesas somadas
+            double despesaGeraisMaisAlmocoDividioPorMembro =
+                (custosDespesasCasa.TotalDespesaGeraisForaAlmoco + totalDoAlmocoComAbateParteDoJhon)
+                / custosDespesasCasa.MembrosForaJhonCount;
+
+            return new DistribuicaoCustosCasaDto()
+            {
+                Membros = custosDespesasCasa.TodosMembros,
+                TotalDespesaGeraisForaAlmoco = custosDespesasCasa.TotalDespesaGeraisForaAlmoco,
+                TotalAlmocoDividioComJhon = totalDoAlmocoComAbateParteDoJhon,
+                TotalAlmocoParteDoJhon = totalAlmocoParteDoJhon,
+                DespesaGeraisMaisAlmoco = despesaGeraisMaisAlmoco,
+                DespesaGeraisMaisAlmocoDividioPorMembro = despesaGeraisMaisAlmocoDividioPorMembro
             };
         }
     }

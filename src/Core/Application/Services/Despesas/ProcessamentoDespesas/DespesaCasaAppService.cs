@@ -1,51 +1,25 @@
 ﻿using Application.Interfaces.Services.Despesas;
 using Application.Services.Despesas.Base;
 using Domain.Dtos.Despesas.Relatorios;
+using Domain.Interfaces.Services.Despesa;
 using Domain.Models.Membros;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Despesas.ProcessamentoDespesas
 {
-    public class DespesaCasaAppService(IServiceProvider service)
-        : BaseDespesaService(service),
-            IDespesaCasaAppService
+    public class DespesaCasaAppService(
+        IServiceProvider service,
+        IDespesaDomainServices _despesaDomainServices
+    ) : BaseDespesaService(service), IDespesaCasaAppService
     {
         public async Task<DistribuicaoCustosCasaDto> CalcularDistribuicaoCustosCasaAsync()
         {
             List<Membro> todosMembros = await _membroRepository.Get().ToListAsync();
 
-            List<Membro> listMembersForaJhon = todosMembros
-                .Where(m => m.Id != _membroId.IdJhon)
-                .ToList();
+            int membrosForaJhonCount = todosMembros.Where(m => m.Id != _membroId.IdJhon).Count();
 
-            // Despesas gerais Limpesa, Higiêne etc... (Fora Almoço, e despesa Moradia aluguel, luz etc..) :
-            double totalDespesaGerais = await CalculaTotalDespesaForaAlmocoDespesaMoradiaAsync();
-
-            //  Almoço divido com Jhon
-            var (totalAlmocoDividioComJhon, totalAlmocoParteDoJhon, totalAlmoco) =
-                await CalculaTotalAlmocoDivididoComJhonAsync();
-
-            double despesaGeraisMaisAlmoco = totalDespesaGerais + totalAlmoco;
-
-            //Despesa gerais Limpesa, Higiêne etc... somado com Almoço divido com Jhon
-            double despesaGeraisMaisAlmocoDividioPorMembro =
-                (totalDespesaGerais + totalAlmocoDividioComJhon) / listMembersForaJhon.Count;
-
-            return new DistribuicaoCustosCasaDto()
-            {
-                Membros = todosMembros,
-                TotalDespesaGerais = totalDespesaGerais,
-                TotalAlmocoDividioComJhon = totalAlmocoDividioComJhon,
-                TotalAlmocoParteDoJhon = totalAlmocoParteDoJhon,
-                DespesaGeraisMaisAlmoco = despesaGeraisMaisAlmoco,
-                DespesaGeraisMaisAlmocoDividioPorMembro = despesaGeraisMaisAlmocoDividioPorMembro
-            };
-        }
-
-        #region Metodos de Suporte
-        private async Task<double> CalculaTotalDespesaForaAlmocoDespesaMoradiaAsync()
-        {
-            double total = await ListDespesasPorGrupo
+            // Despesas gerais Limpesa, Higiêne etc... (Fora Almoço)
+            double totalDespesaGeraisForaAlmoco = await ListDespesasPorGrupo
                 .Where(d =>
                     d.CategoriaId != _categoriaIds.IdAluguel
                     && d.CategoriaId != _categoriaIds.IdCondominio
@@ -54,27 +28,24 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
                 )
                 .SumAsync(d => d.Total);
 
-            return total;
-        }
-
-        private async Task<(double, double, double)> CalculaTotalAlmocoDivididoComJhonAsync()
-        {
-            int todosMembros = await _membroRepository.Get().CountAsync();
-
-            double totalAlmoco = await ListDespesasPorGrupo
+            //Total somente do almoço
+            double valorTotalAlmoco = await ListDespesasPorGrupo
                 .Where(despesa => despesa.CategoriaId == _categoriaIds.IdAlmoco)
                 .SumAsync(despesa => despesa.Total);
 
-            double almocoParteDoJhon = totalAlmoco / todosMembros;
+            var custosDespesasCasa = new CustosDespesasCasaDto
+            {
+                TodosMembros = todosMembros,
+                ValorTotalAlmoco = valorTotalAlmoco,
+                TotalDespesaGeraisForaAlmoco = totalDespesaGeraisForaAlmoco,
+                MembrosForaJhonCount = membrosForaJhonCount
+            };
 
-            double almocoAbatido = totalAlmoco - almocoParteDoJhon;
-
-            return (
-                Math.Max(almocoAbatido, 0),
-                Math.Max(almocoParteDoJhon, 0),
-                Math.Max(totalAlmoco, 0)
+            var distribuicaoCustosCasa = _despesaDomainServices.CalcularDistribuicaoCustosCasa(
+                custosDespesasCasa
             );
+
+            return distribuicaoCustosCasa;
         }
-        #endregion
     }
 }

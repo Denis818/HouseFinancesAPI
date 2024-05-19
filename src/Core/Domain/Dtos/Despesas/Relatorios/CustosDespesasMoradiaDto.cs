@@ -9,6 +9,9 @@ namespace Domain.Dtos.Despesas.Relatorios
         public double ParcelaCaixa { get; set; }
         public double ContaDeLuz { get; set; }
         public double Condominio { get; set; }
+
+        public int MembrosForaJhonPeuCount { get; set; }
+        public int MembrosForaJhonCount { get; set; }
     }
 
     public class GrupoListMembrosDespesaDto

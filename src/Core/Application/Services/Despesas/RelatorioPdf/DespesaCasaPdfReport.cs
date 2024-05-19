@@ -21,7 +21,7 @@ namespace Application.Services.Despesas.RelatorioPdf
 
             CreateTableCalculos(
                 doc,
-                custosCasaDto.TotalDespesaGerais,
+                custosCasaDto.TotalDespesaGeraisForaAlmoco,
                 custosCasaDto.TotalAlmocoDividioComJhon,
                 custosCasaDto.TotalAlmocoParteDoJhon,
                 custosCasaDto.DespesaGeraisMaisAlmoco,

@@ -21,7 +21,7 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
 
             var custosDespesasMoradiaDto = await GetCustosDespesasMoradiaAsync();
 
-            if(
+            if (
                 custosDespesasMoradiaDto.ContaDeLuz == 0
                 && custosDespesasMoradiaDto.ParcelaApartamento == 0
                 && grupoListMembrosDespesa.ListAluguel.Count <= 0
@@ -38,10 +38,20 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
                     CustosDespesasMoradia = custosDespesasMoradiaDto,
                     DistribuicaoCustos = new DistribuicaoCustosMoradiaDto
                     {
-                        ValorParaDoPeu = 300, // 300 reais do aluguel e fixo.
+                        ValorParaDoPeu = 300, // 300 reais do aluguel é fixo.
                     }
                 };
             }
+
+            var custosMoradiaDto = new CustosDespesasMoradiaDto
+            {
+                ParcelaApartamento = custosDespesasMoradiaDto.ParcelaApartamento,
+                ParcelaCaixa = custosDespesasMoradiaDto.ParcelaCaixa,
+                ContaDeLuz = custosDespesasMoradiaDto.ContaDeLuz,
+                Condominio = custosDespesasMoradiaDto.Condominio,
+                MembrosForaJhonPeuCount = grupoListMembrosDespesa.ListMembroForaJhonPeu.Count,
+                MembrosForaJhonCount = grupoListMembrosDespesa.ListMembroForaJhon.Count
+            };
 
             return new DetalhamentoDespesasMoradiaDto()
             {
@@ -49,13 +59,8 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
 
                 CustosDespesasMoradia = custosDespesasMoradiaDto,
 
-                DistribuicaoCustos = _despesaDomainServices.CalcularDistribuicaoCustosMoradiaAsync(
-                    custosDespesasMoradiaDto.ParcelaApartamento,
-                    custosDespesasMoradiaDto.ParcelaCaixa,
-                    custosDespesasMoradiaDto.ContaDeLuz,
-                    custosDespesasMoradiaDto.Condominio,
-                    grupoListMembrosDespesa.ListMembroForaJhonPeu.Count,
-                    grupoListMembrosDespesa.ListMembroForaJhon.Count
+                DistribuicaoCustos = _despesaDomainServices.CalcularDistribuicaoCustosMoradia(
+                    custosMoradiaDto
                 )
             };
         }

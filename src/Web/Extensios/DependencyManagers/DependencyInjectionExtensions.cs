@@ -4,7 +4,7 @@ using Application.Interfaces.Services.Membros;
 using Application.Interfaces.Services.User;
 using Application.Interfaces.Utilities;
 using Application.Services.Categorias;
-using Application.Services.Despesas;
+using Application.Services.Despesas.Operacoes;
 using Application.Services.Despesas.ProcessamentoDespesas;
 using Application.Services.Membros;
 using Application.Services.User;
@@ -57,7 +57,6 @@ namespace Web.Extensios.DependencyManagers
             services.AddScoped<IDespesaCrudAppService, DespesaCrudAppService>();
             services.AddScoped<IDespesaCasaAppService, DespesaCasaAppService>();
             services.AddScoped<IDespesaMoradiaAppService, DespesaMoradiaAppService>();
-            services.AddScoped<IDespesaConsultaAppService, DespesaConsultaAppService>();
             services.AddScoped<IGrupoDespesaAppService, GrupoDespesaAppService>();
         }
 

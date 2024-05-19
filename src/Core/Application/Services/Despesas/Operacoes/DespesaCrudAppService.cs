@@ -6,16 +6,14 @@ using Application.Utilities;
 using Domain.Converters.DatesTimes;
 using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
-using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Services.Despesas
+namespace Application.Services.Despesas.Operacoes
 {
-    public class DespesaCrudAppService(
-        IServiceProvider service,
-        IGrupoDespesaRepository _grupoDespesaRepository
-    ) : BaseDespesaService(service), IDespesaCrudAppService
+    public class DespesaCrudAppService(IServiceProvider service)
+        : BaseDespesaService(service),
+            IDespesaCrudAppService
     {
         #region CRUD
         public async Task<Despesa> GetByIdAsync(int id)
