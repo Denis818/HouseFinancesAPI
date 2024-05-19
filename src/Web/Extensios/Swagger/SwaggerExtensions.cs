@@ -1,5 +1,7 @@
 ﻿using CasaFinanceiroApi.Extensios.Swagger.Filters;
+using Domain.Enumeradores;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Presentation.Version;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -13,7 +15,7 @@ namespace Web.Extensios.Swagger
         {
             services.AddSwaggerGen(options =>
             {
-                foreach(var version in ApiVersioning.ListVersions)
+                foreach (var version in ApiVersioning.ListVersions)
                 {
                     options.SwaggerDoc(
                         $"v{version}",
@@ -28,6 +30,17 @@ namespace Web.Extensios.Swagger
                 options.AddSecuritySchema();
 
                 options.AddSchemaFilters();
+
+                options.MapType<EnumFiltroDespesa>(
+                    () =>
+                        new OpenApiSchema
+                        {
+                            Type = "string",
+                            Enum = Enum.GetNames(typeof(EnumFiltroDespesa))
+                                .Select(name => (IOpenApiAny)new OpenApiString(name))
+                                .ToList()
+                        }
+                );
             });
 
             services.AddAuthentication(x =>
@@ -75,7 +88,7 @@ namespace Web.Extensios.Swagger
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                foreach(var version in ApiVersioning.ListVersions)
+                foreach (var version in ApiVersioning.ListVersions)
                 {
                     options.SwaggerEndpoint($"/swagger/v{version}/swagger.json", $"API v{version}");
                 }

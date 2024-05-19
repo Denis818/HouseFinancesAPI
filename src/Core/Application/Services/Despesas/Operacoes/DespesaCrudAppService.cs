@@ -28,19 +28,18 @@ namespace Application.Services.Despesas.Operacoes
         }
 
         public async Task<PagedResult<Despesa>> GetListDespesas(
-            string filterItem,
+            string filter,
+            EnumFiltroDespesa tipoFiltro,
             int paginaAtual,
             int itensPorPagina
         )
         {
-            if (string.IsNullOrEmpty(filterItem))
+            if (string.IsNullOrEmpty(filter))
             {
                 return await GetAllDespesas(paginaAtual, itensPorPagina);
             }
 
-            var query = ListDespesasPorGrupo
-                .Where(despesa => despesa.Item.ToLower().Contains(filterItem.ToLower()))
-                .OrderByDescending(d => d.DataCompra);
+            IOrderedQueryable<Despesa> query = GetDespesasFiltradas(filter, tipoFiltro);
 
             var listaPaginada = await Pagination.PaginateResultAsync(
                 query,
@@ -49,30 +48,6 @@ namespace Application.Services.Despesas.Operacoes
             );
 
             return listaPaginada;
-        }
-
-        private async Task<PagedResult<Despesa>> GetAllDespesas(int paginaAtual, int itensPorPagina)
-        {
-            var queryAll = ListDespesasPorGrupo
-                .Include(c => c.Categoria)
-                .Include(c => c.GrupoDespesa)
-                .OrderByDescending(d => d.DataCompra);
-
-            var despesas = await Pagination.PaginateResultAsync(
-                queryAll,
-                paginaAtual,
-                itensPorPagina
-            );
-
-            if (despesas.TotalItens == 0)
-            {
-                Notificar(
-                    EnumTipoNotificacao.Informacao,
-                    string.Format(Message.DespesasNaoEncontradas, "")
-                );
-            }
-
-            return despesas;
         }
 
         public async Task<Despesa> InsertAsync(DespesaDto despesaDto)
@@ -241,6 +216,60 @@ namespace Application.Services.Despesas.Operacoes
 
 
         #region Metodos de Suporte
+        private IOrderedQueryable<Despesa> GetDespesasFiltradas(
+            string filter,
+            EnumFiltroDespesa tipoFiltro
+        )
+        {
+            var query = ListDespesasPorGrupo;
+
+            switch (tipoFiltro)
+            {
+                case EnumFiltroDespesa.Item:
+                    query = query.Where(despesa =>
+                        despesa.Item.ToLower().Contains(filter.ToLower())
+                    );
+                    break;
+
+                case EnumFiltroDespesa.Categoria:
+                    query = query.Where(despesa =>
+                        despesa.Categoria.Descricao.ToLower().Contains(filter.ToLower())
+                    );
+                    break;
+
+                case EnumFiltroDespesa.Fornecedor:
+                    query = query.Where(despesa =>
+                        despesa.Fornecedor.ToLower().Contains(filter.ToLower())
+                    );
+                    break;
+            }
+
+            return query.OrderByDescending(d => d.DataCompra);
+        }
+
+        private async Task<PagedResult<Despesa>> GetAllDespesas(int paginaAtual, int itensPorPagina)
+        {
+            var queryAll = ListDespesasPorGrupo
+                .Include(c => c.Categoria)
+                .Include(c => c.GrupoDespesa)
+                .OrderByDescending(d => d.DataCompra);
+
+            var despesas = await Pagination.PaginateResultAsync(
+                queryAll,
+                paginaAtual,
+                itensPorPagina
+            );
+
+            if (despesas.TotalItens == 0)
+            {
+                Notificar(
+                    EnumTipoNotificacao.Informacao,
+                    string.Format(Message.DespesasNaoEncontradas, "")
+                );
+            }
+
+            return despesas;
+        }
 
         private async Task<bool> ValidarDespesaAsync(
             DespesaDto despesaDto,
@@ -291,7 +320,7 @@ namespace Application.Services.Despesas.Operacoes
                 return false;
             }
 
-            if (!await IsDespesaExistenteAsync(despesaDto, idDespesaInEdicao))
+            if (!await IsDespesaMensalExistenteAsync(despesaDto, idDespesaInEdicao))
             {
                 return false;
             }
@@ -299,7 +328,7 @@ namespace Application.Services.Despesas.Operacoes
             return true;
         }
 
-        private async Task<bool> IsDespesaExistenteAsync(
+        private async Task<bool> IsDespesaMensalExistenteAsync(
             DespesaDto despesaDto,
             int idDespesaInEdicao
         )

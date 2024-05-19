@@ -1,9 +1,9 @@
-﻿using Asp.Versioning;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Presentation.Api.Base;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Presentation.Version
 {
@@ -12,7 +12,7 @@ namespace Presentation.Version
         public const string V1 = "1.0";
         public const string V2 = "2.0";
 
-        public static readonly string[] ListVersions = [ V1, V2 ];
+        public static readonly string[] ListVersions = [V1, V2];
 
         public static void ConfigureWebApi(this IServiceCollection services)
         {
@@ -28,6 +28,7 @@ namespace Presentation.Version
                 {
                     opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                     opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                    opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
             services.Configure<ApiBehaviorOptions>(options =>

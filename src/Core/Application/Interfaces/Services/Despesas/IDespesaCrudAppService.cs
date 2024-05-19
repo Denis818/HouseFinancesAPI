@@ -1,5 +1,6 @@
 ﻿using Application.Utilities;
 using Domain.Dtos.Despesas.Criacao;
+using Domain.Enumeradores;
 using Domain.Models.Despesas;
 
 namespace Application.Interfaces.Services.Despesas
@@ -9,6 +10,7 @@ namespace Application.Interfaces.Services.Despesas
         Task<bool> DeleteAsync(int id);
         Task<PagedResult<Despesa>> GetListDespesas(
             string filterItem,
+            EnumFiltroDespesa tipoFiltro,
             int paginaAtual,
             int itensPorPagina
         );
