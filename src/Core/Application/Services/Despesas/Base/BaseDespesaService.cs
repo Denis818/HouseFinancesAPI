@@ -17,7 +17,8 @@ namespace Application.Services.Despesas.Base
         protected (int IdJhon, int IdPeu) _membroId;
         protected int _grupoDespesaId = 0;
 
-        protected IQueryable<Despesa> ListDespesasPorGrupo;
+        protected IQueryable<Despesa> _queryDespesasPorGrupo;
+        protected IQueryable<Despesa> _queryDespesasAllGrupo;
 
         public BaseDespesaService(IServiceProvider service)
             : base(service)
@@ -29,7 +30,8 @@ namespace Application.Services.Despesas.Base
             _membroId = _membroRepository.GetIdsJhonPeu();
             _categoriaIds = _categoriaRepository.GetCategoriaIds();
 
-            ListDespesasPorGrupo = GetDespesasByGroup();
+            _queryDespesasPorGrupo = GetDespesasByGroup();
+            _queryDespesasAllGrupo = GetDespesasAllGroup();
         }
 
         public IQueryable<Despesa> GetDespesasByGroup()
@@ -38,6 +40,16 @@ namespace Application.Services.Despesas.Base
 
             var queryDespesas = _repository
                 .Get(d => d.GrupoDespesaId == _grupoDespesaId)
+                .Include(c => c.Categoria)
+                .Include(c => c.GrupoDespesa);
+
+            return queryDespesas;
+        }
+
+        public IQueryable<Despesa> GetDespesasAllGroup()
+        {
+            var queryDespesas = _repository
+                .Get()
                 .Include(c => c.Categoria)
                 .Include(c => c.GrupoDespesa);
 

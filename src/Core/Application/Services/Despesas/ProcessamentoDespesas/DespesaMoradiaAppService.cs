@@ -68,7 +68,7 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
         #region Metodos de Suporte
         private async Task<CustosDespesasMoradiaDto> GetCustosDespesasMoradiaAsync()
         {
-            var listAluguel = ListDespesasPorGrupo.Where(d =>
+            var listAluguel = _queryDespesasPorGrupo.Where(d =>
                 d.CategoriaId == _categoriaIds.IdAluguel
             );
 
@@ -80,11 +80,11 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
                 .Where(aluguel => aluguel.Item.ToLower().Contains("caixa"))
                 .FirstOrDefaultAsync();
 
-            Despesa contaDeLuz = await ListDespesasPorGrupo
+            Despesa contaDeLuz = await _queryDespesasPorGrupo
                 .Where(despesa => despesa.CategoriaId == _categoriaIds.IdContaDeLuz)
                 .FirstOrDefaultAsync();
 
-            Despesa condominio = await ListDespesasPorGrupo
+            Despesa condominio = await _queryDespesasPorGrupo
                 .Where(despesa => despesa.CategoriaId == _categoriaIds.IdCondominio)
                 .FirstOrDefaultAsync();
 
@@ -107,7 +107,7 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
                 .Where(m => m.Id != _membroId.IdPeu)
                 .ToList();
 
-            List<Despesa> listAluguel = await ListDespesasPorGrupo
+            List<Despesa> listAluguel = await _queryDespesasPorGrupo
                 .Where(d => d.CategoriaId == _categoriaIds.IdAluguel)
                 .ToListAsync();
 

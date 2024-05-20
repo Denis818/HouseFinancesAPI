@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Application.Interfaces.Services.Despesas;
+﻿using Application.Interfaces.Services.Despesas;
 using Application.Utilities;
 using Asp.Versioning;
 using Domain.Dtos.Despesas.Criacao;
@@ -23,21 +22,36 @@ namespace Presentation.Api.V1.Finance.Despesas
     ) : MainController(service)
     {
         #region CRUD
-        [HttpGet]
+        [HttpGet("por-grupo")]
         [GetIdGroupInHeaderFilter]
-        [Description("Tipo de Filtro: Item = 0, Categoria = 1, Nenhum = 2")]
-        public async Task<PagedResult<Despesa>> GetListDespesas(
+        public async Task<PagedResult<Despesa>> GetListDespesasPorGrupo(
             string filter,
             int paginaAtual = 1,
             int itensPorPagina = 10,
             EnumFiltroDespesa tipoFiltro = EnumFiltroDespesa.Item
         )
         {
-            return await _despesaCrudServices.GetListDespesas(
+            return await _despesaCrudServices.GetListDespesasPorGrupo(
                 filter,
-                tipoFiltro,
                 paginaAtual,
-                itensPorPagina
+                itensPorPagina,
+                tipoFiltro
+            );
+        }
+
+        [HttpGet("todos-grupos")]
+        public async Task<PagedResult<Despesa>> GetListDespesasAllGrupos(
+            string filter,
+            int paginaAtual = 1,
+            int itensPorPagina = 10,
+            EnumFiltroDespesa tipoFiltro = EnumFiltroDespesa.Item
+        )
+        {
+            return await _despesaCrudServices.GetListDespesasAllGroups(
+                filter,
+                paginaAtual,
+                itensPorPagina,
+                tipoFiltro
             );
         }
 

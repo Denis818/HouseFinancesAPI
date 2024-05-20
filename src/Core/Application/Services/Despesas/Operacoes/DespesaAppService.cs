@@ -22,7 +22,7 @@ namespace Application.Services.Despesas.Operacoes
         #region Consultas
         public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync()
         {
-            var listDespesas = await ListDespesasPorGrupo.ToListAsync();
+            var listDespesas = await _queryDespesasPorGrupo.ToListAsync();
 
             if (listDespesas.Count <= 0)
             {
@@ -128,7 +128,7 @@ namespace Application.Services.Despesas.Operacoes
         #region Utilitários
         public async Task<(double, double)> CompararFaturaComTotalDeDespesas(double faturaCartao)
         {
-            double totalDespesas = await ListDespesasPorGrupo
+            double totalDespesas = await _queryDespesasPorGrupo
                 .Where(despesa =>
                     despesa.CategoriaId != _categoriaIds.IdAluguel
                     && despesa.CategoriaId != _categoriaIds.IdContaDeLuz
@@ -156,7 +156,7 @@ namespace Application.Services.Despesas.Operacoes
                 return new();
             }
 
-            double totalGastoMoradia = await ListDespesasPorGrupo
+            double totalGastoMoradia = await _queryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Id == _categoriaIds.IdAluguel
                     || d.Categoria.Id == _categoriaIds.IdCondominio
@@ -164,7 +164,7 @@ namespace Application.Services.Despesas.Operacoes
                 )
                 .SumAsync(d => d.Total);
 
-            double totalGastosCasa = await ListDespesasPorGrupo
+            double totalGastosCasa = await _queryDespesasPorGrupo
                 .Where(d =>
                     d.Categoria.Id != _categoriaIds.IdAluguel
                     && d.Categoria.Id != _categoriaIds.IdCondominio

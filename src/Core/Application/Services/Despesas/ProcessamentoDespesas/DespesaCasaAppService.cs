@@ -19,7 +19,7 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
             int membrosForaJhonCount = todosMembros.Where(m => m.Id != _membroId.IdJhon).Count();
 
             // Despesas gerais Limpesa, Higiêne etc... (Fora Almoço)
-            double totalDespesaGeraisForaAlmoco = await ListDespesasPorGrupo
+            double totalDespesaGeraisForaAlmoco = await _queryDespesasPorGrupo
                 .Where(d =>
                     d.CategoriaId != _categoriaIds.IdAluguel
                     && d.CategoriaId != _categoriaIds.IdCondominio
@@ -29,7 +29,7 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
                 .SumAsync(d => d.Total);
 
             //Total somente do almoço
-            double valorTotalAlmoco = await ListDespesasPorGrupo
+            double valorTotalAlmoco = await _queryDespesasPorGrupo
                 .Where(despesa => despesa.CategoriaId == _categoriaIds.IdAlmoco)
                 .SumAsync(despesa => despesa.Total);
 

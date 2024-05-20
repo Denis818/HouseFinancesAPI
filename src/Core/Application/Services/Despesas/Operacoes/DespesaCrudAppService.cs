@@ -27,19 +27,50 @@ namespace Application.Services.Despesas.Operacoes
             return despesa;
         }
 
-        public async Task<PagedResult<Despesa>> GetListDespesas(
+        public async Task<PagedResult<Despesa>> GetListDespesasPorGrupo(
             string filter,
-            EnumFiltroDespesa tipoFiltro,
             int paginaAtual,
-            int itensPorPagina
+            int itensPorPagina,
+            EnumFiltroDespesa tipoFiltro
         )
         {
             if (string.IsNullOrEmpty(filter))
             {
-                return await GetAllDespesas(paginaAtual, itensPorPagina);
+                return await GetAllDespesas(_queryDespesasPorGrupo, paginaAtual, itensPorPagina);
             }
 
-            IOrderedQueryable<Despesa> query = GetDespesasFiltradas(filter, tipoFiltro);
+            IOrderedQueryable<Despesa> query = GetDespesasFiltradas(
+                _queryDespesasPorGrupo,
+                filter,
+                tipoFiltro
+            );
+
+            var listaPaginada = await Pagination.PaginateResultAsync(
+                query,
+                paginaAtual,
+                itensPorPagina
+            );
+
+            return listaPaginada;
+        }
+
+        public async Task<PagedResult<Despesa>> GetListDespesasAllGroups(
+            string filter,
+            int paginaAtual,
+            int itensPorPagina,
+            EnumFiltroDespesa tipoFiltro
+        )
+        {
+            if (string.IsNullOrEmpty(filter))
+            {
+                return await GetAllDespesas(_queryDespesasAllGrupo, paginaAtual, itensPorPagina);
+            }
+
+            IOrderedQueryable<Despesa> query = GetDespesasFiltradas(
+                _queryDespesasAllGrupo,
+                filter,
+                tipoFiltro
+            );
 
             var listaPaginada = await Pagination.PaginateResultAsync(
                 query,
@@ -217,12 +248,11 @@ namespace Application.Services.Despesas.Operacoes
 
         #region Metodos de Suporte
         private IOrderedQueryable<Despesa> GetDespesasFiltradas(
+            IQueryable<Despesa> query,
             string filter,
             EnumFiltroDespesa tipoFiltro
         )
         {
-            var query = ListDespesasPorGrupo;
-
             switch (tipoFiltro)
             {
                 case EnumFiltroDespesa.Item:
@@ -247,9 +277,13 @@ namespace Application.Services.Despesas.Operacoes
             return query.OrderByDescending(d => d.DataCompra);
         }
 
-        private async Task<PagedResult<Despesa>> GetAllDespesas(int paginaAtual, int itensPorPagina)
+        private async Task<PagedResult<Despesa>> GetAllDespesas(
+            IQueryable<Despesa> query,
+            int paginaAtual,
+            int itensPorPagina
+        )
         {
-            var queryAll = ListDespesasPorGrupo
+            var queryAll = query
                 .Include(c => c.Categoria)
                 .Include(c => c.GrupoDespesa)
                 .OrderByDescending(d => d.DataCompra);
