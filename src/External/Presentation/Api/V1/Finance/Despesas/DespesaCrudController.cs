@@ -1,5 +1,4 @@
 ﻿using Application.Interfaces.Services.Despesas;
-using Application.Utilities;
 using Asp.Versioning;
 using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
@@ -7,7 +6,6 @@ using Domain.Models.Despesas;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
-using Presentation.Attributes.Util;
 using Presentation.Version;
 
 namespace Presentation.Api.V1.Finance.Despesas
@@ -21,40 +19,6 @@ namespace Presentation.Api.V1.Finance.Despesas
         IDespesaCrudAppService _despesaCrudServices
     ) : MainController(service)
     {
-        #region CRUD
-        [HttpGet("por-grupo")]
-        [GetIdGroupInHeaderFilter]
-        public async Task<PagedResult<Despesa>> GetListDespesasPorGrupo(
-            string filter,
-            int paginaAtual = 1,
-            int itensPorPagina = 10,
-            EnumFiltroDespesa tipoFiltro = EnumFiltroDespesa.Item
-        )
-        {
-            return await _despesaCrudServices.GetListDespesasPorGrupo(
-                filter,
-                paginaAtual,
-                itensPorPagina,
-                tipoFiltro
-            );
-        }
-
-        [HttpGet("todos-grupos")]
-        public async Task<PagedResult<Despesa>> GetListDespesasAllGrupos(
-            string filter,
-            int paginaAtual = 1,
-            int itensPorPagina = 10,
-            EnumFiltroDespesa tipoFiltro = EnumFiltroDespesa.Item
-        )
-        {
-            return await _despesaCrudServices.GetListDespesasAllGroups(
-                filter,
-                paginaAtual,
-                itensPorPagina,
-                tipoFiltro
-            );
-        }
-
         [HttpPost]
         [PermissoesFinance(EnumPermissoes.USU_000001)]
         public async Task<Despesa> PostAsync(DespesaDto vendaDto) =>
@@ -74,6 +38,5 @@ namespace Presentation.Api.V1.Finance.Despesas
         public async Task<IEnumerable<Despesa>> PostRangeAsync(
             IAsyncEnumerable<DespesaDto> vendaDto
         ) => await _despesaCrudServices.InsertRangeAsync(vendaDto);
-        #endregion
     }
 }

@@ -8,7 +8,7 @@ using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
 using Presentation.Version;
 
-namespace Presentation.Api.V1.Finance.Despesas
+namespace Presentation.Api.V1.Finance.GrupoDespesas
 {
     [ApiController]
     [ApiVersion(ApiVersioning.V1)]

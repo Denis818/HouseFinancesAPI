@@ -9,12 +9,13 @@ using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Services.Despesas.Operacoes
+namespace Application.Services.GrupoDespesas
 {
     public class GrupoDespesaAppService(IServiceProvider service)
         : BaseAppService<GrupoDespesa, IGrupoDespesaRepository>(service),
             IGrupoDespesaAppService
     {
+        #region CRUD
         public async Task<IEnumerable<GrupoDespesa>> GetAllAsync() =>
             await _repository.Get().OrderBy(c => c.Nome).ToListAsync();
 
@@ -151,7 +152,9 @@ namespace Application.Services.Despesas.Operacoes
 
             return true;
         }
+        #endregion
 
+        #region Metodos de Suporte
         public string FormatNomeGrupo(string nomeGrupo)
         {
             nomeGrupo = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(nomeGrupo.ToLower());
@@ -174,5 +177,7 @@ namespace Application.Services.Despesas.Operacoes
 
             return true;
         }
+
+        #endregion
     }
 }

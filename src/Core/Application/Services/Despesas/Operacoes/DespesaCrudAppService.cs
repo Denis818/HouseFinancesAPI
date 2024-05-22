@@ -2,84 +2,22 @@
 using Application.Interfaces.Services.Despesas;
 using Application.Resources.Messages;
 using Application.Services.Despesas.Base;
-using Application.Utilities;
 using Domain.Converters.DatesTimes;
 using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
+using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Despesas.Operacoes
 {
-    public class DespesaCrudAppService(IServiceProvider service)
-        : BaseDespesaService(service),
-            IDespesaCrudAppService
+    public class DespesaCrudAppService(
+        IServiceProvider service,
+        IDespesaConsultas _despesaConsultas,
+        IGrupoDespesaRepository _grupoDespesaRepository
+    ) : BaseDespesaService(service), IDespesaCrudAppService
     {
         #region CRUD
-        public async Task<Despesa> GetByIdAsync(int id)
-        {
-            var despesa = await _repository
-                .Get(despesa => despesa.Id == id)
-                .Include(x => x.Categoria)
-                .Include(x => x.GrupoDespesa)
-                .FirstOrDefaultAsync();
-
-            return despesa;
-        }
-
-        public async Task<PagedResult<Despesa>> GetListDespesasPorGrupo(
-            string filter,
-            int paginaAtual,
-            int itensPorPagina,
-            EnumFiltroDespesa tipoFiltro
-        )
-        {
-            if (string.IsNullOrEmpty(filter))
-            {
-                return await GetAllDespesas(_queryDespesasPorGrupo, paginaAtual, itensPorPagina);
-            }
-
-            IOrderedQueryable<Despesa> query = GetDespesasFiltradas(
-                _queryDespesasPorGrupo,
-                filter,
-                tipoFiltro
-            );
-
-            var listaPaginada = await Pagination.PaginateResultAsync(
-                query,
-                paginaAtual,
-                itensPorPagina
-            );
-
-            return listaPaginada;
-        }
-
-        public async Task<PagedResult<Despesa>> GetListDespesasAllGroups(
-            string filter,
-            int paginaAtual,
-            int itensPorPagina,
-            EnumFiltroDespesa tipoFiltro
-        )
-        {
-            if (string.IsNullOrEmpty(filter))
-            {
-                return await GetAllDespesas(_queryDespesasAllGrupo, paginaAtual, itensPorPagina);
-            }
-
-            IOrderedQueryable<Despesa> query = GetDespesasFiltradas(
-                _queryDespesasAllGrupo,
-                filter,
-                tipoFiltro
-            );
-
-            var listaPaginada = await Pagination.PaginateResultAsync(
-                query,
-                paginaAtual,
-                itensPorPagina
-            );
-
-            return listaPaginada;
-        }
 
         public async Task<Despesa> InsertAsync(DespesaDto despesaDto)
         {
@@ -105,7 +43,7 @@ namespace Application.Services.Despesas.Operacoes
                 return null;
             }
 
-            return await GetByIdAsync(despesa.Id);
+            return await _despesaConsultas.GetByIdAsync(despesa.Id);
         }
 
         public async Task<IEnumerable<Despesa>> InsertRangeAsync(
@@ -214,7 +152,7 @@ namespace Application.Services.Despesas.Operacoes
                 return null;
             }
 
-            return await GetByIdAsync(despesa.Id);
+            return await _despesaConsultas.GetByIdAsync(despesa.Id);
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -247,63 +185,7 @@ namespace Application.Services.Despesas.Operacoes
 
 
         #region Metodos de Suporte
-        private IOrderedQueryable<Despesa> GetDespesasFiltradas(
-            IQueryable<Despesa> query,
-            string filter,
-            EnumFiltroDespesa tipoFiltro
-        )
-        {
-            switch (tipoFiltro)
-            {
-                case EnumFiltroDespesa.Item:
-                    query = query.Where(despesa =>
-                        despesa.Item.ToLower().Contains(filter.ToLower())
-                    );
-                    break;
 
-                case EnumFiltroDespesa.Categoria:
-                    query = query.Where(despesa =>
-                        despesa.Categoria.Descricao.ToLower().Contains(filter.ToLower())
-                    );
-                    break;
-
-                case EnumFiltroDespesa.Fornecedor:
-                    query = query.Where(despesa =>
-                        despesa.Fornecedor.ToLower().Contains(filter.ToLower())
-                    );
-                    break;
-            }
-
-            return query.OrderByDescending(d => d.DataCompra);
-        }
-
-        private async Task<PagedResult<Despesa>> GetAllDespesas(
-            IQueryable<Despesa> query,
-            int paginaAtual,
-            int itensPorPagina
-        )
-        {
-            var queryAll = query
-                .Include(c => c.Categoria)
-                .Include(c => c.GrupoDespesa)
-                .OrderByDescending(d => d.DataCompra);
-
-            var despesas = await Pagination.PaginateResultAsync(
-                queryAll,
-                paginaAtual,
-                itensPorPagina
-            );
-
-            if (despesas.TotalItens == 0)
-            {
-                Notificar(
-                    EnumTipoNotificacao.Informacao,
-                    string.Format(Message.DespesasNaoEncontradas, "")
-                );
-            }
-
-            return despesas;
-        }
 
         private async Task<bool> ValidarDespesaAsync(
             DespesaDto despesaDto,
@@ -367,7 +249,7 @@ namespace Application.Services.Despesas.Operacoes
             int idDespesaInEdicao
         )
         {
-            if (!ehDespesaMensal(despesaDto.CategoriaId))
+            if (!EhDespesaMensal(despesaDto.CategoriaId))
             {
                 return true;
             }
@@ -423,7 +305,7 @@ namespace Application.Services.Despesas.Operacoes
             return true;
         }
 
-        private bool ehDespesaMensal(int idCategoria)
+        private bool EhDespesaMensal(int idCategoria)
         {
             return idCategoria == _categoriaIds.IdAluguel
                 || idCategoria == _categoriaIds.IdCondominio
