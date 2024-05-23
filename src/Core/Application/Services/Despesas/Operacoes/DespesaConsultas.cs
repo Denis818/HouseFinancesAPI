@@ -8,7 +8,6 @@ using Domain.Dtos.Despesas.Relatorios;
 using Domain.Dtos.Despesas.Resumos;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
-using Domain.Models.Categorias;
 using Domain.Models.Despesas;
 using Domain.Models.Membros;
 using Microsoft.EntityFrameworkCore;
@@ -26,40 +25,38 @@ namespace Application.Services.Despesas.Operacoes
         public async Task<IEnumerable<SugestaoEconomiaDespesa>> SugerirOtimizacaoDeDespesasAsync()
         {
             var categorias = await _categoriaRepository.Get().ToListAsync();
-
-            List<SugestaoEconomiaDespesa> ListSugestoesForcenedores = [];
+            List<SugestaoEconomiaDespesa> sugestoes = [];
 
             foreach (var categoria in categorias)
             {
-                var despesasPorCategoria = await GetDespesasPorCategoriaAsync(categoria.Id);
-                if (despesasPorCategoria.Count == 0)
-                    continue;
+                var despesasTotalPorCategoria = await GetDespesasPorCategoriaAsync(categoria.Id);
 
-                var mediaPorFornecedor = despesasPorCategoria
+                var mediaPorFornecedor = despesasTotalPorCategoria
                     .GroupBy(d => d.Fornecedor)
                     .Select(group => new
                     {
                         Fornecedor = group.Key,
-                        MediaPreco = group.Average(d => d.Preco)
+                        MediaPreco = group.Average(d => d.Preco),
+                        Despesas = group.ToList()
                     })
                     .OrderBy(x => x.MediaPreco)
                     .FirstOrDefault();
 
                 if (mediaPorFornecedor != null)
                 {
-                    var sugestaoEconomiaDespesa = new SugestaoEconomiaDespesa
-                    {
-                        SugestaoDeFornecedor =
-                            $"{categoria.Descricao} em {mediaPorFornecedor.Fornecedor}, teve uma média de gostos de {mediaPorFornecedor.MediaPreco:C}.",
+                    sugestoes.Add(
+                        new SugestaoEconomiaDespesa
+                        {
+                            SugestaoDeFornecedor =
+                                $"{categoria.Descricao} em {mediaPorFornecedor.Fornecedor}, teve um gasto médio de R$ {mediaPorFornecedor.MediaPreco:C}.",
 
-                        DespesasDoFornecedor = despesasPorCategoria
-                    };
-
-                    ListSugestoesForcenedores.Add(sugestaoEconomiaDespesa);
+                            ItensDesteFornecedor = mediaPorFornecedor.Despesas
+                        }
+                    );
                 }
             }
 
-            if (ListSugestoesForcenedores.Count == 0)
+            if (sugestoes.Count == 0)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -67,7 +64,7 @@ namespace Application.Services.Despesas.Operacoes
                 );
             }
 
-            return ListSugestoesForcenedores;
+            return sugestoes;
         }
 
         #region Listagem das Despesas
@@ -306,16 +303,7 @@ namespace Application.Services.Despesas.Operacoes
 
             return await _repository
                 .Get(d => d.CategoriaId == idCategoria)
-                .Include(c => c.Categoria.Descricao)
-                .Include(g => g.GrupoDespesa.Nome)
-                .OrderByDescending(d => d.DataCompra)
-                .ToListAsync();
-        }
-
-        private async Task<List<Despesa>> GetDespesasPorFornecedorAsync(string fornecedor)
-        {
-            return await _repository
-                .Get(d => d.Fornecedor == fornecedor)
+                .Include(g => g.GrupoDespesa)
                 .OrderByDescending(d => d.DataCompra)
                 .ToListAsync();
         }
@@ -397,23 +385,5 @@ namespace Application.Services.Despesas.Operacoes
             return valoresPorMembro;
         }
         #endregion
-    }
-
-    public class SugestaoEconomiaDespesa
-    {
-        public string SugestaoDeFornecedor { get; set; }
-        public IEnumerable<Despesa> DespesasDoFornecedor { get; set; }
-    }
-
-    public class DespesaPorCategoria
-    {
-
-        public string Item { get; set; }
-        public double Preco { get; set; }
-        public int Quantidade { get; set; }
-        public string Fornecedor { get; set; }
-        public double Total { get; set; }
-        public GrupoDespesa GrupoDespesa { get; set; }
-        public Categoria Categoria { get; set; }
     }
 }
