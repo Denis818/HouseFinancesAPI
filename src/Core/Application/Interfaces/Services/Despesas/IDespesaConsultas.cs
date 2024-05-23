@@ -7,6 +7,7 @@ namespace Application.Interfaces.Services.Despesas
 {
     public interface IDespesaConsultas
     {
+        Task<IEnumerable<string>> SugerirOtimizacaoDeDespesasAsync();
         Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync();
         Task<Despesa> GetByIdAsync(int id);
         Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync();

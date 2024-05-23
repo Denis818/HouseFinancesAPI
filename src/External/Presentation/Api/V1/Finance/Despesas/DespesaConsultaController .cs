@@ -15,7 +15,6 @@ namespace Presentation.Api.V1.Finance.Despesas
     [ApiController]
     [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
-    [GetIdGroupInHeaderFilter]
     [Route("api/v1/despesa")]
     public class DespesaConsultaController(
         IServiceProvider service,
@@ -59,16 +58,23 @@ namespace Presentation.Api.V1.Finance.Despesas
 
         #region Análise das Despesas
         [HttpGet("analise-despesa-por-grupo")]
+        [GetIdGroupInHeaderFilter]
         public async Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync() =>
             await _despesaConsultas.GetAnaliseDesesasPorGrupoAsync();
 
         [HttpGet("total-por-categoria")]
+        [GetIdGroupInHeaderFilter]
         public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync() =>
             await _despesaConsultas.GetTotalPorCategoriaAsync();
 
         [HttpGet("total-por-grupo")]
+        [GetIdGroupInHeaderFilter]
         public async Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync() =>
             await _despesaConsultas.GetDespesaGrupoParaGraficoAsync();
+
+        [HttpGet("sugerir-otimizacao")]
+        public async Task<IEnumerable<string>> GetSugestoesDeOtimizacaoDeDespesas() =>
+            await _despesaConsultas.SugerirOtimizacaoDeDespesasAsync();
         #endregion
     }
 }

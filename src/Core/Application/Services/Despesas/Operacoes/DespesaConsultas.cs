@@ -22,6 +22,47 @@ namespace Application.Services.Despesas.Operacoes
         IDespesaCasaAppService _despesaCasaApp
     ) : BaseDespesaService(service), IDespesaConsultas
     {
+        public async Task<IEnumerable<string>> SugerirOtimizacaoDeDespesasAsync()
+        {
+            var categorias = await _categoriaRepository.Get().ToListAsync();
+
+            List<string> sugestoes = [];
+
+            foreach (var categoria in categorias)
+            {
+                var despesasPorCategoria = await GetDespesasPorCategoriaAsync(categoria.Id);
+                if (despesasPorCategoria.Count == 0)
+                    continue;
+
+                var mediaPorFornecedor = despesasPorCategoria
+                    .GroupBy(d => d.Fornecedor)
+                    .Select(group => new
+                    {
+                        Fornecedor = group.Key,
+                        MediaPreco = group.Average(d => d.Preco)
+                    })
+                    .OrderBy(x => x.MediaPreco)
+                    .FirstOrDefault();
+
+                if (mediaPorFornecedor != null)
+                {
+                    string sugestao =
+                        $"Considere comprar {categoria.Descricao} de {mediaPorFornecedor.Fornecedor}, onde o preço médio é {mediaPorFornecedor.MediaPreco:C}.";
+                    sugestoes.Add(sugestao);
+                }
+            }
+
+            if (sugestoes.Count == 0)
+            {
+                Notificar(
+                    EnumTipoNotificacao.Informacao,
+                    "Nenhuma sugestão de otimização disponível no momento."
+                );
+            }
+
+            return sugestoes;
+        }
+
         #region Listagem das Despesas
 
         public async Task<Despesa> GetByIdAsync(int id)
@@ -93,6 +134,7 @@ namespace Application.Services.Despesas.Operacoes
 
             return listaPaginada;
         }
+
         #endregion
 
         #region Análise de Depesas
@@ -241,6 +283,32 @@ namespace Application.Services.Despesas.Operacoes
             }
 
             return despesas;
+        }
+
+        private async Task<List<Despesa>> GetDespesasPorCategoriaAsync(int idCategoria)
+        {
+            if (
+                idCategoria == _categoriaIds.IdAluguel
+                || idCategoria == _categoriaIds.IdCondominio
+                || idCategoria == _categoriaIds.IdContaDeLuz
+                || idCategoria == _categoriaIds.IdInternet
+            )
+            {
+                return [];
+            }
+
+            return await _repository
+                .Get(d => d.CategoriaId == idCategoria)
+                .OrderByDescending(d => d.DataCompra)
+                .ToListAsync();
+        }
+
+        private async Task<List<Despesa>> GetDespesasPorFornecedorAsync(string fornecedor)
+        {
+            return await _repository
+                .Get(d => d.Fornecedor == fornecedor)
+                .OrderByDescending(d => d.DataCompra)
+                .ToListAsync();
         }
 
         private async Task<RelatorioGastosDoGrupoDto> GetRelatorioDeGastosDoMesAsync()
