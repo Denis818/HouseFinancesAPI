@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.Services.Despesas;
+using Application.Services.Despesas.Operacoes;
 using Application.Utilities;
 using Asp.Versioning;
 using Domain.Dtos.Despesas.Consultas;
@@ -73,7 +74,7 @@ namespace Presentation.Api.V1.Finance.Despesas
             await _despesaConsultas.GetDespesaGrupoParaGraficoAsync();
 
         [HttpGet("sugerir-otimizacao")]
-        public async Task<IEnumerable<string>> GetSugestoesDeOtimizacaoDeDespesas() =>
+        public async Task<IEnumerable<SugestaoEconomiaDespesa>> GetSugestoesDeOtimizacaoDeDespesas() =>
             await _despesaConsultas.SugerirOtimizacaoDeDespesasAsync();
         #endregion
     }

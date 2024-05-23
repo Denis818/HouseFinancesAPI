@@ -28,7 +28,6 @@ namespace Presentation.Version
                 {
                     opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                     opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-                    opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
             services.Configure<ApiBehaviorOptions>(options =>

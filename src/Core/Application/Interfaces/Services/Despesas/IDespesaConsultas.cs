@@ -1,4 +1,5 @@
-﻿using Application.Utilities;
+﻿using Application.Services.Despesas.Operacoes;
+using Application.Utilities;
 using Domain.Dtos.Despesas.Consultas;
 using Domain.Enumeradores;
 using Domain.Models.Despesas;
@@ -7,7 +8,7 @@ namespace Application.Interfaces.Services.Despesas
 {
     public interface IDespesaConsultas
     {
-        Task<IEnumerable<string>> SugerirOtimizacaoDeDespesasAsync();
+        Task<IEnumerable<SugestaoEconomiaDespesa>> SugerirOtimizacaoDeDespesasAsync();
         Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync();
         Task<Despesa> GetByIdAsync(int id);
         Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync();
