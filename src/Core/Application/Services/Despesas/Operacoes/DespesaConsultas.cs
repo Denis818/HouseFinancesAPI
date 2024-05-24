@@ -48,7 +48,7 @@ namespace Application.Services.Despesas.Operacoes
                         new SugestaoEconomiaDespesa
                         {
                             SugestaoDeFornecedor =
-                                $"{categoria.Descricao} em {mediaPorFornecedor.Fornecedor}, teve um gasto médio de R$ {mediaPorFornecedor.MediaPreco:C}.",
+                                $"{categoria.Descricao} em {mediaPorFornecedor.Fornecedor}, teve um gasto médio de {mediaPorFornecedor.MediaPreco:C}.",
 
                             ItensDesteFornecedor = mediaPorFornecedor.Despesas
                         }
@@ -303,6 +303,7 @@ namespace Application.Services.Despesas.Operacoes
 
             return await _repository
                 .Get(d => d.CategoriaId == idCategoria)
+                .Include(c => c.Categoria)
                 .Include(g => g.GrupoDespesa)
                 .OrderByDescending(d => d.DataCompra)
                 .ToListAsync();
