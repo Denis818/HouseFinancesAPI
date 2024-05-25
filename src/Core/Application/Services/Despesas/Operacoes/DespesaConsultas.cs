@@ -23,13 +23,13 @@ namespace Application.Services.Despesas.Operacoes
         IDespesaCasaAppService _despesaCasaApp
     ) : BaseDespesaService(service), IDespesaConsultas
     {
-        public async Task<IEnumerable<DespesasPorFornecedorDto>> MediaDespesasPorFornecedorAsync(
+        public async Task<IEnumerable<MediaPorFornecedorDto>> MediaDespesasPorFornecedorAsync(
             int paginaAtual,
             int itensPorPagina
         )
         {
             var categorias = await _categoriaRepository.Get().ToListAsync();
-            List<DespesasPorFornecedorDto> sugestoes = new();
+            List<MediaPorFornecedorDto> sugestoes = new();
 
             foreach (var categoria in categorias)
             {
@@ -52,7 +52,7 @@ namespace Application.Services.Despesas.Operacoes
                     );
 
                     sugestoes.Add(
-                        new DespesasPorFornecedorDto
+                        new MediaPorFornecedorDto
                         {
                             MediaDeFornecedor =
                                 $"{categoria.Descricao} em {mediaPorFornecedor.Fornecedor}, teve um gasto médio de R$ {mediaPorFornecedor.MediaPreco.ToFormatPrBr()}.",

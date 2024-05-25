@@ -70,7 +70,7 @@ namespace Presentation.Api.V1.Finance.Despesas
             await _despesaConsultas.GetDespesaGrupoParaGraficoAsync();
 
         [HttpGet("sugerir-otimizacao")]
-        public async Task<IEnumerable<DespesasPorFornecedorDto>> MediaDespesasPorFornecedorAsync(
+        public async Task<IEnumerable<MediaPorFornecedorDto>> MediaDespesasPorFornecedorAsync(
             int paginaAtual = 1,
             int itensPorPagina = 10
         ) => await _despesaConsultas.MediaDespesasPorFornecedorAsync(paginaAtual, itensPorPagina);

@@ -7,7 +7,7 @@ namespace Application.Interfaces.Services.Despesas
 {
     public interface IDespesaConsultas
     {
-        Task<IEnumerable<DespesasPorFornecedorDto>> MediaDespesasPorFornecedorAsync(
+        Task<IEnumerable<MediaPorFornecedorDto>> MediaDespesasPorFornecedorAsync(
             int paginaAtual,
             int itensPorPagina
         );
