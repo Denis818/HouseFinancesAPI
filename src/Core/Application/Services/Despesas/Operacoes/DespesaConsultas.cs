@@ -41,20 +41,24 @@ namespace Application.Services.Despesas.Operacoes
                     {
                         Fornecedor = group.Key,
                         MediaPreco = group.Average(d => d.Preco),
-                        Despesas = group,
                     })
                     .OrderBy(x => x.MediaPreco)
                     .ToList();
 
                 foreach (var mediaPorFornecedor in mediasPorFornecedor)
                 {
+                    var itensDesteFornecedor = _queryDespesasPorGrupo.Where(despesa =>
+                        despesa.Fornecedor.ToLower() == mediaPorFornecedor.Fornecedor.ToLower()
+                    );
+
                     sugestoes.Add(
                         new DespesasPorFornecedorDto
                         {
                             MediaDeFornecedor =
                                 $"{categoria.Descricao} em {mediaPorFornecedor.Fornecedor}, teve um gasto médio de R$ {mediaPorFornecedor.MediaPreco.ToFormatPrBr()}.",
-                            ItensDesteFornecedor = Pagination.PaginateResult(
-                                mediaPorFornecedor.Despesas.ToList(),
+
+                            ItensDesteFornecedor = await Pagination.PaginateResultAsync(
+                                itensDesteFornecedor,
                                 paginaAtual,
                                 itensPorPagina
                             )
@@ -308,8 +312,8 @@ namespace Application.Services.Despesas.Operacoes
                 return [];
             }
 
-            return await _repository
-                .Get(d => d.CategoriaId == idCategoria)
+            return await _queryDespesasPorGrupo
+                .Where(d => d.CategoriaId == idCategoria)
                 .Include(c => c.Categoria)
                 .Include(g => g.GrupoDespesa)
                 .OrderByDescending(d => d.DataCompra)

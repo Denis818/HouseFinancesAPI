@@ -16,6 +16,7 @@ namespace Presentation.Api.V1.Finance.Despesas
     [ApiVersion(ApiVersioning.V1)]
     [AutorizationFinance]
     [Route("api/v1/despesa")]
+    [GetIdGroupInHeaderFilter]
     public class DespesaConsultaController(
         IServiceProvider service,
         IDespesaConsultas _despesaConsultas
@@ -23,7 +24,6 @@ namespace Presentation.Api.V1.Finance.Despesas
     {
         #region Listagem das Despesas
         [HttpGet("por-grupo")]
-        [GetIdGroupInHeaderFilter]
         public async Task<PagedResult<Despesa>> GetListDespesasPorGrupo(
             string filter,
             int paginaAtual = 1,
@@ -58,22 +58,19 @@ namespace Presentation.Api.V1.Finance.Despesas
 
         #region Análise das Despesas
         [HttpGet("analise-despesa-por-grupo")]
-        [GetIdGroupInHeaderFilter]
         public async Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync() =>
             await _despesaConsultas.GetAnaliseDesesasPorGrupoAsync();
 
         [HttpGet("total-por-categoria")]
-        [GetIdGroupInHeaderFilter]
         public async Task<IEnumerable<DespesasTotalPorCategoriaDto>> GetTotalPorCategoriaAsync() =>
             await _despesaConsultas.GetTotalPorCategoriaAsync();
 
         [HttpGet("total-por-grupo")]
-        [GetIdGroupInHeaderFilter]
         public async Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync() =>
             await _despesaConsultas.GetDespesaGrupoParaGraficoAsync();
 
         [HttpGet("sugerir-otimizacao")]
-        public async Task<IEnumerable<DespesasPorFornecedorDto>> GetSugestoesDeOtimizacaoDeDespesas(
+        public async Task<IEnumerable<DespesasPorFornecedorDto>> MediaDespesasPorFornecedorAsync(
             int paginaAtual = 1,
             int itensPorPagina = 10
         ) => await _despesaConsultas.MediaDespesasPorFornecedorAsync(paginaAtual, itensPorPagina);
