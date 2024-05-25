@@ -1,4 +1,6 @@
-﻿namespace Application.Extensions.Help
+﻿using System.Globalization;
+
+namespace Application.Extensions.Help
 {
     public static class HelpExtensios
     {
@@ -11,5 +13,8 @@
         }
 
         public static double RountToZeroIfNegative(this double soucer) => Math.Max(soucer, 0);
+
+        public static string ToFormatPrBr(this double soucer) =>
+            soucer.ToString("F2", new CultureInfo("pt-BR"));
     }
 }

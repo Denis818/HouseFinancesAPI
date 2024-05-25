@@ -10,6 +10,7 @@ using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Domain.Models.Membros;
+using Domain.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -22,35 +23,41 @@ namespace Application.Services.Despesas.Operacoes
         IDespesaCasaAppService _despesaCasaApp
     ) : BaseDespesaService(service), IDespesaConsultas
     {
-        public async Task<IEnumerable<SugestaoEconomiaDespesa>> SugerirOtimizacaoDeDespesasAsync()
+        public async Task<IEnumerable<DespesasPorFornecedorDto>> MediaDespesasPorFornecedorAsync(
+            int paginaAtual,
+            int itensPorPagina
+        )
         {
             var categorias = await _categoriaRepository.Get().ToListAsync();
-            List<SugestaoEconomiaDespesa> sugestoes = [];
+            List<DespesasPorFornecedorDto> sugestoes = new();
 
             foreach (var categoria in categorias)
             {
                 var despesasTotalPorCategoria = await GetDespesasPorCategoriaAsync(categoria.Id);
 
-                var mediaPorFornecedor = despesasTotalPorCategoria
-                    .GroupBy(d => d.Fornecedor)
+                var mediasPorFornecedor = despesasTotalPorCategoria
+                    .GroupBy(d => d.Fornecedor.ToLower())
                     .Select(group => new
                     {
                         Fornecedor = group.Key,
                         MediaPreco = group.Average(d => d.Preco),
-                        Despesas = group.ToList()
+                        Despesas = group,
                     })
                     .OrderBy(x => x.MediaPreco)
-                    .FirstOrDefault();
+                    .ToList();
 
-                if (mediaPorFornecedor != null)
+                foreach (var mediaPorFornecedor in mediasPorFornecedor)
                 {
                     sugestoes.Add(
-                        new SugestaoEconomiaDespesa
+                        new DespesasPorFornecedorDto
                         {
-                            SugestaoDeFornecedor =
-                                $"{categoria.Descricao} em {mediaPorFornecedor.Fornecedor}, teve um gasto médio de {mediaPorFornecedor.MediaPreco:C}.",
-
-                            ItensDesteFornecedor = mediaPorFornecedor.Despesas
+                            MediaDeFornecedor =
+                                $"{categoria.Descricao} em {mediaPorFornecedor.Fornecedor}, teve um gasto médio de R$ {mediaPorFornecedor.MediaPreco.ToFormatPrBr()}.",
+                            ItensDesteFornecedor = Pagination.PaginateResult(
+                                mediaPorFornecedor.Despesas.ToList(),
+                                paginaAtual,
+                                itensPorPagina
+                            )
                         }
                     );
                 }
@@ -142,7 +149,7 @@ namespace Application.Services.Despesas.Operacoes
         #endregion
 
         #region Análise de Depesas
-        public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync()
+        public async Task<IEnumerable<DespesasTotalPorCategoriaDto>> GetTotalPorCategoriaAsync()
         {
             var listDespesas = await _queryDespesasPorGrupo.ToListAsync();
 
@@ -157,7 +164,7 @@ namespace Application.Services.Despesas.Operacoes
 
             var listAgrupada = listDespesas.GroupBy(despesa => despesa.Categoria.Descricao);
 
-            return listAgrupada.Select(list => new DespesasTotalPorCategoria(
+            return listAgrupada.Select(list => new DespesasTotalPorCategoriaDto(
                 list.Key,
                 list.Sum(despesa => despesa.Total)
             ));

@@ -1,10 +1,9 @@
 ﻿using Application.Interfaces.Services.Despesas;
-using Application.Services.Despesas.Operacoes;
-using Application.Utilities;
 using Asp.Versioning;
 using Domain.Dtos.Despesas.Consultas;
 using Domain.Enumeradores;
 using Domain.Models.Despesas;
+using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
@@ -65,7 +64,7 @@ namespace Presentation.Api.V1.Finance.Despesas
 
         [HttpGet("total-por-categoria")]
         [GetIdGroupInHeaderFilter]
-        public async Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync() =>
+        public async Task<IEnumerable<DespesasTotalPorCategoriaDto>> GetTotalPorCategoriaAsync() =>
             await _despesaConsultas.GetTotalPorCategoriaAsync();
 
         [HttpGet("total-por-grupo")]
@@ -74,8 +73,10 @@ namespace Presentation.Api.V1.Finance.Despesas
             await _despesaConsultas.GetDespesaGrupoParaGraficoAsync();
 
         [HttpGet("sugerir-otimizacao")]
-        public async Task<IEnumerable<SugestaoEconomiaDespesa>> GetSugestoesDeOtimizacaoDeDespesas() =>
-            await _despesaConsultas.SugerirOtimizacaoDeDespesasAsync();
+        public async Task<IEnumerable<DespesasPorFornecedorDto>> GetSugestoesDeOtimizacaoDeDespesas(
+            int paginaAtual = 1,
+            int itensPorPagina = 10
+        ) => await _despesaConsultas.MediaDespesasPorFornecedorAsync(paginaAtual, itensPorPagina);
         #endregion
     }
 }

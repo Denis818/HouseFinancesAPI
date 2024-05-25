@@ -1,14 +1,16 @@
-﻿using Application.Services.Despesas.Operacoes;
-using Application.Utilities;
-using Domain.Dtos.Despesas.Consultas;
+﻿using Domain.Dtos.Despesas.Consultas;
 using Domain.Enumeradores;
 using Domain.Models.Despesas;
+using Domain.Utilities;
 
 namespace Application.Interfaces.Services.Despesas
 {
     public interface IDespesaConsultas
     {
-        Task<IEnumerable<SugestaoEconomiaDespesa>> SugerirOtimizacaoDeDespesasAsync();
+        Task<IEnumerable<DespesasPorFornecedorDto>> MediaDespesasPorFornecedorAsync(
+            int paginaAtual,
+            int itensPorPagina
+        );
         Task<DespesasDivididasMensalDto> GetAnaliseDesesasPorGrupoAsync();
         Task<Despesa> GetByIdAsync(int id);
         Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync();
@@ -24,6 +26,6 @@ namespace Application.Interfaces.Services.Despesas
             int itensPorPagina,
             EnumFiltroDespesa tipoFiltro
         );
-        Task<IEnumerable<DespesasTotalPorCategoria>> GetTotalPorCategoriaAsync();
+        Task<IEnumerable<DespesasTotalPorCategoriaDto>> GetTotalPorCategoriaAsync();
     }
 }
