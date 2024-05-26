@@ -16,23 +16,6 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Services.Despesas.Operacoes
 {
-    public class DespesaFornecedorInfo
-    {
-        public string Fornecedor { get; set; }
-        public double PrecoMedio { get; set; }
-        public double PrecoMinimo { get; set; }
-        public double PrecoMaximo { get; set; }
-        public int QuantidadeTotal { get; set; }
-    }
-
-    public class SugestaoEconomiaInfo
-    {
-        public string Item { get; set; }
-        public string FornecedorMaisBarato { get; set; }
-        public double PrecoMaisBarato { get; set; }
-        public double PotencialEconomia { get; set; }
-    }
-
     public class DespesaConsultas(
         IServiceProvider service,
         IGrupoDespesaRepository _grupoDespesaRepository,
@@ -40,7 +23,7 @@ namespace Application.Services.Despesas.Operacoes
         IDespesaCasaAppService _despesaCasaApp
     ) : BaseDespesaService(service), IDespesaConsultas
     {
-        public async Task<List<SugestaoEconomiaInfo>> GetSugestoesEconomiaPorGrupoAsync()
+        public async Task<List<SugestaoEconomiaInfoDto>> GetSugestoesEconomiaPorGrupoAsync()
         {
             var sugestoes = await _queryDespesasPorGrupo
                 .Where(d =>
@@ -50,7 +33,7 @@ namespace Application.Services.Despesas.Operacoes
                     && d.CategoriaId != _categoriaIds.IdInternet
                 )
                 .GroupBy(d => d.Item)
-                .Select(group => new SugestaoEconomiaInfo
+                .Select(group => new SugestaoEconomiaInfoDto
                 {
                     Item = group.Key,
                     FornecedorMaisBarato = group.OrderBy(d => d.Preco).First().Fornecedor,

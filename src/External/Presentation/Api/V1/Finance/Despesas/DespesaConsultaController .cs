@@ -77,7 +77,9 @@ namespace Presentation.Api.V1.Finance.Despesas
         ) => await _despesaConsultas.MediaDespesasPorFornecedorAsync(paginaAtual, itensPorPagina);
 
         [HttpGet("sugestoes-economia")]
-        public async Task<IEnumerable<SugestaoEconomiaInfo>> GetSugestoesEconomiaPorGrupoAsync() =>
+        public async Task<
+            IEnumerable<SugestaoEconomiaInfoDto>
+        > GetSugestoesEconomiaPorGrupoAsync() =>
             await _despesaConsultas.GetSugestoesEconomiaPorGrupoAsync();
         #endregion
     }

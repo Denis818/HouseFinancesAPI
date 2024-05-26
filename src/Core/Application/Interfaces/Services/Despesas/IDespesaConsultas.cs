@@ -8,7 +8,7 @@ namespace Application.Interfaces.Services.Despesas
 {
     public interface IDespesaConsultas
     {
-        Task<List<SugestaoEconomiaInfo>> GetSugestoesEconomiaPorGrupoAsync();
+        Task<List<SugestaoEconomiaInfoDto>> GetSugestoesEconomiaPorGrupoAsync();
         Task<IEnumerable<MediaPorFornecedorDto>> MediaDespesasPorFornecedorAsync(
             int paginaAtual,
             int itensPorPagina
