@@ -15,7 +15,7 @@ namespace Application.Utilities
             int totalItens = await consulta.CountAsync();
             int quantidadePular = 0;
 
-            if (totalItens > tamanhoPagina)
+            if(totalItens > tamanhoPagina)
             {
                 quantidadePular = (numeroPagina - 1) * tamanhoPagina;
             }
@@ -31,21 +31,21 @@ namespace Application.Utilities
         }
 
         public static PagedResult<T> PaginateResult<T>(
-            IList<T> consulta,
+            IList<T> list,
             int numeroPagina = 1,
             int tamanhoPagina = 10
         )
             where T : class
         {
-            int totalItens = consulta.Count;
+            int totalItens = list.Count;
             int quantidadePular = 0;
 
-            if (totalItens > tamanhoPagina)
+            if(totalItens > tamanhoPagina)
             {
                 quantidadePular = (numeroPagina - 1) * tamanhoPagina;
             }
 
-            var itens = consulta.Skip(quantidadePular).Take(tamanhoPagina).ToList();
+            var itens = list.Skip(quantidadePular).Take(tamanhoPagina).ToList();
 
             return new PagedResult<T>
             {

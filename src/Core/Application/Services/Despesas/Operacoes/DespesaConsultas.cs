@@ -46,51 +46,57 @@ namespace Application.Services.Despesas.Operacoes
             return sugestoes;
         }
 
-        public async Task<IEnumerable<MediaPorFornecedorDto>> MediaDespesasPorFornecedorAsync(
+        public async Task<IEnumerable<SugestaoDeFornecedorDto>> SugestaoDeFornecedorMaisBarato(
             int paginaAtual,
             int itensPorPagina
         )
         {
             var categorias = await _categoriaRepository.Get().ToListAsync();
-            List<MediaPorFornecedorDto> sugestoes = new();
+            List<SugestaoDeFornecedorDto> sugestoes = new();
 
-            foreach (var categoria in categorias)
+            foreach(var categoria in categorias)
             {
                 var despesasTotalPorCategoria = await GetDespesasPorCategoriaAsync(categoria.Id);
 
-                var mediasPorFornecedor = despesasTotalPorCategoria
-                    .GroupBy(d => d.Fornecedor.ToLower())
-                    .Select(group => new
-                    {
-                        Fornecedor = group.Key,
-                        MediaPreco = group.Average(d => d.Preco),
-                    })
-                    .OrderBy(x => x.MediaPreco)
+                var itensAgrupados = despesasTotalPorCategoria
+                    .GroupBy(d => d.Item.ToLower())
                     .ToList();
 
-                foreach (var mediaPorFornecedor in mediasPorFornecedor)
+                foreach(var grupoItem in itensAgrupados)
                 {
-                    var itensDesteFornecedor = _queryDespesasPorGrupo.Where(despesa =>
-                        despesa.Fornecedor.ToLower() == mediaPorFornecedor.Fornecedor.ToLower()
-                    );
+                    var fornecedoresComPrecoMaisBarato = grupoItem
+                        .GroupBy(d => d.Preco)
+                        .OrderBy(g => g.Key)
+                        .FirstOrDefault();
 
-                    sugestoes.Add(
-                        new MediaPorFornecedorDto
-                        {
-                            MediaDeFornecedor =
-                                $"{categoria.Descricao} em {mediaPorFornecedor.Fornecedor}, teve um gasto médio de R$ {mediaPorFornecedor.MediaPreco.ToFormatPrBr()}.",
+                    if(
+                        fornecedoresComPrecoMaisBarato != null
+                        && fornecedoresComPrecoMaisBarato.Count() == 1
+                    )
+                    {
+                        var fornecedorMaisBarato = fornecedoresComPrecoMaisBarato.First();
 
-                            ItensDesteFornecedor = await Pagination.PaginateResultAsync(
-                                itensDesteFornecedor,
-                                paginaAtual,
-                                itensPorPagina
-                            )
-                        }
-                    );
+                        var itensComMesmoNome = despesasTotalPorCategoria
+                            .Where(d => d.Item.ToLower() == grupoItem.Key)
+                            .ToList();
+
+                        sugestoes.Add(
+                            new SugestaoDeFornecedorDto
+                            {
+                                Sugestao =
+                                    $"{grupoItem.Key} em {fornecedorMaisBarato.Fornecedor} é mais barato",
+                                ListaItens = Pagination.PaginateResult(
+                                    itensComMesmoNome,
+                                    paginaAtual,
+                                    itensPorPagina
+                                )
+                            }
+                        );
+                    }
                 }
             }
 
-            if (sugestoes.Count == 0)
+            if(sugestoes.Count == 0)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -121,7 +127,7 @@ namespace Application.Services.Despesas.Operacoes
             EnumFiltroDespesa tipoFiltro
         )
         {
-            if (string.IsNullOrEmpty(filter))
+            if(string.IsNullOrEmpty(filter))
             {
                 return await GetAllDespesas(_queryDespesasPorGrupo, paginaAtual, itensPorPagina);
             }
@@ -153,7 +159,7 @@ namespace Application.Services.Despesas.Operacoes
                 .Include(c => c.Categoria)
                 .Include(c => c.GrupoDespesa);
 
-            if (string.IsNullOrEmpty(filter))
+            if(string.IsNullOrEmpty(filter))
             {
                 return await GetAllDespesas(queryDespesasAllGrupo, paginaAtual, itensPorPagina);
             }
@@ -180,7 +186,7 @@ namespace Application.Services.Despesas.Operacoes
         {
             var listDespesas = await _queryDespesasPorGrupo.ToListAsync();
 
-            if (listDespesas.Count <= 0)
+            if(listDespesas.Count <= 0)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -271,25 +277,25 @@ namespace Application.Services.Despesas.Operacoes
             EnumFiltroDespesa tipoFiltro
         )
         {
-            switch (tipoFiltro)
+            switch(tipoFiltro)
             {
                 case EnumFiltroDespesa.Item:
-                    query = query.Where(despesa =>
-                        despesa.Item.ToLower().Contains(filter.ToLower())
-                    );
-                    break;
+                query = query.Where(despesa =>
+                    despesa.Item.ToLower().Contains(filter.ToLower())
+                );
+                break;
 
                 case EnumFiltroDespesa.Categoria:
-                    query = query.Where(despesa =>
-                        despesa.Categoria.Descricao.ToLower().Contains(filter.ToLower())
-                    );
-                    break;
+                query = query.Where(despesa =>
+                    despesa.Categoria.Descricao.ToLower().Contains(filter.ToLower())
+                );
+                break;
 
                 case EnumFiltroDespesa.Fornecedor:
-                    query = query.Where(despesa =>
-                        despesa.Fornecedor.ToLower().Contains(filter.ToLower())
-                    );
-                    break;
+                query = query.Where(despesa =>
+                    despesa.Fornecedor.ToLower().Contains(filter.ToLower())
+                );
+                break;
             }
 
             return query.OrderByDescending(d => d.DataCompra);
@@ -312,7 +318,7 @@ namespace Application.Services.Despesas.Operacoes
                 itensPorPagina
             );
 
-            if (despesas.TotalItens == 0)
+            if(despesas.TotalItens == 0)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -325,7 +331,7 @@ namespace Application.Services.Despesas.Operacoes
 
         private async Task<List<Despesa>> GetDespesasPorCategoriaAsync(int idCategoria)
         {
-            if (
+            if(
                 idCategoria == _categoriaIds.IdAluguel
                 || idCategoria == _categoriaIds.IdCondominio
                 || idCategoria == _categoriaIds.IdContaDeLuz
@@ -350,7 +356,7 @@ namespace Application.Services.Despesas.Operacoes
                 .FirstOrDefault()
                 ?.Nome;
 
-            if (grupoNome.IsNullOrEmpty())
+            if(grupoNome.IsNullOrEmpty())
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.SelecioneUmGrupoDesesa);
                 return new();
@@ -394,7 +400,7 @@ namespace Application.Services.Despesas.Operacoes
 
             double ValorMoradia(Membro membro)
             {
-                if (membro.Id == _membroId.IdPeu)
+                if(membro.Id == _membroId.IdPeu)
                 {
                     return aluguelCondominioContaLuzParaPeu.RoundTo(2);
                 }

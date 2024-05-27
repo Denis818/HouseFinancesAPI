@@ -1,5 +1,4 @@
 ﻿using Application.Interfaces.Services.Despesas;
-using Application.Services.Despesas.Operacoes;
 using Asp.Versioning;
 using Domain.Dtos.Despesas.Consultas;
 using Domain.Enumeradores;
@@ -70,11 +69,11 @@ namespace Presentation.Api.V1.Finance.Despesas
         public async Task<IEnumerable<DespesasPorGrupoDto>> GetDespesaGrupoParaGraficoAsync() =>
             await _despesaConsultas.GetDespesaGrupoParaGraficoAsync();
 
-        [HttpGet("media-por-fornecedor")]
-        public async Task<IEnumerable<MediaPorFornecedorDto>> MediaDespesasPorFornecedorAsync(
+        [HttpGet("sugestoes-fornecedor")]
+        public async Task<IEnumerable<SugestaoDeFornecedorDto>> SugestaoDeFornecedorMaisBarato(
             int paginaAtual = 1,
             int itensPorPagina = 10
-        ) => await _despesaConsultas.MediaDespesasPorFornecedorAsync(paginaAtual, itensPorPagina);
+        ) => await _despesaConsultas.SugestaoDeFornecedorMaisBarato(paginaAtual, itensPorPagina);
 
         [HttpGet("sugestoes-economia")]
         public async Task<

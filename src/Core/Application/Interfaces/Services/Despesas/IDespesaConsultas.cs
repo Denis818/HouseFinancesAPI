@@ -1,5 +1,4 @@
-﻿using Application.Services.Despesas.Operacoes;
-using Domain.Dtos.Despesas.Consultas;
+﻿using Domain.Dtos.Despesas.Consultas;
 using Domain.Enumeradores;
 using Domain.Models.Despesas;
 using Domain.Utilities;
@@ -9,7 +8,7 @@ namespace Application.Interfaces.Services.Despesas
     public interface IDespesaConsultas
     {
         Task<List<SugestaoEconomiaInfoDto>> GetSugestoesEconomiaPorGrupoAsync();
-        Task<IEnumerable<MediaPorFornecedorDto>> MediaDespesasPorFornecedorAsync(
+        Task<IEnumerable<SugestaoDeFornecedorDto>> SugestaoDeFornecedorMaisBarato(
             int paginaAtual,
             int itensPorPagina
         );
