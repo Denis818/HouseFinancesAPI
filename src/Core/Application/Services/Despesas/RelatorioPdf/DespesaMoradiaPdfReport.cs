@@ -1,4 +1,5 @@
-﻿using Application.Helpers;
+﻿using Application.Extensions.Help;
+using Application.Helpers;
 using Domain.Dtos.Despesas.Relatorios;
 using Domain.Models.Membros;
 using iText.Kernel.Pdf;
@@ -60,36 +61,39 @@ namespace Application.Services.Despesas.RelatorioPdf
 
         private void TableValoresIniciais(
             Document doc,
-            double? parcelaApartamento,
-            double? parcelaCaixa,
-            double? contaDeLuz,
-            double? condominio
+            double parcelaApartamento,
+            double parcelaCaixa,
+            double contaDeLuz,
+            double condominio
         )
         {
             var columnsValoresIniciais = new Dictionary<string, string>
             {
-                { "Parcela do Apartamento", $"R$ {parcelaApartamento:F2}" },
-                { "Parcela da Caixa", $"R$ {parcelaCaixa:F2}" },
-                { "Conta de Luz", $"R$ {contaDeLuz:F2}" },
-                { "Condomínio", $"R$ {condominio:F2}" },
+                { "Parcela do Apartamento", $"R$ {parcelaApartamento.ToFormatPriceBr()}" },
+                { "Parcela da Caixa", $"R$ {parcelaCaixa.ToFormatPriceBr()}" },
+                { "Conta de Luz", $"R$ {contaDeLuz.ToFormatPriceBr()}" },
+                { "Condomínio", $"R$ {condominio.ToFormatPriceBr()}" },
             };
             _pdfTable.CreateTable(doc, "Valores Iniciais", columnsValoresIniciais);
         }
 
         private void TableCalculos(
             Document doc,
-            double? totalAptoMaisCaixa,
-            double? totalLuzMaisCondominio,
-            double? totalAptoMaisCaixaAbate300Peu100Estacionamento
+            double totalAptoMaisCaixa,
+            double totalLuzMaisCondominio,
+            double totalAptoMaisCaixaAbate300Peu100Estacionamento
         )
         {
             var columnsCalculos = new Dictionary<string, string>
             {
-                { "Parcela Apto mais Caixa", $"R$ {totalAptoMaisCaixa:F2}" },
-                { "Conta de Luz mais Condomínio", $"R$ {totalLuzMaisCondominio:F2}" },
+                { "Parcela Apto mais Caixa", $"R$ {totalAptoMaisCaixa.ToFormatPriceBr()}" },
+                {
+                    "Conta de Luz mais Condomínio",
+                    $"R$ {totalLuzMaisCondominio.ToFormatPriceBr()}"
+                },
                 {
                     "Apto mais Caixa menos R$ 300 do Peu e R$ 100 do estacionamento alugado",
-                    $"R$ {totalAptoMaisCaixaAbate300Peu100Estacionamento:F2}"
+                    $"R$ {totalAptoMaisCaixaAbate300Peu100Estacionamento.ToFormatPriceBr()}"
                 },
             };
             _pdfTable.CreateTable(doc, "Cálculos", columnsCalculos);
@@ -98,7 +102,7 @@ namespace Application.Services.Despesas.RelatorioPdf
         private void TableParcelaCaixaApto(
             Document doc,
             IList<Membro> listMembroForaJhon,
-            double? valorAptoMaisCaixaParaCadaMembro
+            double valorAptoMaisCaixaParaCadaMembro
         )
         {
             Dictionary<string, string> columnsAptoCaixaParaCada = [];
@@ -112,7 +116,7 @@ namespace Application.Services.Despesas.RelatorioPdf
                     valorAluguel = 300;
                 }
 
-                columnsAptoCaixaParaCada.Add(membro.Nome, $"R$ {valorAluguel:F2}");
+                columnsAptoCaixaParaCada.Add(membro.Nome, $"R$ {valorAluguel.ToFormatPriceBr()}");
             }
 
             _pdfTable.CreateTable(
@@ -125,7 +129,7 @@ namespace Application.Services.Despesas.RelatorioPdf
         private void TableContaLuzAndCondominio(
             Document doc,
             IList<Membro> listMembroForaJhon,
-            double? valorLuzMaisCondominioParaCadaMembro
+            double valorLuzMaisCondominioParaCadaMembro
         )
         {
             Dictionary<string, string> columnsLuzCondParaCada = [];
@@ -134,7 +138,7 @@ namespace Application.Services.Despesas.RelatorioPdf
             {
                 columnsLuzCondParaCada.Add(
                     membro.Nome,
-                    $"R$ {valorLuzMaisCondominioParaCadaMembro:F2}"
+                    $"R$ {valorLuzMaisCondominioParaCadaMembro.ToFormatPriceBr()}"
                 );
             }
 
@@ -148,8 +152,8 @@ namespace Application.Services.Despesas.RelatorioPdf
         private void TableValoresParaCada(
             Document doc,
             IList<Membro> listMembroForaJhon,
-            double? valorParaMembrosForaPeu,
-            double? valorParaDoPeu
+            double valorParaMembrosForaPeu,
+            double valorParaDoPeu
         )
         {
             Dictionary<string, string> columnsTotalParaCada = [];
@@ -163,7 +167,7 @@ namespace Application.Services.Despesas.RelatorioPdf
                     valorParaCada = valorParaDoPeu;
                 }
 
-                columnsTotalParaCada.Add(membro.Nome, $"R$ {valorParaCada:F2}");
+                columnsTotalParaCada.Add(membro.Nome, $"R$ {valorParaCada.ToFormatPriceBr()}");
             }
             _pdfTable.CreateTable(doc, "Valor que cada um deve pagar", columnsTotalParaCada);
         }
