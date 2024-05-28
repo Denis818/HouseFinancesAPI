@@ -80,6 +80,11 @@ namespace Application.Services.Despesas.Operacoes
                             .Where(d => d.Item.ToLower() == grupoItem.Key)
                             .ToList();
 
+                        if(itensComMesmoNome.Count <= 1)
+                        {
+                            continue;
+                        }
+
                         sugestoes.Add(
                             new SugestaoDeFornecedorDto
                             {
