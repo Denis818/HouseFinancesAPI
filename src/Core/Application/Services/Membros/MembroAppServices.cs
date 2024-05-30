@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using Application.Interfaces.Services.Despesas;
+﻿using Application.Interfaces.Services.Despesas;
 using Application.Interfaces.Services.Membros;
 using Application.Resources.Messages;
 using Application.Services.Base;
@@ -9,6 +8,7 @@ using Domain.Interfaces.Repositories;
 using Domain.Models.Membros;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Text.RegularExpressions;
 
 namespace Application.Services.Membros
 {
@@ -16,6 +16,12 @@ namespace Application.Services.Membros
         : BaseAppService<Membro, IMembroRepository>(service),
             IMembroAppServices
     {
+        const string ConviteParaSite = "\r\n\r\nPara saber mais detalhes sobre os valores acesse:\r\n"
+                                  + "https://casa-financeiro-app.netlify.app/portal"
+                                  + "\r\n\r\nEntre com:"
+                                  + "\r\nUsuário: *visitante*"
+                                  + "\r\nSenha: *123456*";
+
         #region CRUD
         public async Task<IEnumerable<Membro>> GetAllAsync() =>
             await _repository.Get().OrderBy(c => c.Nome).ToListAsync();
@@ -24,12 +30,12 @@ namespace Application.Services.Membros
 
         public async Task<Membro> InsertAsync(MembroDto membroDto)
         {
-            if (Validator(membroDto))
+            if(Validator(membroDto))
                 return null;
 
             membroDto.Telefone = FormatFone(membroDto.Telefone);
 
-            if (await _repository.ExisteAsync(membroDto.Nome) != null)
+            if(await _repository.ExisteAsync(membroDto.Nome) != null)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -42,7 +48,7 @@ namespace Application.Services.Membros
 
             await _repository.InsertAsync(membro);
 
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -56,12 +62,12 @@ namespace Application.Services.Membros
 
         public async Task<Membro> UpdateAsync(int id, MembroDto membroDto)
         {
-            if (Validator(membroDto))
+            if(Validator(membroDto))
                 return null;
 
             var membro = await _repository.GetByIdAsync(id);
 
-            if (membro is null)
+            if(membro is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
@@ -70,15 +76,15 @@ namespace Application.Services.Membros
                 return null;
             }
 
-            if (_repository.ValidaMembroParaAcao(membro.Id))
+            if(_repository.ValidaMembroParaAcao(membro.Id))
             {
                 Notificar(EnumTipoNotificacao.ClientError, Message.AvisoMembroImutavel);
                 return null;
             }
 
-            if (await _repository.ExisteAsync(membroDto.Nome) is Membro membroExiste)
+            if(await _repository.ExisteAsync(membroDto.Nome) is Membro membroExiste)
             {
-                if (membro.Id != membroExiste.Id)
+                if(membro.Id != membroExiste.Id)
                 {
                     Notificar(
                         EnumTipoNotificacao.Informacao,
@@ -92,7 +98,7 @@ namespace Application.Services.Membros
 
             _repository.Update(membro);
 
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -108,7 +114,7 @@ namespace Application.Services.Membros
         {
             var membro = await _repository.GetByIdAsync(id);
 
-            if (membro == null)
+            if(membro == null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
@@ -117,7 +123,7 @@ namespace Application.Services.Membros
                 return false;
             }
 
-            if (_repository.ValidaMembroParaAcao(membro.Id))
+            if(_repository.ValidaMembroParaAcao(membro.Id))
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.AvisoMembroImutavel);
                 return false;
@@ -125,7 +131,7 @@ namespace Application.Services.Membros
 
             _repository.Delete(membro);
 
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -148,7 +154,7 @@ namespace Application.Services.Membros
         {
             var membro = await _repository.Get(membro => membro.Nome == nome).FirstOrDefaultAsync();
 
-            if (membro is null)
+            if(membro is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
@@ -158,7 +164,7 @@ namespace Application.Services.Membros
                 return null;
             }
 
-            if (isMoradia && membro.Nome.Contains("Jhon"))
+            if(isMoradia && membro.Nome.Contains("Jhon"))
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -170,7 +176,7 @@ namespace Application.Services.Membros
 
             string message = isMoradia
                 ? await MensagemValoresMoradiaDividosAsync(pix, membro.Nome, titleMessage)
-                : await MensagemValoresCasaDividosAsync(pix, membro.Nome, titleMessage);
+                : await MensagemValoresCasaDividosAsync(pix, membro, titleMessage);
 
             string encodedMessage = Uri.EscapeDataString(message);
 
@@ -184,28 +190,37 @@ namespace Application.Services.Membros
 
         public async Task<string> MensagemValoresCasaDividosAsync(
             string pix,
-            string membroNome,
+            Membro membro,
             string titleMessage
         )
         {
             var resumoMensal = await _despesaConsultas.GetAnaliseDesesasPorGrupoAsync();
+            var membroIds = _repository.GetIdsJhonPeu();
 
             double valorPorMembro =
                 resumoMensal
-                    .DespesasPorMembro.Where(membro => membro.Nome == membroNome)
+                    .DespesasPorMembro.Where(membro => membro.Nome == membro.Nome)
                     .FirstOrDefault()
                     ?.ValorDespesaCasa ?? 0;
 
             string title = titleMessage.IsNullOrEmpty()
-                ? $"Olá {membroNome}, tudo bem? Essas são as despesas desse mês:\r\n\r\n"
-                : titleMessage + "\r\n\r\n";
+                  ? $"Olá {membro.Nome}, tudo bem? Essas são as despesas desse mês:\r\n\r\n"
+                  : titleMessage + "\r\n\r\n";
 
-            string messageBody =
-                $"As despesas de casa vieram com um valor total de: *R${resumoMensal.RelatorioGastosDoGrupo.TotalGastosCasa:F2}*.\r\n\r\n"
-                + $"Dividido para cada vai ficar: *R$ {valorPorMembro:F2}*."
-                + $"\r\n\r\nMeu pix: *{pix}*.";
+            string messageBody = "";
 
-            return title + messageBody;
+            if(membro.Id == membroIds.idJhon)
+            {
+                messageBody = $"Sua parte no almoço ficou esse valor: *R$ {valorPorMembro:F2}*."
+                            + $"\r\n\r\nMeu pix: *{pix}*.";
+            }
+            else
+            {
+                messageBody = $"As despesas de casa dividido para cada vai ficar: *R$ {valorPorMembro:F2}*."
+                            + $"\r\n\r\nMeu pix: *{pix}*.";
+            }
+
+            return title + messageBody + ConviteParaSite;
         }
 
         public async Task<string> MensagemValoresMoradiaDividosAsync(
@@ -226,23 +241,21 @@ namespace Application.Services.Membros
                 ? $"Olá {membroNome}, tudo bem? Essas são as despesas desse mês:\r\n\r\n"
                 : titleMessage + "\r\n\r\n";
 
-            string messageBody =
-                $"As despesas Moradia (Aluguel, comdomínio, conta de luz) vieram com um valor total de: *R${resumoMensal.RelatorioGastosDoGrupo.TotalGastosMoradia:F2}*.\r\n\r\n"
-                + $"Dividido para cada vai ficar: *R$ {valorPorMembro:F2}*."
-                + $"\r\n\r\nMeu pix: *{pix}*.";
+            string messageBody = $"O valor do Aluguel, comdomínio e conta de luz para cada ficou: *R$ {valorPorMembro:F2}*."
+                               + $"\r\n\r\nMeu pix: *{pix}*.";
 
-            return title + messageBody;
+            return title + messageBody + ConviteParaSite;
         }
 
         public static string FormatFone(string telefone)
         {
             string numeros = Regex.Replace(telefone, "[^0-9]", "");
 
-            if (numeros.Length == 10)
+            if(numeros.Length == 10)
             {
                 return $"({numeros.Substring(0, 2)}) {numeros.Substring(2, 4)}-{numeros.Substring(6)}";
             }
-            else if (numeros.Length == 11)
+            else if(numeros.Length == 11)
             {
                 return $"({numeros.Substring(0, 2)}) {numeros.Substring(2, 5)}-{numeros.Substring(7)}";
             }
