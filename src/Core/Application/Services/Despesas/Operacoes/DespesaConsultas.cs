@@ -47,31 +47,42 @@ namespace Application.Services.Despesas.Operacoes
         }
 
         public async Task<IEnumerable<SugestaoDeFornecedorDto>> SugestaoDeFornecedorMaisBarato(
-            int paginaAtual,
-            int itensPorPagina
-        )
+       int paginaAtual,
+       int itensPorPagina
+   )
         {
-            List<SugestaoDeFornecedorDto> sugestoes = [];
+            var categorias = await _categoriaRepository.Get().ToListAsync();
+            List<SugestaoDeFornecedorDto> sugestoes = new();
 
-            var itensAgrupados = await GetDespesasCasa()
-                .GroupBy(d => d.Item.ToLower())
-                .ToListAsync();
-
-            foreach(var grupoItem in itensAgrupados)
+            foreach(var categoria in categorias)
             {
-                if(grupoItem.Count() > 1) 
-                {
-                    var fornecedorMaisBarato = grupoItem.OrderBy(d => d.Preco).First();
+                var itensAgrupados = await GetDespesasCasa()
+                    .Where(d => d.CategoriaId == categoria.Id)
+                    .GroupBy(d => d.Item.ToLower())
+                    .ToListAsync();
 
-                    sugestoes.Add(new SugestaoDeFornecedorDto
+                foreach(var grupoItem in itensAgrupados)
+                {
+                    if(grupoItem.Count() <= 1)
                     {
-                        Sugestao = $"{grupoItem.Key} em {fornecedorMaisBarato.Fornecedor} é mais barato",
-                        ListaItens = Pagination.PaginateResult(
-                            grupoItem.ToList(),
-                            paginaAtual,
-                            itensPorPagina
-                        )
-                    });
+                        continue;
+                    }
+
+                    var fornecedorMaisBarato = grupoItem
+                        .OrderBy(d => d.Preco)
+                        .First();
+
+                    sugestoes.Add(
+                        new SugestaoDeFornecedorDto
+                        {
+                            Sugestao = $"{grupoItem.Key} em {fornecedorMaisBarato.Fornecedor} é mais barato",
+                            ListaItens = Pagination.PaginateResult(
+                                grupoItem.ToList(),
+                                paginaAtual,
+                                itensPorPagina
+                            )
+                        }
+                    );
                 }
             }
 
