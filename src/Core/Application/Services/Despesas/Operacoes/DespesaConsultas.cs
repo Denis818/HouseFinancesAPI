@@ -51,53 +51,27 @@ namespace Application.Services.Despesas.Operacoes
             int itensPorPagina
         )
         {
-            var categorias = await _categoriaRepository.Get().ToListAsync();
-            List<SugestaoDeFornecedorDto> sugestoes = new();
+            List<SugestaoDeFornecedorDto> sugestoes = [];
 
-            foreach(var categoria in categorias)
+            var itensAgrupados = await GetDespesasCasa()
+                .GroupBy(d => d.Item.ToLower())
+                .ToListAsync();
+
+            foreach(var grupoItem in itensAgrupados)
             {
-                var despesasTotalPorCategoria = await GetDespesasPorCategoriaAsync(categoria.Id);
-
-                var itensAgrupados = despesasTotalPorCategoria
-                    .GroupBy(d => d.Item.ToLower())
-                    .ToList();
-
-                foreach(var grupoItem in itensAgrupados)
+                if(grupoItem.Count() > 1) 
                 {
-                    var fornecedoresComPrecoMaisBarato = grupoItem
-                        .GroupBy(d => d.Preco)
-                        .OrderBy(g => g.Key)
-                        .FirstOrDefault();
+                    var fornecedorMaisBarato = grupoItem.OrderBy(d => d.Preco).First();
 
-                    if(
-                        fornecedoresComPrecoMaisBarato != null
-                        && fornecedoresComPrecoMaisBarato.Count() == 1
-                    )
+                    sugestoes.Add(new SugestaoDeFornecedorDto
                     {
-                        var fornecedorMaisBarato = fornecedoresComPrecoMaisBarato.First();
-
-                        var itensComMesmoNome = despesasTotalPorCategoria
-                            .Where(d => d.Item.ToLower() == grupoItem.Key)
-                            .ToList();
-
-                        if(itensComMesmoNome.Count <= 1)
-                        {
-                            continue;
-                        }
-
-                        sugestoes.Add(
-                            new SugestaoDeFornecedorDto
-                            {
-                                Sugestao =
-                                    $"{grupoItem.Key} em {fornecedorMaisBarato.Fornecedor} é mais barato",
-                                ListaItens = Pagination.PaginateResult(
-                                    itensComMesmoNome,
-                                    paginaAtual,
-                                    itensPorPagina
-                                )
-                            }
-                        );
-                    }
+                        Sugestao = $"{grupoItem.Key} em {fornecedorMaisBarato.Fornecedor} é mais barato",
+                        ListaItens = Pagination.PaginateResult(
+                            grupoItem.ToList(),
+                            paginaAtual,
+                            itensPorPagina
+                        )
+                    });
                 }
             }
 
@@ -111,6 +85,7 @@ namespace Application.Services.Despesas.Operacoes
 
             return sugestoes;
         }
+
 
         #region Listagem das Despesas
 
@@ -334,24 +309,16 @@ namespace Application.Services.Despesas.Operacoes
             return despesas;
         }
 
-        private async Task<List<Despesa>> GetDespesasPorCategoriaAsync(int idCategoria)
+        private IQueryable<Despesa> GetDespesasCasa()
         {
-            if(
-                idCategoria == _categoriaIds.IdAluguel
-                || idCategoria == _categoriaIds.IdCondominio
-                || idCategoria == _categoriaIds.IdContaDeLuz
-                || idCategoria == _categoriaIds.IdInternet
-            )
-            {
-                return [];
-            }
-
-            return await _queryDespesasPorGrupo
-                .Where(d => d.CategoriaId == idCategoria)
+            return  _queryDespesasPorGrupo
+                .Where(c => c.CategoriaId != _categoriaIds.IdAluguel
+                         && c.CategoriaId != _categoriaIds.IdCondominio
+                         && c.CategoriaId != _categoriaIds.IdContaDeLuz
+                         && c.CategoriaId != _categoriaIds.IdInternet)
                 .Include(c => c.Categoria)
                 .Include(g => g.GrupoDespesa)
-                .OrderByDescending(d => d.DataCompra)
-                .ToListAsync();
+                .OrderByDescending(d => d.DataCompra);
         }
 
         private async Task<RelatorioGastosDoGrupoDto> GetRelatorioDeGastosDoMesAsync()
