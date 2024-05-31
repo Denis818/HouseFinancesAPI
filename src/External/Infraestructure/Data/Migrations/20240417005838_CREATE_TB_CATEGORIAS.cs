@@ -34,12 +34,6 @@ namespace Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Despesas_CategoriaId",
-                table: "Despesas",
-                column: "CategoriaId"
-            );
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Categorias_Descricao",
                 table: "Categorias",
                 column: "Descricao"

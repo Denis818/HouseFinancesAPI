@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Application.Extensions.Help
+namespace Domain.Extensions.Help
 {
     public static class HelpExtensios
     {

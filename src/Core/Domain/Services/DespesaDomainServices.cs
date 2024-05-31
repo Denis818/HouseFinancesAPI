@@ -1,4 +1,5 @@
 ﻿using Domain.Dtos.Despesas.Relatorios;
+using Domain.Extensions.Help;
 using Domain.Interfaces.Services.Despesa;
 
 namespace Domain.Services
@@ -11,18 +12,20 @@ namespace Domain.Services
         {
             double totalAptoMaisCaixa =
                 custosDespesasMoradia.ParcelaApartamento + custosDespesasMoradia.ParcelaCaixa;
+
             double totalLuzMaisCondominio =
                 custosDespesasMoradia.ContaDeLuz + custosDespesasMoradia.Condominio;
 
             double totalAptoMaisCaixaAbate300Peu100Estacionamento =
-                (totalAptoMaisCaixa - 300) - 100; //300 aluguel cobrado do peu. 100 reais do estacionamento alugado.
+               (totalAptoMaisCaixa - 300 - 100).RountToZeroIfNegative(); //300 aluguel cobrado do peu. 100 reais do estacionamento alugado.
 
-            double valorAptoMaisCaixaParaCadaMembro =
-                totalAptoMaisCaixaAbate300Peu100Estacionamento
-                / custosDespesasMoradia.MembrosForaJhonPeuCount;
-
+            double valorAptoMaisCaixaParaCadaMembro = 
+                (totalAptoMaisCaixaAbate300Peu100Estacionamento 
+                    / custosDespesasMoradia.MembrosForaJhonPeuCount).RountToZeroIfNegative();
+                
             double valorLuzMaisCondominioParaCadaMembro =
-                totalLuzMaisCondominio / custosDespesasMoradia.MembrosForaJhonCount;
+                (totalLuzMaisCondominio / custosDespesasMoradia.MembrosForaJhonCount).RountToZeroIfNegative();
+            
 
             double valorParaMembrosForaPeu =
                 valorAptoMaisCaixaParaCadaMembro + valorLuzMaisCondominioParaCadaMembro;
