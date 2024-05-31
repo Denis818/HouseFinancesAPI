@@ -37,28 +37,30 @@ namespace Domain.Services
                 ValorParaDoPeu = valorParaDoPeu,
                 TotalAptoMaisCaixa = totalAptoMaisCaixa,
                 TotalLuzMaisCondominio = totalLuzMaisCondominio,
-                ValorParaMembrosForaPeu = Math.Max(valorParaMembrosForaPeu, 0),
-                ValorAptoMaisCaixaParaCadaMembro = Math.Max(valorAptoMaisCaixaParaCadaMembro, 0),
-                TotalAptoMaisCaixaAbate300Peu100Estacionamento = Math.Max(
-                    totalAptoMaisCaixaAbate300Peu100Estacionamento,
-                    0
-                ),
-                ValorLuzMaisCondominioParaCadaMembro = Math.Max(
-                    valorLuzMaisCondominioParaCadaMembro,
-                    0
-                ),
+
+                ValorParaMembrosForaPeu = 
+                    valorParaMembrosForaPeu.RountToZeroIfNegative(),
+
+                ValorAptoMaisCaixaParaCadaMembro = 
+                    valorAptoMaisCaixaParaCadaMembro.RountToZeroIfNegative(),
+
+                TotalAptoMaisCaixaAbate300Peu100Estacionamento = 
+                    totalAptoMaisCaixaAbate300Peu100Estacionamento.RountToZeroIfNegative(),
+
+                ValorLuzMaisCondominioParaCadaMembro = 
+                    valorLuzMaisCondominioParaCadaMembro.RountToZeroIfNegative(),
             };
         }
 
         public DistribuicaoCustosCasaDto CalcularDistribuicaoCustosCasa(
-            CustosDespesasCasaDto custosDespesasCasa
-        )
+            CustosDespesasCasaDto custosDespesasCasa)
         {
             //  Almoço divido com Jhon
             double totalAlmocoParteDoJhon =
-                custosDespesasCasa.ValorTotalAlmoco / custosDespesasCasa.TodosMembros.Count;
+                (custosDespesasCasa.ValorTotalAlmoco / custosDespesasCasa.TodosMembros.Count).RountToZeroIfNegative();
+
             double totalDoAlmocoComAbateParteDoJhon =
-                custosDespesasCasa.ValorTotalAlmoco - totalAlmocoParteDoJhon;
+                (custosDespesasCasa.ValorTotalAlmoco - totalAlmocoParteDoJhon).RountToZeroIfNegative();
 
             //Calcular todas as depesas da casa.
             double despesaGeraisMaisAlmoco =
@@ -77,7 +79,7 @@ namespace Domain.Services
                 TotalAlmocoDividioComJhon = totalDoAlmocoComAbateParteDoJhon,
                 TotalAlmocoParteDoJhon = totalAlmocoParteDoJhon,
                 DespesaGeraisMaisAlmoco = despesaGeraisMaisAlmoco,
-                DespesaGeraisMaisAlmocoDividioPorMembro = despesaGeraisMaisAlmocoDividioPorMembro
+                DespesaGeraisMaisAlmocoDividioPorMembro = despesaGeraisMaisAlmocoDividioPorMembro.RountToZeroIfNegative()
             };
         }
     }
