@@ -14,9 +14,9 @@ namespace Presentation.Attributes.Util
             var httpContext = context.HttpContext;
             string grupoId = httpContext.Request.Headers[ "Grupo-Despesas-Id" ];
 
-            if(int.TryParse(grupoId, out int grupoDespesasId))
+            if(int.TryParse(grupoId, out int GrupoFaturasId))
             {
-                httpContext.Items[ "GrupoDespesaId" ] = grupoDespesasId;
+                httpContext.Items[ "GrupoFaturaId" ] = GrupoFaturasId;
             }
             else if(httpContext.Request.Method == "GET")
             {

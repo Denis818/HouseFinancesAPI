@@ -63,7 +63,7 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(50)");
 
-                    b.Property<int>("GrupoDespesaId")
+                    b.Property<int>("GrupoFaturaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Item")
@@ -96,7 +96,7 @@ namespace Data.Migrations
                     b.ToTable("Despesas", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.Despesas.GrupoDespesa", b =>
+            modelBuilder.Entity("Domain.Models.Despesas.GrupoFatura", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -111,12 +111,12 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Id")
-                        .HasDatabaseName("IX_Grupo_Despesa_Id");
+                        .HasDatabaseName("IX_Grupo_Fatura_Id");
 
                     b.HasIndex("Nome")
-                        .HasDatabaseName("IX_Grupo_Despesa_Nome");
+                        .HasDatabaseName("IX_Grupo_Fatura_Nome");
 
-                    b.ToTable("Grupo_Despesa", (string)null);
+                    b.ToTable("Grupo_Fatura", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Membros.Membro", b =>
@@ -219,15 +219,15 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.Despesas.GrupoDespesa", "GrupoDespesa")
+                    b.HasOne("Domain.Models.Despesas.GrupoFatura", "GrupoFatura")
                         .WithMany("Despesas")
-                        .HasForeignKey("GrupoDespesaId")
+                        .HasForeignKey("GrupoFaturaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Categoria");
 
-                    b.Navigation("GrupoDespesa");
+                    b.Navigation("GrupoFatura");
                 });
 
             modelBuilder.Entity("Usuario_Permissao", b =>
@@ -250,7 +250,7 @@ namespace Data.Migrations
                     b.Navigation("Despesas");
                 });
 
-            modelBuilder.Entity("Domain.Models.Despesas.GrupoDespesa", b =>
+            modelBuilder.Entity("Domain.Models.Despesas.GrupoFatura", b =>
                 {
                     b.Navigation("Despesas");
                 });

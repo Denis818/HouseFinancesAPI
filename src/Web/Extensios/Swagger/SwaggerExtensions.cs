@@ -79,7 +79,7 @@ namespace Web.Extensios.Swagger
         public static void AddSchemaFilters(this SwaggerGenOptions options)
         {
             options.SchemaFilter<DateSchemaFilter>();
-            options.OperationFilter<GrupoDespesaIdHeaderParameter>();
+            options.OperationFilter<GrupoFaturaIdHeaderParameter>();
         }
 
         public static void ConfigureSwaggerUI(this WebApplication app)

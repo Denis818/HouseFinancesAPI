@@ -6,23 +6,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository.Despesas
 {
-    public class GrupoDespesaRepository(IServiceProvider service)
-        : RepositoryBase<GrupoDespesa, FinanceDbContext>(service),
-            IGrupoDespesaRepository
+    public class GrupoFaturaRepository(IServiceProvider service)
+        : RepositoryBase<GrupoFatura, FinanceDbContext>(service),
+            IGrupoFaturaRepository
     {
-        public async Task<GrupoDespesa> ExisteAsync(int id, string nome)
+        public async Task<GrupoFatura> ExisteAsync(int id, string nome)
         {
-            GrupoDespesa grupoDespesa = null;
+            GrupoFatura GrupoFatura = null;
             if (nome != null)
             {
-                grupoDespesa = await Get(c => c.Nome == nome).FirstOrDefaultAsync();
+                GrupoFatura = await Get(c => c.Nome == nome).FirstOrDefaultAsync();
             }
             else
             {
-                grupoDespesa = await Get(c => c.Id == id).FirstOrDefaultAsync();
+                GrupoFatura = await Get(c => c.Id == id).FirstOrDefaultAsync();
             }
 
-            return grupoDespesa;
+            return GrupoFatura;
         }
     }
 }

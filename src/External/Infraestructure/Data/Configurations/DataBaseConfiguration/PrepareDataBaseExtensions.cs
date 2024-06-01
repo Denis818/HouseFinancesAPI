@@ -91,7 +91,7 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
         {
             var categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
             var memberRepository = service.GetRequiredService<IMembroRepository>();
-            var grupoDespesaRepository = service.GetRequiredService<IGrupoDespesaRepository>();
+            var GrupoFaturaRepository = service.GetRequiredService<IGrupoFaturaRepository>();
 
             if(categoriaRepository.Get().ToList().Count > 0)
                 return;
@@ -122,18 +122,18 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                 .ToString("MMMM", new CultureInfo("pt-BR"));
             mesAtualName = char.ToUpper(mesAtualName[ 0 ]) + mesAtualName[ 1.. ].ToLower();
 
-            var grupoDespesa = new GrupoDespesa
+            var GrupoFatura = new GrupoFatura
             {
                 Nome = $"Fatura de {mesAtualName} {DateTime.Now.Year}"
             };
 
             await categoriaRepository.InsertRangeAsync(listCategoria);
             await memberRepository.InsertRangeAsync(listMember);
-            await grupoDespesaRepository.InsertAsync(grupoDespesa);
+            await GrupoFaturaRepository.InsertAsync(GrupoFatura);
 
             await categoriaRepository.SaveChangesAsync();
             await memberRepository.SaveChangesAsync();
-            await grupoDespesaRepository.SaveChangesAsync();
+            await GrupoFaturaRepository.SaveChangesAsync();
         }
     }
 }

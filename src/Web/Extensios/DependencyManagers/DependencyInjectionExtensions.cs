@@ -6,7 +6,7 @@ using Application.Interfaces.Utilities;
 using Application.Services.Categorias;
 using Application.Services.Despesas.Operacoes;
 using Application.Services.Despesas.ProcessamentoDespesas;
-using Application.Services.GrupoDespesas;
+using Application.Services.GrupoFaturas;
 using Application.Services.Membros;
 using Application.Services.User;
 using Application.Utilities;
@@ -40,7 +40,7 @@ namespace Web.Extensios.DependencyManagers
             services.AddScoped<IDespesaRepository, DespesaRepository>();
             services.AddScoped<IMembroRepository, MembroRepository>();
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
-            services.AddScoped<IGrupoDespesaRepository, GrupoDespesaRepository>();
+            services.AddScoped<IGrupoFaturaRepository, GrupoFaturaRepository>();
         }
 
         public static void AddDependecyDomainServices(this IServiceCollection services)
@@ -59,7 +59,7 @@ namespace Web.Extensios.DependencyManagers
             services.AddScoped<IDespesaCrudAppService, DespesaCrudAppService>();
             services.AddScoped<IDespesaCasaAppService, DespesaCasaAppService>();
             services.AddScoped<IDespesaMoradiaAppService, DespesaMoradiaAppService>();
-            services.AddScoped<IGrupoDespesaAppService, GrupoDespesaAppService>();
+            services.AddScoped<IGrupoFaturaAppService, GrupoFaturaAppService>();
         }
 
         public static void AddCompanyConnectionStrings(

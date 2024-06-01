@@ -15,13 +15,13 @@ namespace Domain.Models.Despesas
         public int Quantidade { get; set; }
         public string Fornecedor { get; set; }
         public double Total { get; set; }
-        public GrupoDespesa GrupoDespesa { get; set; }
+        public GrupoFatura GrupoFatura { get; set; }
         public Categoria Categoria { get; set; }
 
         [JsonIgnore]
         public int CategoriaId { get; set; }
 
         [JsonIgnore]
-        public int GrupoDespesaId { get; set; }
+        public int GrupoFaturaId { get; set; }
     }
 }

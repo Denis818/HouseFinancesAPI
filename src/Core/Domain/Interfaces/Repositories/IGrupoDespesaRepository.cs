@@ -3,8 +3,8 @@ using Domain.Models.Despesas;
 
 namespace Domain.Interfaces.Repositories
 {
-    public interface IGrupoDespesaRepository : IRepositoryBase<GrupoDespesa>
+    public interface IGrupoFaturaRepository : IRepositoryBase<GrupoFatura>
     {
-        Task<GrupoDespesa> ExisteAsync(int id = 0, string nome = null);
+        Task<GrupoFatura> ExisteAsync(int id = 0, string nome = null);
     }
 }

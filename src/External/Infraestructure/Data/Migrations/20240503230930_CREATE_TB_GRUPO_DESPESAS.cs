@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Data.Migrations
 {
     /// <inheritdoc />
-    public partial class CREATE_TB_GRUPO_DESPESAS : Migration
+    public partial class CREATE_TB_Grupo_FaturaS : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "GrupoDespesaId",
+                name: "GrupoFaturaId",
                 table: "Despesas",
                 type: "int",
                 nullable: false,
@@ -21,7 +21,7 @@ namespace Data.Migrations
 
             migrationBuilder
                 .CreateTable(
-                    name: "Grupo_Despesa",
+                    name: "Grupo_Fatura",
                     columns: table => new
                     {
                         Id = table
@@ -36,28 +36,28 @@ namespace Data.Migrations
                     },
                     constraints: table =>
                     {
-                        table.PrimaryKey("PK_Grupo_Despesa", x => x.Id);
+                        table.PrimaryKey("PK_Grupo_Fatura", x => x.Id);
                     }
                 )
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Grupo_Despesa_Id",
-                table: "Grupo_Despesa",
+                name: "IX_Grupo_Fatura_Id",
+                table: "Grupo_Fatura",
                 column: "Id"
             );
 
             migrationBuilder.CreateIndex(
-                name: "IX_Grupo_Despesa_Nome",
-                table: "Grupo_Despesa",
+                name: "IX_Grupo_Fatura_Nome",
+                table: "Grupo_Fatura",
                 column: "Nome"
             );
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Despesas_Grupo_Despesa_GrupoDespesaId",
+                name: "FK_Despesas_Grupo_Fatura_GrupoFaturaId",
                 table: "Despesas",
-                column: "GrupoDespesaId",
-                principalTable: "Grupo_Despesa",
+                column: "GrupoFaturaId",
+                principalTable: "Grupo_Fatura",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade
             );
@@ -67,13 +67,13 @@ namespace Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Despesas_Grupo_Despesa_GrupoDespesaId",
+                name: "FK_Despesas_Grupo_Fatura_GrupoFaturaId",
                 table: "Despesas"
             );
 
-            migrationBuilder.DropTable(name: "Grupo_Despesa");
+            migrationBuilder.DropTable(name: "Grupo_Fatura");
 
-            migrationBuilder.DropColumn(name: "GrupoDespesaId", table: "Despesas");
+            migrationBuilder.DropColumn(name: "GrupoFaturaId", table: "Despesas");
         }
     }
 }
