@@ -29,10 +29,10 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
                 dbContext.Database.SetConnectionString(company.ConnectionString);
                 dbContext.Database.Migrate();
 
-                PrepareDataBaseExtensions.PrepareDataBase(
-                    scope.ServiceProvider,
-                    company.NomeDominio
-                );
+                //PrepareDataBaseExtensions.PrepareDataBase(
+                //    scope.ServiceProvider,
+                //    company.NomeDominio
+                //);
             }
         }
     }
