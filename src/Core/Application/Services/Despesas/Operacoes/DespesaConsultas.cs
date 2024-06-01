@@ -18,7 +18,7 @@ namespace Application.Services.Despesas.Operacoes
 {
     public class DespesaConsultas(
         IServiceProvider service,
-        IGrupoDespesaRepository _grupoDespesaRepository,
+        IGrupoFaturaRepository _GrupoFaturaRepository,
         IDespesaMoradiaAppService _despesaMoradiaApp,
         IDespesaCasaAppService _despesaCasaApp
     ) : BaseDespesaService(service), IDespesaConsultas
@@ -105,7 +105,7 @@ namespace Application.Services.Despesas.Operacoes
             var despesa = await _repository
                 .Get(despesa => despesa.Id == id)
                 .Include(x => x.Categoria)
-                .Include(x => x.GrupoDespesa)
+                .Include(x => x.GrupoFatura)
                 .FirstOrDefaultAsync();
 
             return despesa;
@@ -148,7 +148,7 @@ namespace Application.Services.Despesas.Operacoes
             var queryDespesasAllGrupo = _repository
                 .Get()
                 .Include(c => c.Categoria)
-                .Include(c => c.GrupoDespesa);
+                .Include(c => c.GrupoFatura);
 
             if(string.IsNullOrEmpty(filter))
             {
@@ -215,7 +215,7 @@ namespace Application.Services.Despesas.Operacoes
 
             var despesasPorGrupo = _repository
                 .Get()
-                .GroupBy(d => d.GrupoDespesa.Nome)
+                .GroupBy(d => d.GrupoFatura.Nome)
                 .Select(group => new DespesasPorGrupoDto
                 {
                     GrupoNome = group.Key,
@@ -300,7 +300,7 @@ namespace Application.Services.Despesas.Operacoes
         {
             var queryAll = query
                 .Include(c => c.Categoria)
-                .Include(c => c.GrupoDespesa)
+                .Include(c => c.GrupoFatura)
                 .OrderByDescending(d => d.DataCompra);
 
             var despesas = await Pagination.PaginateResultAsync(
@@ -328,14 +328,14 @@ namespace Application.Services.Despesas.Operacoes
                          && c.CategoriaId != _categoriaIds.IdContaDeLuz
                          && c.CategoriaId != _categoriaIds.IdInternet)
                 .Include(c => c.Categoria)
-                .Include(g => g.GrupoDespesa)
+                .Include(g => g.GrupoFatura)
                 .OrderByDescending(d => d.DataCompra);
         }
 
         private async Task<RelatorioGastosDoGrupoDto> GetRelatorioDeGastosDoMesAsync()
         {
-            string grupoNome = _grupoDespesaRepository
-                .Get(g => g.Id == _grupoDespesaId)
+            string grupoNome = _GrupoFaturaRepository
+                .Get(g => g.Id == _GrupoFaturaId)
                 .FirstOrDefault()
                 ?.Nome;
 
@@ -365,7 +365,7 @@ namespace Application.Services.Despesas.Operacoes
 
             return new RelatorioGastosDoGrupoDto
             {
-                GrupoDespesaNome = grupoNome,
+                GrupoFaturaNome = grupoNome,
                 TotalGeral = totalGeral.RoundTo(2),
                 TotalGastosCasa = totalGastosCasa.RoundTo(2),
                 TotalGastosMoradia = totalGastoMoradia.RoundTo(2),

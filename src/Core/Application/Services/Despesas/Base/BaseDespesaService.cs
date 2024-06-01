@@ -14,7 +14,7 @@ namespace Application.Services.Despesas.Base
 
         protected readonly CategoriaIdsDto _categoriaIds;
         protected (int IdJhon, int IdPeu) _membroId;
-        protected int _grupoDespesaId = 0;
+        protected int _GrupoFaturaId = 0;
 
         protected IQueryable<Despesa> _queryDespesasPorGrupo;
 
@@ -32,12 +32,12 @@ namespace Application.Services.Despesas.Base
 
         public IQueryable<Despesa> GetDespesasByGroup()
         {
-            _grupoDespesaId = (int)(_httpContext.Items["GrupoDespesaId"] ?? 0);
+            _GrupoFaturaId = (int)(_httpContext.Items["GrupoFaturaId"] ?? 0);
 
             var queryDespesas = _repository
-                .Get(d => d.GrupoDespesaId == _grupoDespesaId)
+                .Get(d => d.GrupoFaturaId == _GrupoFaturaId)
                 .Include(c => c.Categoria)
-                .Include(c => c.GrupoDespesa);
+                .Include(c => c.GrupoFatura);
 
             return queryDespesas;
         }

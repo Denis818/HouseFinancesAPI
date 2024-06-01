@@ -14,7 +14,7 @@ namespace Application.Services.Despesas.Operacoes
     public class DespesaCrudAppService(
         IServiceProvider service,
         IDespesaConsultas _despesaConsultas,
-        IGrupoDespesaRepository _grupoDespesaRepository
+        IGrupoFaturaRepository _GrupoFaturaRepository
     ) : BaseDespesaService(service), IDespesaCrudAppService
     {
         #region CRUD
@@ -112,7 +112,7 @@ namespace Application.Services.Despesas.Operacoes
             var despesasInseridas = await _repository
                 .Get(d => ids.Contains(d.Id))
                 .Include(c => c.Categoria)
-                .Include(c => c.GrupoDespesa)
+                .Include(c => c.GrupoFatura)
                 .ToListAsync();
 
             return despesasInseridas;
@@ -223,14 +223,14 @@ namespace Application.Services.Despesas.Operacoes
                 return false;
             }
 
-            if (await _grupoDespesaRepository.ExisteAsync(despesaDto.GrupoDespesaId) is null)
+            if (await _GrupoFaturaRepository.ExisteAsync(despesaDto.GrupoFaturaId) is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
                     string.Format(
                         Message.IdNaoEncontrado,
                         "O Grupo de Despesa",
-                        despesaDto.GrupoDespesaId
+                        despesaDto.GrupoFaturaId
                     )
                 );
                 return false;
@@ -261,7 +261,7 @@ namespace Application.Services.Despesas.Operacoes
             }
 
             var despesasExistentes = _repository.Get(d =>
-                d.GrupoDespesaId == despesaDto.GrupoDespesaId
+                d.GrupoFaturaId == despesaDto.GrupoFaturaId
                 && d.CategoriaId == despesaDto.CategoriaId
             );
 

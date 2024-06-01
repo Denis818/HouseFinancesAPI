@@ -2,7 +2,7 @@
 {
     public class DespesaDto
     {
-        public int GrupoDespesaId { get; set; }
+        public int GrupoFaturaId { get; set; }
         public int CategoriaId { get; set; }
         public string Item { get; set; }
         public double Preco { get; set; }

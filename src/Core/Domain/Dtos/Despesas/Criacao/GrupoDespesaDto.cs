@@ -1,6 +1,6 @@
 ﻿namespace Domain.Dtos.Despesas.Criacao
 {
-    public class GrupoDespesaDto
+    public class GrupoFaturaDto
     {
         public string Nome { get; set; }
     }

@@ -2,7 +2,7 @@
 
 namespace Domain.Models.Despesas
 {
-    public class GrupoDespesa
+    public class GrupoFatura
     {
         public int Id { get; set; }
         public string Nome { get; set; }

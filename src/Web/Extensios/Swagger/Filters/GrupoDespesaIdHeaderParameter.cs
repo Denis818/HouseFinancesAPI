@@ -4,7 +4,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Web.Extensios.Swagger.Filters
 {
-    public class GrupoDespesaIdHeaderParameter : IOperationFilter
+    public class GrupoFaturaIdHeaderParameter : IOperationFilter
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
