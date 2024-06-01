@@ -81,14 +81,8 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoriaId")
-                        .HasDatabaseName("IX_Despesas_CategoriaId");
-
                     b.HasIndex("DataCompra")
                         .HasDatabaseName("IX_Despesas_DataCompra");
-
-                    b.HasIndex("GrupoDespesaId")
-                        .HasDatabaseName("IX_Despesas_GrupoDespesaId");
 
                     b.HasIndex("Id")
                         .HasDatabaseName("IX_Despesas_Id");

@@ -73,8 +73,6 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(name: "Grupo_Despesa");
 
-            migrationBuilder.DropIndex(name: "IX_Despesas_GrupoDespesaId", table: "Despesas");
-
             migrationBuilder.DropColumn(name: "GrupoDespesaId", table: "Despesas");
         }
     }
