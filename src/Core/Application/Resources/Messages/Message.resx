@@ -135,7 +135,7 @@
   <data name="CampoFormatoInvalido" xml:space="preserve">
     <value>Campo {0} não está em um formato válido.</value>
   </data>
-  <data name="DeletarUnicoGrupoDespesa" xml:space="preserve">
+  <data name="DeletarUnicoGrupoFatura" xml:space="preserve">
     <value>Deve existir pelo menos um Grupo.</value>
   </data>
   <data name="DespesaExistente" xml:space="preserve">

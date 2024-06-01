@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Application.Validators.Despesas
 {
-    public class GrupoDespesaValidator : AbstractValidator<GrupoDespesaDto>
+    public class GrupoFaturaValidator : AbstractValidator<GrupoFaturaDto>
     {
-        public GrupoDespesaValidator()
+        public GrupoFaturaValidator()
         {
             RuleFor(x => x.Nome)
                 .NotEmpty()

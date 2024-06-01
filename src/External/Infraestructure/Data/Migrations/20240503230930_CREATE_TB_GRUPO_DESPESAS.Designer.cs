@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(FinanceDbContext))]
-    [Migration("20240503230930_CREATE_TB_GRUPO_DESPESAS")]
-    partial class CREATE_TB_GRUPO_DESPESAS
+    [Migration("20240503230930_CREATE_TB_Grupo_FaturaS")]
+    partial class CREATE_TB_Grupo_FaturaS
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,7 +63,7 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(20)");
 
-                    b.Property<int>("GrupoDespesaId")
+                    b.Property<int>("GrupoFaturaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Item")
@@ -81,14 +81,8 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoriaId")
-                        .HasDatabaseName("IX_Despesas_CategoriaId");
-
                     b.HasIndex("DataCompra")
                         .HasDatabaseName("IX_Despesas_DataCompra");
-
-                    b.HasIndex("GrupoDespesaId")
-                        .HasDatabaseName("IX_Despesas_GrupoDespesaId");
 
                     b.HasIndex("Id")
                         .HasDatabaseName("IX_Despesas_Id");
@@ -99,7 +93,7 @@ namespace Data.Migrations
                     b.ToTable("Despesas", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Models.Despesas.GrupoDespesa", b =>
+            modelBuilder.Entity("Domain.Models.Despesas.GrupoFatura", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -114,9 +108,9 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Nome")
-                        .HasDatabaseName("IX_Grupo_Despesa_Nome");
+                        .HasDatabaseName("IX_Grupo_Fatura_Nome");
 
-                    b.ToTable("Grupo_Despesa", (string)null);
+                    b.ToTable("Grupo_Fatura", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Membros.Membro", b =>
@@ -219,15 +213,15 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.Despesas.GrupoDespesa", "GrupoDespesa")
+                    b.HasOne("Domain.Models.Despesas.GrupoFatura", "GrupoFatura")
                         .WithMany("Despesas")
-                        .HasForeignKey("GrupoDespesaId")
+                        .HasForeignKey("GrupoFaturaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Categoria");
 
-                    b.Navigation("GrupoDespesa");
+                    b.Navigation("GrupoFatura");
                 });
 
             modelBuilder.Entity("Usuario_Permissao", b =>
@@ -250,7 +244,7 @@ namespace Data.Migrations
                     b.Navigation("Despesas");
                 });
 
-            modelBuilder.Entity("Domain.Models.Despesas.GrupoDespesa", b =>
+            modelBuilder.Entity("Domain.Models.Despesas.GrupoFatura", b =>
                 {
                     b.Navigation("Despesas");
                 });

@@ -117,9 +117,9 @@ namespace Application.Resources.Messages {
         /// <summary>
         ///   Looks up a localized string similar to Deve existir pelo menos um Grupo..
         /// </summary>
-        public static string DeletarUnicoGrupoDespesa {
+        public static string DeletarUnicoGrupoFatura {
             get {
-                return ResourceManager.GetString("DeletarUnicoGrupoDespesa", resourceCulture);
+                return ResourceManager.GetString("DeletarUnicoGrupoFatura", resourceCulture);
             }
         }
         

@@ -3,11 +3,11 @@ using Domain.Models.Despesas;
 
 namespace Application.Interfaces.Services.Despesas
 {
-    public interface IGrupoDespesaAppService
+    public interface IGrupoFaturaAppService
     {
-        Task<IEnumerable<GrupoDespesa>> GetAllAsync();
-        Task<GrupoDespesa> InsertAsync(GrupoDespesaDto grupoDto);
-        Task<GrupoDespesa> UpdateAsync(int id, GrupoDespesaDto grupoDespesaDto);
+        Task<IEnumerable<GrupoFatura>> GetAllAsync();
+        Task<GrupoFatura> InsertAsync(GrupoFaturaDto grupoDto);
+        Task<GrupoFatura> UpdateAsync(int id, GrupoFaturaDto GrupoFaturaDto);
         Task<bool> DeleteAsync(int id);
     }
 }

@@ -12,11 +12,11 @@ namespace Presentation.Attributes.Util
         public void OnResourceExecuting(ResourceExecutingContext context)
         {
             var httpContext = context.HttpContext;
-            string grupoId = httpContext.Request.Headers[ "Grupo-Despesas-Id" ];
+            string grupoId = httpContext.Request.Headers["grupo-fatura-id"];
 
-            if(int.TryParse(grupoId, out int grupoDespesasId))
+            if(int.TryParse(grupoId, out int GrupoFaturasId))
             {
-                httpContext.Items[ "GrupoDespesaId" ] = grupoDespesasId;
+                httpContext.Items["GrupoFaturaId"] = GrupoFaturasId;
             }
             else if(httpContext.Request.Method == "GET")
             {

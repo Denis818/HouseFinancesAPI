@@ -9,17 +9,17 @@ using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Services.GrupoDespesas
+namespace Application.Services.GrupoFaturas
 {
-    public class GrupoDespesaAppService(IServiceProvider service)
-        : BaseAppService<GrupoDespesa, IGrupoDespesaRepository>(service),
-            IGrupoDespesaAppService
+    public class GrupoFaturaAppService(IServiceProvider service)
+        : BaseAppService<GrupoFatura, IGrupoFaturaRepository>(service),
+            IGrupoFaturaAppService
     {
         #region CRUD
-        public async Task<IEnumerable<GrupoDespesa>> GetAllAsync() =>
+        public async Task<IEnumerable<GrupoFatura>> GetAllAsync() =>
             await _repository.Get().OrderBy(c => c.Nome).ToListAsync();
 
-        public async Task<GrupoDespesa> InsertAsync(GrupoDespesaDto grupoDto)
+        public async Task<GrupoFatura> InsertAsync(GrupoFaturaDto grupoDto)
         {
             if (Validator(grupoDto))
                 return null;
@@ -42,8 +42,8 @@ namespace Application.Services.GrupoDespesas
                 return null;
             }
 
-            var grupoDespesa = _mapper.Map<GrupoDespesa>(grupoDto);
-            await _repository.InsertAsync(grupoDespesa);
+            var GrupoFatura = _mapper.Map<GrupoFatura>(grupoDto);
+            await _repository.InsertAsync(GrupoFatura);
 
             if (!await _repository.SaveChangesAsync())
             {
@@ -54,10 +54,10 @@ namespace Application.Services.GrupoDespesas
                 return null;
             }
 
-            return grupoDespesa;
+            return GrupoFatura;
         }
 
-        public async Task<GrupoDespesa> UpdateAsync(int id, GrupoDespesaDto grupoDto)
+        public async Task<GrupoFatura> UpdateAsync(int id, GrupoFaturaDto grupoDto)
         {
             if (Validator(grupoDto))
                 return null;
@@ -67,9 +67,9 @@ namespace Application.Services.GrupoDespesas
             if (!NomeGrupoIsCorretFormat(grupoDto.Nome))
                 return null;
 
-            var grupoDespesa = await _repository.GetByIdAsync(id);
+            var GrupoFatura = await _repository.GetByIdAsync(id);
 
-            if (grupoDespesa is null)
+            if (GrupoFatura is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
@@ -78,15 +78,15 @@ namespace Application.Services.GrupoDespesas
                 return null;
             }
 
-            if (grupoDespesa.Nome == grupoDto.Nome)
-                return grupoDespesa;
+            if (GrupoFatura.Nome == grupoDto.Nome)
+                return GrupoFatura;
 
             if (
                 await _repository.ExisteAsync(nome: grupoDto.Nome)
-                is GrupoDespesa grupoDespesaExiste
+                is GrupoFatura GrupoFaturaExiste
             )
             {
-                if (grupoDespesa.Id != grupoDespesaExiste.Id)
+                if (GrupoFatura.Id != GrupoFaturaExiste.Id)
                 {
                     Notificar(
                         EnumTipoNotificacao.Informacao,
@@ -100,9 +100,9 @@ namespace Application.Services.GrupoDespesas
                 }
             }
 
-            _mapper.Map(grupoDto, grupoDespesa);
+            _mapper.Map(grupoDto, GrupoFatura);
 
-            _repository.Update(grupoDespesa);
+            _repository.Update(GrupoFatura);
 
             if (!await _repository.SaveChangesAsync())
             {
@@ -113,14 +113,14 @@ namespace Application.Services.GrupoDespesas
                 return null;
             }
 
-            return grupoDespesa;
+            return GrupoFatura;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var grupoDespesa = await _repository.GetByIdAsync(id);
+            var GrupoFatura = await _repository.GetByIdAsync(id);
 
-            if (grupoDespesa == null)
+            if (GrupoFatura == null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
@@ -134,12 +134,12 @@ namespace Application.Services.GrupoDespesas
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
-                    string.Format(Message.DeletarUnicoGrupoDespesa)
+                    string.Format(Message.DeletarUnicoGrupoFatura)
                 );
                 return false;
             }
 
-            _repository.Delete(grupoDespesa);
+            _repository.Delete(GrupoFatura);
 
             if (!await _repository.SaveChangesAsync())
             {
