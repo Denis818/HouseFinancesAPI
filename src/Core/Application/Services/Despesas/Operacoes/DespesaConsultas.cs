@@ -1,5 +1,4 @@
-﻿using Domain.Extensions.Help;
-using Application.Interfaces.Services.Despesas;
+﻿using Application.Interfaces.Services.Despesas;
 using Application.Resources.Messages;
 using Application.Services.Despesas.Base;
 using Application.Utilities;
@@ -7,6 +6,7 @@ using Domain.Dtos.Despesas.Consultas;
 using Domain.Dtos.Despesas.Relatorios;
 using Domain.Dtos.Despesas.Resumos;
 using Domain.Enumeradores;
+using Domain.Extensions.Help;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Domain.Models.Membros;
@@ -322,7 +322,7 @@ namespace Application.Services.Despesas.Operacoes
 
         private IQueryable<Despesa> GetDespesasCasa()
         {
-            return  _queryDespesasPorGrupo
+            return _queryDespesasPorGrupo
                 .Where(c => c.CategoriaId != _categoriaIds.IdAluguel
                          && c.CategoriaId != _categoriaIds.IdCondominio
                          && c.CategoriaId != _categoriaIds.IdContaDeLuz

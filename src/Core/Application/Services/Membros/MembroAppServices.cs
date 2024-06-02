@@ -199,8 +199,8 @@ namespace Application.Services.Membros
 
             double valorPorMembro =
                 resumoMensal
-                    .DespesasPorMembro.Where(membro => membro.Nome == membro.Nome)
-                    .FirstOrDefault()
+                    .DespesasPorMembro
+                    .FirstOrDefault(m => m.Nome == membro.Nome)
                     ?.ValorDespesaCasa ?? 0;
 
             string title = titleMessage.IsNullOrEmpty()

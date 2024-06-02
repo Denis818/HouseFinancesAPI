@@ -28,7 +28,7 @@ namespace Web.Extensios.Swagger.Filters
                 operation.Parameters.Add(
                     new OpenApiParameter
                     {
-                        Name = "Grupo-Despesas-Id",
+                        Name = "grupo-fatura-id",
                         In = ParameterLocation.Header,
                         Description =
                             "Adicionar o Id de um grupo de despesas no cabeçalho da requisição",
