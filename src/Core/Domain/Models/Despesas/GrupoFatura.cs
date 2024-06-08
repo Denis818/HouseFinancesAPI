@@ -9,5 +9,7 @@ namespace Domain.Models.Despesas
 
         [JsonIgnore]
         public ICollection<Despesa> Despesas { get; set; } = [];
+        public ICollection<StatusFatura> StatusFaturas { get; set; } = [];
     }
+
 }

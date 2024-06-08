@@ -6,7 +6,7 @@ namespace Application.Services
 {
     public interface IStatusFaturaAppService
     {
-        Task<StatusFatura> UpdateAsync(EnumFaturaNome faturaNome, EnumStatusFatura status);
+        Task<StatusFatura> UpdateAsync(EnumFaturaTipo faturaNome, EnumStatusFatura status);
         Task<StatusFaturaDto> GetStatusFaturaDtoByNameAsync(string status);
     }
 }

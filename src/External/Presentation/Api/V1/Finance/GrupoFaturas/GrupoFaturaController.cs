@@ -7,6 +7,7 @@ using Domain.Models.Despesas;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Base;
 using Presentation.Attributes.Auth;
+using Presentation.Attributes.Util;
 using Presentation.Version;
 
 namespace Presentation.Api.V1.Finance.GrupoFaturas
@@ -44,12 +45,14 @@ namespace Presentation.Api.V1.Finance.GrupoFaturas
         #region Status Fatura
 
         [HttpGet("status-fatura")]
+        [GetIdGroupInHeaderFilter]
         public async Task<StatusFaturaDto> GetStatusFaturaDtoByNameAsync(string status) =>
            await _statusFaturaServices.GetStatusFaturaDtoByNameAsync(status);
 
         [HttpPut("status-fatura")]
+        [GetIdGroupInHeaderFilter]
         [PermissoesFinance(EnumPermissoes.USU_000002)]
-        public async Task<StatusFatura> PutStatusFaturaAsync(EnumFaturaNome faturaNome, EnumStatusFatura status) =>
+        public async Task<StatusFatura> PutStatusFaturaAsync(EnumFaturaTipo faturaNome, EnumStatusFatura status) =>
             await _statusFaturaServices.UpdateAsync(faturaNome, status);
 
         #endregion

@@ -1,15 +1,12 @@
 ﻿using Application.Helpers;
 using Application.Interfaces.Services.User;
-using Domain.Converters.DatesTimes;
 using Domain.Dtos.User.Auth;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Categorias;
-using Domain.Models.Despesas;
 using Domain.Models.Membros;
 using Domain.Models.Users;
 using Microsoft.Extensions.DependencyInjection;
-using System.Globalization;
 
 namespace Infraestructure.Data.Configurations.DataBaseConfiguration
 {
@@ -92,7 +89,6 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
             var categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
             var memberRepository = service.GetRequiredService<IMembroRepository>();
             var grupoFaturaRepository = service.GetRequiredService<IGrupoFaturaRepository>();
-            var statusFaturaRepository = service.GetRequiredService<IStatusFaturaRepository>();
 
             if(categoriaRepository.Get().ToList().Count < 1)
             {
@@ -129,31 +125,32 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
 
             if(grupoFaturaRepository.Get().ToList().Count < 1)
             {
-                string mesAtualName = DateTimeZoneProvider
-                    .GetBrasiliaTimeZone(DateTime.UtcNow)
-                    .ToString("MMMM", new CultureInfo("pt-BR"));
+                //string mesAtualName = DateTimeZoneProvider
+                //    .GetBrasiliaTimeZone(DateTime.UtcNow)
+                //    .ToString("MMMM", new CultureInfo("pt-BR"));
 
-                mesAtualName = char.ToUpper(mesAtualName[0]) + mesAtualName[1..].ToLower();
+                //mesAtualName = char.ToUpper(mesAtualName[0]) + mesAtualName[1..].ToLower();
 
-                var grupoFatura = new GrupoFatura
-                {
-                    Nome = $"Fatura de {mesAtualName} {DateTime.Now.Year}"
-                };
+                //var grupoFatura = new GrupoFatura
+                //{
+                //    Nome = $"Fatura de {mesAtualName} {DateTime.Now.Year}",
+                //    StatusFaturas =
+                //    [
+                //        new()
+                //        {
+                //            Estado = EnumStatusFatura.CasaAberto.ToString(),
+                //            FaturaNome = EnumFaturaTipo.Casa.ToString()
+                //        },
+                //        new()
+                //        {
+                //            Estado = EnumStatusFatura.MoradiaAberto.ToString(),
+                //            FaturaNome = EnumFaturaTipo.Moradia.ToString()
+                //        }
+                //    ]
+                //};
 
-                await grupoFaturaRepository.InsertAsync(grupoFatura);
-                await grupoFaturaRepository.SaveChangesAsync();
-            }
-
-            if(statusFaturaRepository.Get().ToList().Count < 1)
-            {
-                var listStatusFatura = new List<StatusFatura>
-                {
-                    new() { FaturaNome = "Casa", Estado = EnumStatusFatura.CasaAberto.ToString() },
-                    new() { FaturaNome = "Moradia", Estado = EnumStatusFatura.MoradiaAberto.ToString() },
-                };
-
-                await statusFaturaRepository.InsertRangeAsync(listStatusFatura);
-                await statusFaturaRepository.SaveChangesAsync();
+                //await grupoFaturaRepository.InsertAsync(grupoFatura);
+                //await grupoFaturaRepository.SaveChangesAsync();
             }
         }
     }

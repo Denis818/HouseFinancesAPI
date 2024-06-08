@@ -14,7 +14,12 @@ namespace Application.Services
     {
         public async Task<StatusFaturaDto> GetStatusFaturaDtoByNameAsync(string status)
         {
-            var statusFatura = await _repository.Get().FirstOrDefaultAsync(s => s.Estado == status);
+            var grupoFaturaId = (int)(_httpContext.Items["GrupoFaturaId"] ?? 0);
+
+            var statusFatura = await _repository
+                .Get(s => s.GrupoFaturaId == grupoFaturaId)
+                .FirstOrDefaultAsync(s => s.Estado == status);
+
             if(statusFatura == null)
             {
                 var defaultState = status.Contains("Casa")
@@ -27,10 +32,15 @@ namespace Application.Services
             return new StatusFaturaDto { Estado = statusFatura.Estado };
         }
 
-        public async Task<StatusFatura> UpdateAsync(EnumFaturaNome faturaNome, EnumStatusFatura status)
+        public async Task<StatusFatura> UpdateAsync(
+            EnumFaturaTipo faturaNome,
+            EnumStatusFatura status
+        )
         {
+            var grupoFaturaId = (int)(_httpContext.Items["GrupoFaturaId"] ?? 0);
+
             var statusFatura = await _repository
-                .Get()
+                .Get(s => s.GrupoFaturaId == grupoFaturaId)
                 .FirstOrDefaultAsync(s => s.FaturaNome == faturaNome.ToString());
 
             statusFatura.Estado = status.ToString();

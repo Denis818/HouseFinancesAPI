@@ -23,7 +23,7 @@ namespace Web.Extensios.Swagger.Filters
                 && context.ApiDescription.HttpMethod == "GET"
             )
             {
-                operation.Parameters ??= new List<OpenApiParameter>();
+                operation.Parameters ??= [];
 
                 operation.Parameters.Add(
                     new OpenApiParameter

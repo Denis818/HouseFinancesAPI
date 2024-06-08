@@ -17,7 +17,11 @@ namespace Application.Services.GrupoFaturas
     {
         #region CRUD
         public async Task<IEnumerable<GrupoFatura>> GetAllAsync() =>
-            await _repository.Get().OrderBy(c => c.Nome).ToListAsync();
+            await _repository
+                .Get()
+                .Include(s => s.StatusFaturas)
+                .OrderBy(c => c.Nome)
+                .ToListAsync();
 
         public async Task<GrupoFatura> InsertAsync(GrupoFaturaDto grupoDto)
         {
@@ -42,8 +46,23 @@ namespace Application.Services.GrupoFaturas
                 return null;
             }
 
-            var GrupoFatura = _mapper.Map<GrupoFatura>(grupoDto);
-            await _repository.InsertAsync(GrupoFatura);
+            var grupoFatura = _mapper.Map<GrupoFatura>(grupoDto);
+
+            grupoFatura.StatusFaturas =
+            [
+                new()
+                {
+                    Estado = EnumStatusFatura.CasaAberto.ToString(),
+                    FaturaNome = EnumFaturaTipo.Casa.ToString()
+                },
+                new()
+                {
+                    Estado = EnumStatusFatura.MoradiaAberto.ToString(),
+                    FaturaNome = EnumFaturaTipo.Moradia.ToString()
+                }
+            ];
+
+            await _repository.InsertAsync(grupoFatura);
 
             if(!await _repository.SaveChangesAsync())
             {
@@ -54,7 +73,7 @@ namespace Application.Services.GrupoFaturas
                 return null;
             }
 
-            return GrupoFatura;
+            return grupoFatura;
         }
 
         public async Task<GrupoFatura> UpdateAsync(int id, GrupoFaturaDto grupoDto)
@@ -81,10 +100,7 @@ namespace Application.Services.GrupoFaturas
             if(GrupoFatura.Nome == grupoDto.Nome)
                 return GrupoFatura;
 
-            if(
-                await _repository.ExisteAsync(nome: grupoDto.Nome)
-                is GrupoFatura GrupoFaturaExiste
-            )
+            if(await _repository.ExisteAsync(nome: grupoDto.Nome) is GrupoFatura GrupoFaturaExiste)
             {
                 if(GrupoFatura.Id != GrupoFaturaExiste.Id)
                 {

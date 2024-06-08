@@ -35,6 +35,8 @@ namespace Infraestructure.Data.Mappings.Despesas
             builder.HasIndex(d => d.Item).HasDatabaseName("IX_Despesas_Item");
             builder.HasIndex(d => d.DataCompra).HasDatabaseName("IX_Despesas_DataCompra");
             builder.HasIndex(d => d.Fornecedor).HasDatabaseName("IX_Despesas_Fornecedor");
+            builder.HasIndex(d => d.GrupoFaturaId).HasDatabaseName("IX_Despesas_GrupoFaturaId");
+
         }
     }
 }

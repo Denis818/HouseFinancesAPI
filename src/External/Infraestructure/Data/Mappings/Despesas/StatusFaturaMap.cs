@@ -15,6 +15,13 @@ namespace Infraestructure.Data.Mappings.Despesas
 
             builder.HasIndex(c => c.FaturaNome).HasDatabaseName("IX_Status_Fatura_Fatura_Nome");
             builder.HasIndex(c => c.Estado).HasDatabaseName("IX_Status_Fatura_Estado");
+
+            builder.HasOne(s => s.GrupoFatura)
+                   .WithMany(g => g.StatusFaturas)
+                   .HasForeignKey(s => s.GrupoFaturaId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(s => s.GrupoFaturaId).HasDatabaseName("IX_Status_Faturas_GrupoFaturaId");
         }
     }
 }

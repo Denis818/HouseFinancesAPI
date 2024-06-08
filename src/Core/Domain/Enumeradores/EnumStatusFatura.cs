@@ -8,7 +8,7 @@
         MoradiaAberto,
         MoradiaFechado
     }
-    public enum EnumFaturaNome
+    public enum EnumFaturaTipo
     {
         Casa,
         Moradia
