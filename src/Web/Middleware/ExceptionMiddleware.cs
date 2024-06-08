@@ -19,7 +19,7 @@ namespace Web.Middleware
 
                 var response = new ResponseDTO<string>()
                 {
-                    Mensagens = [ new(message, EnumTipoNotificacao.ServerError) ]
+                    Mensagens = [new(message, EnumTipoNotificacao.ServerError)]
                 };
 
                 context.Response.Headers.Append("content-type", "application/json; charset=utf-8");

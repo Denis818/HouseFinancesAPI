@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using System.Text.RegularExpressions;
-using Application.Interfaces.Services.Despesas;
+﻿using Application.Interfaces.Services.Despesas;
 using Application.Resources.Messages;
 using Application.Services.Base;
 using Domain.Dtos.Despesas.Criacao;
@@ -8,6 +6,8 @@ using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Application.Services.GrupoFaturas
 {
@@ -21,19 +21,19 @@ namespace Application.Services.GrupoFaturas
 
         public async Task<GrupoFatura> InsertAsync(GrupoFaturaDto grupoDto)
         {
-            if (Validator(grupoDto))
+            if(Validator(grupoDto))
                 return null;
 
             grupoDto.Nome = FormatNomeGrupo(grupoDto.Nome);
 
-            if (!NomeGrupoIsCorretFormat(grupoDto.Nome))
+            if(!NomeGrupoIsCorretFormat(grupoDto.Nome))
                 return null;
 
             var existingGrupo = await _repository
                 .Get(grupo => grupo.Nome == grupoDto.Nome)
                 .FirstOrDefaultAsync();
 
-            if (existingGrupo != null)
+            if(existingGrupo != null)
             {
                 Notificar(
                     EnumTipoNotificacao.Informacao,
@@ -45,7 +45,7 @@ namespace Application.Services.GrupoFaturas
             var GrupoFatura = _mapper.Map<GrupoFatura>(grupoDto);
             await _repository.InsertAsync(GrupoFatura);
 
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -59,17 +59,17 @@ namespace Application.Services.GrupoFaturas
 
         public async Task<GrupoFatura> UpdateAsync(int id, GrupoFaturaDto grupoDto)
         {
-            if (Validator(grupoDto))
+            if(Validator(grupoDto))
                 return null;
 
             grupoDto.Nome = FormatNomeGrupo(grupoDto.Nome);
 
-            if (!NomeGrupoIsCorretFormat(grupoDto.Nome))
+            if(!NomeGrupoIsCorretFormat(grupoDto.Nome))
                 return null;
 
             var GrupoFatura = await _repository.GetByIdAsync(id);
 
-            if (GrupoFatura is null)
+            if(GrupoFatura is null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
@@ -78,15 +78,15 @@ namespace Application.Services.GrupoFaturas
                 return null;
             }
 
-            if (GrupoFatura.Nome == grupoDto.Nome)
+            if(GrupoFatura.Nome == grupoDto.Nome)
                 return GrupoFatura;
 
-            if (
+            if(
                 await _repository.ExisteAsync(nome: grupoDto.Nome)
                 is GrupoFatura GrupoFaturaExiste
             )
             {
-                if (GrupoFatura.Id != GrupoFaturaExiste.Id)
+                if(GrupoFatura.Id != GrupoFaturaExiste.Id)
                 {
                     Notificar(
                         EnumTipoNotificacao.Informacao,
@@ -104,7 +104,7 @@ namespace Application.Services.GrupoFaturas
 
             _repository.Update(GrupoFatura);
 
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -120,7 +120,7 @@ namespace Application.Services.GrupoFaturas
         {
             var GrupoFatura = await _repository.GetByIdAsync(id);
 
-            if (GrupoFatura == null)
+            if(GrupoFatura == null)
             {
                 Notificar(
                     EnumTipoNotificacao.NotFount,
@@ -130,7 +130,7 @@ namespace Application.Services.GrupoFaturas
             }
 
             var IsUnicGroup = await _repository.Get().ToListAsync();
-            if (IsUnicGroup.Count == 1)
+            if(IsUnicGroup.Count == 1)
             {
                 Notificar(
                     EnumTipoNotificacao.ClientError,
@@ -141,7 +141,7 @@ namespace Application.Services.GrupoFaturas
 
             _repository.Delete(GrupoFatura);
 
-            if (!await _repository.SaveChangesAsync())
+            if(!await _repository.SaveChangesAsync())
             {
                 Notificar(
                     EnumTipoNotificacao.ServerError,
@@ -169,7 +169,7 @@ namespace Application.Services.GrupoFaturas
                 RegexOptions.IgnoreCase
             );
 
-            if (!regex.IsMatch(nomeGrupo))
+            if(!regex.IsMatch(nomeGrupo))
             {
                 Notificar(EnumTipoNotificacao.Informacao, Message.NomeGrupoForaDoPadrao);
                 return false;

@@ -11,6 +11,7 @@ namespace Data.DataContext
     {
         public DbSet<Despesa> Despesas { get; set; }
         public DbSet<GrupoFatura> GrupoFaturas { get; set; }
+        public DbSet<StatusFatura> StatusFaturas { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Membro> Membros { get; set; }
 

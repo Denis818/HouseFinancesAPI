@@ -4,6 +4,7 @@ using Data.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(FinanceDbContext))]
-    partial class FinanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240608132714_ADD_TB_STATUS_FATURAS")]
+    partial class ADD_TB_STATUS_FATURAS
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,18 +138,13 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(30)");
 
-                    b.Property<string>("FaturaNome")
-                        .IsRequired()
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("Fatura_Nome");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Estado")
                         .HasDatabaseName("IX_Status_Fatura_Estado");
 
-                    b.HasIndex("FaturaNome")
-                        .HasDatabaseName("IX_Status_Fatura_Fatura_Nome");
+                    b.HasIndex("Id")
+                        .HasDatabaseName("IX_Status_Fatura_Id");
 
                     b.ToTable("Status_Faturas", (string)null);
                 });

@@ -91,49 +91,70 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
         {
             var categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
             var memberRepository = service.GetRequiredService<IMembroRepository>();
-            var GrupoFaturaRepository = service.GetRequiredService<IGrupoFaturaRepository>();
+            var grupoFaturaRepository = service.GetRequiredService<IGrupoFaturaRepository>();
+            var statusFaturaRepository = service.GetRequiredService<IStatusFaturaRepository>();
 
-            if(categoriaRepository.Get().ToList().Count > 0)
-                return;
-
-            var listCategoria = new List<Categoria>
+            if(categoriaRepository.Get().ToList().Count < 1)
             {
-                new() { Descricao = "Almoço/Janta" },
-                new() { Descricao = "Condomínio" },
-                new() { Descricao = "Aluguel" },
-                new() { Descricao = "Limpeza" },
-                new() { Descricao = "Lanches" },
-                new() { Descricao = "Higiêne" },
-                new() { Descricao = "Internet" },
-                new() { Descricao = "Conta de Luz" }
-            };
+                var listCategoria = new List<Categoria>
+                {
+                    new() { Descricao = "Almoço/Janta" },
+                    new() { Descricao = "Condomínio" },
+                    new() { Descricao = "Aluguel" },
+                    new() { Descricao = "Limpeza" },
+                    new() { Descricao = "Lanches" },
+                    new() { Descricao = "Higiêne" },
+                    new() { Descricao = "Internet" },
+                    new() { Descricao = "Conta de Luz" }
+                };
 
-            var listMember = new List<Membro>
+                await categoriaRepository.InsertRangeAsync(listCategoria);
+                await categoriaRepository.SaveChangesAsync();
+            }
+
+            if(memberRepository.Get().ToList().Count < 1)
             {
-                new() { Nome = "Bruno", Telefone = "(38) 99805-5965" },
-                new() { Nome = "Denis", Telefone = "(38) 997282407" },
-                new() { Nome = "Valdirene", Telefone = "(31) 99797-7731" },
-                new() { Nome = "Peu", Telefone = "(38) 99995-4309" },
-                new() { Nome = "Jhon Lenon", Telefone = "(31) 99566-4815" }
-            };
+                var listMember = new List<Membro>
+                {
+                    new() { Nome = "Bruno", Telefone = "(38) 99805-5965" },
+                    new() { Nome = "Denis", Telefone = "(38) 997282407" },
+                    new() { Nome = "Valdirene", Telefone = "(31) 99797-7731" },
+                    new() { Nome = "Peu", Telefone = "(38) 99995-4309" },
+                    new() { Nome = "Jhon Lenon", Telefone = "(31) 99566-4815" }
+                };
 
-            string mesAtualName = DateTimeZoneProvider
-                .GetBrasiliaTimeZone(DateTime.UtcNow)
-                .ToString("MMMM", new CultureInfo("pt-BR"));
-            mesAtualName = char.ToUpper(mesAtualName[ 0 ]) + mesAtualName[ 1.. ].ToLower();
+                await memberRepository.InsertRangeAsync(listMember);
+                await memberRepository.SaveChangesAsync();
+            }
 
-            var GrupoFatura = new GrupoFatura
+            if(grupoFaturaRepository.Get().ToList().Count < 1)
             {
-                Nome = $"Fatura de {mesAtualName} {DateTime.Now.Year}"
-            };
+                string mesAtualName = DateTimeZoneProvider
+                    .GetBrasiliaTimeZone(DateTime.UtcNow)
+                    .ToString("MMMM", new CultureInfo("pt-BR"));
 
-            await categoriaRepository.InsertRangeAsync(listCategoria);
-            await memberRepository.InsertRangeAsync(listMember);
-            await GrupoFaturaRepository.InsertAsync(GrupoFatura);
+                mesAtualName = char.ToUpper(mesAtualName[0]) + mesAtualName[1..].ToLower();
 
-            await categoriaRepository.SaveChangesAsync();
-            await memberRepository.SaveChangesAsync();
-            await GrupoFaturaRepository.SaveChangesAsync();
+                var grupoFatura = new GrupoFatura
+                {
+                    Nome = $"Fatura de {mesAtualName} {DateTime.Now.Year}"
+                };
+
+                await grupoFaturaRepository.InsertAsync(grupoFatura);
+                await grupoFaturaRepository.SaveChangesAsync();
+            }
+
+            if(statusFaturaRepository.Get().ToList().Count < 1)
+            {
+                var listStatusFatura = new List<StatusFatura>
+                {
+                    new() { FaturaNome = "Casa", Estado = EnumStatusFatura.CasaAberto.ToString() },
+                    new() { FaturaNome = "Moradia", Estado = EnumStatusFatura.MoradiaAberto.ToString() },
+                };
+
+                await statusFaturaRepository.InsertRangeAsync(listStatusFatura);
+                await statusFaturaRepository.SaveChangesAsync();
+            }
         }
     }
 }

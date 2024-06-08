@@ -31,7 +31,7 @@ namespace Application.Services.Base
 
             ValidationResult results = validator.Validate(entityDto);
 
-            if (!results.IsValid)
+            if(!results.IsValid)
             {
                 var groupedFailures = results
                     .Errors.GroupBy(failure => failure.PropertyName)
@@ -41,7 +41,7 @@ namespace Application.Services.Base
                         Errors = string.Join(" ", group.Select(err => err.ErrorMessage))
                     });
 
-                foreach (var failure in groupedFailures)
+                foreach(var failure in groupedFailures)
                 {
                     Notificar(EnumTipoNotificacao.Informacao, $"{failure.Errors}");
                 }
