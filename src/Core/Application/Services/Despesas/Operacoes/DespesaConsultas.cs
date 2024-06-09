@@ -379,7 +379,9 @@ namespace Application.Services.Despesas.Operacoes
             double aluguelCondominioContaLuzParaPeu
         )
         {
-            var todosMembros = await _membroRepository.Get().ToListAsync();
+            var todosMembros = await _membroRepository
+                .Get(m => m.DataInicio.Date.Month <= _grupoFatura.DataCriacao.Date.Month)
+                .ToListAsync();
 
             double ValorMoradia(Membro membro)
             {
@@ -403,8 +405,7 @@ namespace Application.Services.Despesas.Operacoes
                         : Math.Max(despesaGeraisMaisAlmocoDividioPorMembro.RoundTo(2), 0),
 
                 ValorDespesaMoradia =
-                    member.Id == _membroId.IdJhon ||
-                    member.Id == _membroId.IdLaila
+                    member.Id == _membroId.IdJhon || member.Id == _membroId.IdLaila
                         ? -1
                         : ValorMoradia(member).RoundTo(2)
             });
