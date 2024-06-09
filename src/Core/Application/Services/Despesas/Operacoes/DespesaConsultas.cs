@@ -335,7 +335,7 @@ namespace Application.Services.Despesas.Operacoes
         private async Task<RelatorioGastosDoGrupoDto> GetRelatorioDeGastosDoMesAsync()
         {
             string grupoNome = _GrupoFaturaRepository
-                .Get(g => g.Id == _GrupoFaturaId)
+                .Get(g => g.Id == _grupoFatura.Id)
                 .FirstOrDefault()
                 ?.Nome;
 

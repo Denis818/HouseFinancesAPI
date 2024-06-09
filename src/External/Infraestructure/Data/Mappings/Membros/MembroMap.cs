@@ -11,6 +11,7 @@ namespace Data.Mappings.Membros
             builder.ToTable("Membros");
             builder.Property(m => m.Id).IsRequired().HasColumnType("int").ValueGeneratedOnAdd();
 
+            builder.Property(d => d.DataInicio).HasColumnName("Data_Inicio").HasColumnType("datetime(6)").IsRequired();
             builder.Property(m => m.Nome).HasColumnType("varchar(30)").IsRequired();
 
             builder
@@ -21,6 +22,7 @@ namespace Data.Mappings.Membros
                 .IsRequired();
 
             builder.HasIndex(m => m.Nome).HasDatabaseName("IX_Membros_Nome");
+            builder.HasIndex(m => m.DataInicio).HasDatabaseName("IX_Membros_Data_Inicio");
         }
     }
 }

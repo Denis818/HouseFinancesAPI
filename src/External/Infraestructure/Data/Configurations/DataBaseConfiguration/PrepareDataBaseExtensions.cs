@@ -1,12 +1,15 @@
 ﻿using Application.Helpers;
 using Application.Interfaces.Services.User;
+using Domain.Converters.DatesTimes;
 using Domain.Dtos.User.Auth;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Categorias;
+using Domain.Models.Despesas;
 using Domain.Models.Membros;
 using Domain.Models.Users;
 using Microsoft.Extensions.DependencyInjection;
+using System.Globalization;
 
 namespace Infraestructure.Data.Configurations.DataBaseConfiguration
 {
@@ -110,13 +113,15 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
 
             if(memberRepository.Get().ToList().Count < 1)
             {
+                var dataInicio = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
+
                 var listMember = new List<Membro>
                 {
-                    new() { Nome = "Bruno", Telefone = "(38) 99805-5965" },
-                    new() { Nome = "Denis", Telefone = "(38) 997282407" },
-                    new() { Nome = "Valdirene", Telefone = "(31) 99797-7731" },
-                    new() { Nome = "Peu", Telefone = "(38) 99995-4309" },
-                    new() { Nome = "Jhon Lenon", Telefone = "(31) 99566-4815" }
+                    new() { Nome = "Bruno", Telefone = "(38) 99805-5965", DataInicio =  dataInicio},
+                    new() { Nome = "Denis", Telefone = "(38) 997282407", DataInicio =  dataInicio},
+                    new() { Nome = "Valdirene", Telefone = "(31) 99797-7731", DataInicio =  dataInicio},
+                    new() { Nome = "Peu", Telefone = "(38) 99995-4309", DataInicio =  dataInicio },
+                    new() { Nome = "Jhon Lenon", Telefone = "(31) 99566-4815", DataInicio =  dataInicio}
                 };
 
                 await memberRepository.InsertRangeAsync(listMember);
@@ -125,32 +130,34 @@ namespace Infraestructure.Data.Configurations.DataBaseConfiguration
 
             if(grupoFaturaRepository.Get().ToList().Count < 1)
             {
-                //string mesAtualName = DateTimeZoneProvider
-                //    .GetBrasiliaTimeZone(DateTime.UtcNow)
-                //    .ToString("MMMM", new CultureInfo("pt-BR"));
+                var dataCriacao = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
 
-                //mesAtualName = char.ToUpper(mesAtualName[0]) + mesAtualName[1..].ToLower();
+                string mesAtualName = dataCriacao
+                    .ToString("MMMM", new CultureInfo("pt-BR"));
 
-                //var grupoFatura = new GrupoFatura
-                //{
-                //    Nome = $"Fatura de {mesAtualName} {DateTime.Now.Year}",
-                //    StatusFaturas =
-                //    [
-                //        new()
-                //        {
-                //            Estado = EnumStatusFatura.CasaAberto.ToString(),
-                //            FaturaNome = EnumFaturaTipo.Casa.ToString()
-                //        },
-                //        new()
-                //        {
-                //            Estado = EnumStatusFatura.MoradiaAberto.ToString(),
-                //            FaturaNome = EnumFaturaTipo.Moradia.ToString()
-                //        }
-                //    ]
-                //};
+                mesAtualName = char.ToUpper(mesAtualName[0]) + mesAtualName[1..].ToLower();
 
-                //await grupoFaturaRepository.InsertAsync(grupoFatura);
-                //await grupoFaturaRepository.SaveChangesAsync();
+                var grupoFatura = new GrupoFatura
+                {
+                    Nome = $"Fatura de {mesAtualName} {DateTime.Now.Year}",
+                    DataCriacao = dataCriacao,
+                    StatusFaturas =
+                    [
+                        new()
+                        {
+                            Estado = EnumStatusFatura.CasaAberto.ToString(),
+                            FaturaNome = EnumFaturaTipo.Casa.ToString()
+                        },
+                        new()
+                        {
+                            Estado = EnumStatusFatura.MoradiaAberto.ToString(),
+                            FaturaNome = EnumFaturaTipo.Moradia.ToString()
+                        }
+                    ]
+                };
+
+                await grupoFaturaRepository.InsertAsync(grupoFatura);
+                await grupoFaturaRepository.SaveChangesAsync();
             }
         }
     }

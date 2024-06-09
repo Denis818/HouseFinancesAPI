@@ -2,8 +2,8 @@
 {
     public class DateTimeZoneProvider
     {
-        public static DateTime GetBrasiliaTimeZone(DateTime dateTime)
-            => TimeZoneInfo.ConvertTimeFromUtc(dateTime,
+        public static DateTime GetBrasiliaDateTimeZone()
+            => TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow,
                 TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
     }
 }

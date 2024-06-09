@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using Domain.Converters.DatesTimes;
+using System.Text.Json.Serialization;
 
 namespace Domain.Models.Despesas
 {
@@ -6,6 +7,9 @@ namespace Domain.Models.Despesas
     {
         public int Id { get; set; }
         public string Nome { get; set; }
+
+        [JsonConverter(typeof(LongDateFormatConverter))]
+        public DateTime DataCriacao { get; set; }
 
         [JsonIgnore]
         public ICollection<Despesa> Despesas { get; set; } = [];

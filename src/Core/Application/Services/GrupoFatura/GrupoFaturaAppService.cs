@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.Services.Despesas;
 using Application.Resources.Messages;
 using Application.Services.Base;
+using Domain.Converters.DatesTimes;
 using Domain.Dtos.Despesas.Criacao;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
@@ -47,6 +48,7 @@ namespace Application.Services.GrupoFaturas
             }
 
             var grupoFatura = _mapper.Map<GrupoFatura>(grupoDto);
+            grupoFatura.DataCriacao = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
 
             grupoFatura.StatusFaturas =
             [

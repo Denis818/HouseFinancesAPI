@@ -14,7 +14,9 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
     {
         public async Task<DistribuicaoCustosCasaDto> CalcularDistribuicaoCustosCasaAsync()
         {
-            List<Membro> todosMembros = await _membroRepository.Get().ToListAsync();
+            List<Membro> todosMembros = await _membroRepository
+                .Get(m => m.DataInicio.Date.Month <= _grupoFatura.DataCriacao.Date.Month)
+                .ToListAsync();
 
             int membrosForaJhonCount = todosMembros.Where(m => m.Id != _membroId.IdJhon).Count();
 

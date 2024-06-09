@@ -2,6 +2,7 @@
 using Application.Interfaces.Services.Membros;
 using Application.Resources.Messages;
 using Application.Services.Base;
+using Domain.Converters.DatesTimes;
 using Domain.Dtos.Membros;
 using Domain.Enumeradores;
 using Domain.Interfaces.Repositories;
@@ -45,6 +46,7 @@ namespace Application.Services.Membros
             }
 
             var membro = _mapper.Map<Membro>(membroDto);
+            membro.DataInicio = DateTimeZoneProvider.GetBrasiliaDateTimeZone();
 
             await _repository.InsertAsync(membro);
 

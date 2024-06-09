@@ -10,12 +10,14 @@ namespace Application.Services.Despesas.Base
 {
     public abstract class BaseDespesaService : BaseAppService<Despesa, IDespesaRepository>
     {
+        private readonly IGrupoFaturaRepository _grupoFaturaRepository;
+
         protected readonly ICategoriaRepository _categoriaRepository;
         protected readonly IMembroRepository _membroRepository;
 
         protected readonly CategoriaIdsDto _categoriaIds;
         protected readonly MembroIdDto _membroId;
-        protected int _GrupoFaturaId = 0;
+        protected GrupoFatura _grupoFatura = null;
 
         protected IQueryable<Despesa> _queryDespesasPorGrupo;
 
@@ -24,6 +26,8 @@ namespace Application.Services.Despesas.Base
         {
             _membroRepository = service.GetRequiredService<IMembroRepository>();
             _categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
+            _categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
+            _grupoFaturaRepository = service.GetRequiredService<IGrupoFaturaRepository>();
 
             _membroId = _membroRepository.GetMembersIds();
             _categoriaIds = _categoriaRepository.GetCategoriaIds();
@@ -33,10 +37,12 @@ namespace Application.Services.Despesas.Base
 
         public IQueryable<Despesa> GetDespesasByGroup()
         {
-            _GrupoFaturaId = (int)(_httpContext.Items["GrupoFaturaId"] ?? 0);
+            var grupoId = (int)(_httpContext.Items["GrupoFaturaId"] ?? 0);
+
+            _grupoFatura = _grupoFaturaRepository.GetByIdAsync(grupoId).Result;
 
             var queryDespesas = _repository
-                .Get(d => d.GrupoFaturaId == _GrupoFaturaId)
+                .Get(d => d.GrupoFaturaId == grupoId)
                 .Include(c => c.Categoria)
                 .Include(c => c.GrupoFatura);
 

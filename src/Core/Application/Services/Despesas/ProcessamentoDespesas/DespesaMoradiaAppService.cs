@@ -99,9 +99,13 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
 
         private async Task<GrupoListMembrosDespesaDto> GetGrupoListMembrosDespesa()
         {
-            List<Membro> listMembroForaJhonLaila = await _membroRepository
-                .Get(m => m.Id != _membroId.IdJhon && m.Id != _membroId.IdLaila)
-                .ToListAsync();
+            List<Membro> todosMembros = await _membroRepository
+               .Get(m => m.DataInicio <= _grupoFatura.DataCriacao)
+               .ToListAsync();
+
+            List<Membro> listMembroForaJhonLaila = todosMembros
+                .Where(m => m.Id != _membroId.IdJhon && m.Id != _membroId.IdLaila)
+                .ToList();
 
             List<Membro> listMembroForaJhonPeu = listMembroForaJhonLaila
                 .Where(m => m.Id != _membroId.IdPeu)
