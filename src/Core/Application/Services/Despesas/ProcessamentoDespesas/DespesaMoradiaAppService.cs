@@ -21,7 +21,7 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
 
             var custosDespesasMoradiaDto = await GetCustosDespesasMoradiaAsync();
 
-            if (
+            if(
                 custosDespesasMoradiaDto.ContaDeLuz == 0
                 && custosDespesasMoradiaDto.ParcelaApartamento == 0
                 && grupoListMembrosDespesa.ListAluguel.Count <= 0
@@ -99,11 +99,11 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
 
         private async Task<GrupoListMembrosDespesaDto> GetGrupoListMembrosDespesa()
         {
-            List<Membro> listMembroForaJhon = await _membroRepository
-                .Get(m => m.Id != _membroId.IdJhon)
+            List<Membro> listMembroForaJhonLaila = await _membroRepository
+                .Get(m => m.Id != _membroId.IdJhon && m.Id != _membroId.IdLaila)
                 .ToListAsync();
 
-            List<Membro> listMembroForaJhonPeu = listMembroForaJhon
+            List<Membro> listMembroForaJhonPeu = listMembroForaJhonLaila
                 .Where(m => m.Id != _membroId.IdPeu)
                 .ToList();
 
@@ -114,7 +114,7 @@ namespace Application.Services.Despesas.ProcessamentoDespesas
             return new GrupoListMembrosDespesaDto()
             {
                 ListAluguel = listAluguel,
-                ListMembroForaJhon = listMembroForaJhon,
+                ListMembroForaJhon = listMembroForaJhonLaila,
                 ListMembroForaJhonPeu = listMembroForaJhonPeu
             };
         }

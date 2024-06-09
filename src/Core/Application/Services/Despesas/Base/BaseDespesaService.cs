@@ -1,5 +1,6 @@
 ﻿using Application.Services.Base;
 using Domain.Dtos.Categorias.Consultas;
+using Domain.Dtos.Membros;
 using Domain.Interfaces.Repositories;
 using Domain.Models.Despesas;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ namespace Application.Services.Despesas.Base
         protected readonly IMembroRepository _membroRepository;
 
         protected readonly CategoriaIdsDto _categoriaIds;
-        protected (int IdJhon, int IdPeu) _membroId;
+        protected readonly MembroIdDto _membroId;
         protected int _GrupoFaturaId = 0;
 
         protected IQueryable<Despesa> _queryDespesasPorGrupo;
@@ -24,7 +25,7 @@ namespace Application.Services.Despesas.Base
             _membroRepository = service.GetRequiredService<IMembroRepository>();
             _categoriaRepository = service.GetRequiredService<ICategoriaRepository>();
 
-            _membroId = _membroRepository.GetIdsJhonPeu();
+            _membroId = _membroRepository.GetMembersIds();
             _categoriaIds = _categoriaRepository.GetCategoriaIds();
 
             _queryDespesasPorGrupo = GetDespesasByGroup();

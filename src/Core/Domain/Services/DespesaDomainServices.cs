@@ -19,13 +19,13 @@ namespace Domain.Services
             double totalAptoMaisCaixaAbate300Peu100Estacionamento =
                (totalAptoMaisCaixa - 300 - 100).RountToZeroIfNegative(); //300 aluguel cobrado do peu. 100 reais do estacionamento alugado.
 
-            double valorAptoMaisCaixaParaCadaMembro = 
-                (totalAptoMaisCaixaAbate300Peu100Estacionamento 
+            double valorAptoMaisCaixaParaCadaMembro =
+                (totalAptoMaisCaixaAbate300Peu100Estacionamento
                     / custosDespesasMoradia.MembrosForaJhonPeuCount).RountToZeroIfNegative();
-                
+
             double valorLuzMaisCondominioParaCadaMembro =
                 (totalLuzMaisCondominio / custosDespesasMoradia.MembrosForaJhonCount).RountToZeroIfNegative();
-            
+
 
             double valorParaMembrosForaPeu =
                 valorAptoMaisCaixaParaCadaMembro + valorLuzMaisCondominioParaCadaMembro;
@@ -38,16 +38,16 @@ namespace Domain.Services
                 TotalAptoMaisCaixa = totalAptoMaisCaixa,
                 TotalLuzMaisCondominio = totalLuzMaisCondominio,
 
-                ValorParaMembrosForaPeu = 
+                ValorParaMembrosForaPeu =
                     valorParaMembrosForaPeu.RountToZeroIfNegative(),
 
-                ValorAptoMaisCaixaParaCadaMembro = 
+                ValorAptoMaisCaixaParaCadaMembro =
                     valorAptoMaisCaixaParaCadaMembro.RountToZeroIfNegative(),
 
-                TotalAptoMaisCaixaAbate300Peu100Estacionamento = 
+                TotalAptoMaisCaixaAbate300Peu100Estacionamento =
                     totalAptoMaisCaixaAbate300Peu100Estacionamento.RountToZeroIfNegative(),
 
-                ValorLuzMaisCondominioParaCadaMembro = 
+                ValorLuzMaisCondominioParaCadaMembro =
                     valorLuzMaisCondominioParaCadaMembro.RountToZeroIfNegative(),
             };
         }

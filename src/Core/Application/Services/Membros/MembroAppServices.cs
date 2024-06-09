@@ -195,7 +195,7 @@ namespace Application.Services.Membros
         )
         {
             var resumoMensal = await _despesaConsultas.GetAnaliseDesesasPorGrupoAsync();
-            var membroIds = _repository.GetIdsJhonPeu();
+            var membroIds = _repository.GetMembersIds();
 
             double valorPorMembro =
                 resumoMensal
@@ -209,7 +209,7 @@ namespace Application.Services.Membros
 
             string messageBody = "";
 
-            if(membro.Id == membroIds.idJhon)
+            if(membro.Id == membroIds.IdJhon)
             {
                 messageBody = $"Sua parte no almoço ficou esse valor: *R$ {valorPorMembro:F2}*."
                             + $"\r\n\r\nMeu pix: *{pix}*.";

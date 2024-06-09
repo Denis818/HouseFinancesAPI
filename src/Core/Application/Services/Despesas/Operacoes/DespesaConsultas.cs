@@ -47,9 +47,9 @@ namespace Application.Services.Despesas.Operacoes
         }
 
         public async Task<IEnumerable<SugestaoDeFornecedorDto>> SugestaoDeFornecedorMaisBarato(
-       int paginaAtual,
-       int itensPorPagina
-   )
+            int paginaAtual,
+            int itensPorPagina
+        )
         {
             var categorias = await _categoriaRepository.Get().ToListAsync();
             List<SugestaoDeFornecedorDto> sugestoes = new();
@@ -68,14 +68,13 @@ namespace Application.Services.Despesas.Operacoes
                         continue;
                     }
 
-                    var fornecedorMaisBarato = grupoItem
-                        .OrderBy(d => d.Preco)
-                        .First();
+                    var fornecedorMaisBarato = grupoItem.OrderBy(d => d.Preco).First();
 
                     sugestoes.Add(
                         new SugestaoDeFornecedorDto
                         {
-                            Sugestao = $"{grupoItem.Key} em {fornecedorMaisBarato.Fornecedor} é mais barato",
+                            Sugestao =
+                                $"{grupoItem.Key} em {fornecedorMaisBarato.Fornecedor} é mais barato",
                             ListaItens = Pagination.PaginateResult(
                                 grupoItem.ToList(),
                                 paginaAtual,
@@ -96,7 +95,6 @@ namespace Application.Services.Despesas.Operacoes
 
             return sugestoes;
         }
-
 
         #region Listagem das Despesas
 
@@ -323,10 +321,12 @@ namespace Application.Services.Despesas.Operacoes
         private IQueryable<Despesa> GetDespesasCasa()
         {
             return _queryDespesasPorGrupo
-                .Where(c => c.CategoriaId != _categoriaIds.IdAluguel
-                         && c.CategoriaId != _categoriaIds.IdCondominio
-                         && c.CategoriaId != _categoriaIds.IdContaDeLuz
-                         && c.CategoriaId != _categoriaIds.IdInternet)
+                .Where(c =>
+                    c.CategoriaId != _categoriaIds.IdAluguel
+                    && c.CategoriaId != _categoriaIds.IdCondominio
+                    && c.CategoriaId != _categoriaIds.IdContaDeLuz
+                    && c.CategoriaId != _categoriaIds.IdInternet
+                )
                 .Include(c => c.Categoria)
                 .Include(g => g.GrupoFatura)
                 .OrderByDescending(d => d.DataCompra);
@@ -403,7 +403,10 @@ namespace Application.Services.Despesas.Operacoes
                         : Math.Max(despesaGeraisMaisAlmocoDividioPorMembro.RoundTo(2), 0),
 
                 ValorDespesaMoradia =
-                    member.Id == _membroId.IdJhon ? -1 : ValorMoradia(member).RoundTo(2)
+                    member.Id == _membroId.IdJhon ||
+                    member.Id == _membroId.IdLaila
+                        ? -1
+                        : ValorMoradia(member).RoundTo(2)
             });
 
             return valoresPorMembro;
