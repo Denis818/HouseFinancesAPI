@@ -81,6 +81,7 @@ namespace Domain.Services
             return new DistribuicaoCustosCasaDto()
             {
                 Membros = custosDespesasCasa.TodosMembros,
+                TotalSomenteAlmoco = custosDespesasCasa.ValorTotalAlmoco,
                 TotalDespesaGeraisForaAlmoco = custosDespesasCasa.TotalDespesaGeraisForaAlmoco,
                 TotalAlmocoParteDoJhon = totalAlmocoParteDoJhon.RountToZeroIfNegative(),
                 TotalDespesasGeraisMaisAlmocoDividido = TotalDespesasGeraisMaisAlmocoDividido,
