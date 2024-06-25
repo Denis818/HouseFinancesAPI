@@ -24,7 +24,7 @@ namespace Application.Services.Despesas.RelatorioPdf
                 doc,
                 custosCasaDto.TotalDespesaGeraisForaAlmoco,
                 custosCasaDto.TotalAlmocoDividioComJhon,
-                custosCasaDto.TotalAlmocoParteDoJhon,
+                custosCasaDto.TotalDespesasGeraisMaisAlmocoDividido,
                 custosCasaDto.DespesaGeraisMaisAlmoco,
                 custosCasaDto.Membros.Count
             );
@@ -45,12 +45,12 @@ namespace Application.Services.Despesas.RelatorioPdf
             Document doc,
             double totalDespesaGeraisForaAlmoco,
             double totalAlmocoDividioComJhon,
-            double totalAlmocoParteDoJhon,
+            double TotalDespesasGeraisMaisAlmocoDividido,
             double despesaGeraisMaisAlmoco,
             int countMembros
         )
         {
-            double totalAlmoco = totalAlmocoDividioComJhon + totalAlmocoParteDoJhon;
+            double totalAlmoco = totalAlmocoDividioComJhon + TotalDespesasGeraisMaisAlmocoDividido;
 
             var columnsValoresCalculados = new Dictionary<string, string>
             {
@@ -61,8 +61,8 @@ namespace Application.Services.Despesas.RelatorioPdf
                     "Almoço fora parte do Jhon",
                     $"R$ {totalAlmocoDividioComJhon.ToFormatPriceBr()}"
                 },
-                { "Almoço parte do Jhon", $"R$ {totalAlmocoParteDoJhon.ToFormatPriceBr()}" },
-                { "Total das despesas de casa", $"R$ {despesaGeraisMaisAlmoco.ToFormatPriceBr()}" },
+                { "Total com almoco/janta dividido com Jhon", $"R$ {TotalDespesasGeraisMaisAlmocoDividido.ToFormatPriceBr()}" },
+                { "Total das Despesas", $"R$ {despesaGeraisMaisAlmoco.ToFormatPriceBr()}" },
             };
 
             _pdfTable.CreateTable(doc, "Despesas somente da Casa", columnsValoresCalculados);
